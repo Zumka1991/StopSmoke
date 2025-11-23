@@ -84,7 +84,11 @@ export default function DashboardPage() {
             <div className="container" style={{ marginTop: '2rem', maxWidth: '1200px' }}>
 
                 {!profile.quitDate ? (
-                    <div className="card text-center" style={{ padding: '3rem' }}>
+                    <div className="card text-center" style={{
+                        padding: '3rem',
+                        maxWidth: '600px',
+                        margin: '0 auto'
+                    }}>
                         <h2 style={{ marginBottom: '1.5rem' }}>{t('tracker.notStarted')}</h2>
                         <button
                             onClick={() => navigate('/profile')}

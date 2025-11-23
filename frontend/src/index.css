@@ -9,7 +9,9 @@
   --success-color: #22c55e;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -136,4 +138,47 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   background-color: rgba(59, 130, 246, 0.35);
   transform: scale(1.05);
+}
+
+/* SOS Breathing Animation */
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  20% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+
+  /* Inhale 4s */
+  55% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+
+  /* Hold 7s */
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  /* Exhale 8s */
+}
+
+.breathing-circle {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, var(--accent-color) 0%, rgba(59, 130, 246, 0.2) 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+  animation: breathe 19s infinite ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
 }

@@ -187,5 +187,21 @@
                 "desc": "Saved 10,000"
             }
         }
+    },
+    "sos": {
+        "button": "SOS",
+        "title": "Emergency Help",
+        "breatheIn": "Breathe In...",
+        "hold": "Hold...",
+        "breatheOut": "Breathe Out...",
+        "feelingBetter": "I'm feeling better",
+        "timer": "Craving usually lasts 3 minutes",
+        "quotes": [
+            "This craving will pass whether you smoke or not.",
+            "You are stronger than your addiction.",
+            "Take a deep breath. You can do this.",
+            "Think about how far you've come.",
+            "Don't trade your future for a moment of relief."
+        ]
     }
 }
