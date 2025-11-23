@@ -120,7 +120,6 @@ export default function HealthTimeline({ quitDate }: HealthTimelineProps) {
             }}>
                 {milestones.map((m, index) => {
                     const isCompleted = index < nextMilestoneIndex;
-                    const isCurrent = index === nextMilestoneIndex;
                     const isLocked = index > nextMilestoneIndex;
 
                     if (isLocked) return null;
