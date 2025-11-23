@@ -41,7 +41,9 @@
         "currency": "Currency",
         "updateSuccess": "Profile updated successfully",
         "updateError": "Failed to update profile",
-        "notSet": "Not set yet"
+        "notSet": "Not set yet",
+        "startNow": "Start Quitting Now",
+        "quitDateHelper": "Or choose a custom date"
     },
     "tracker": {
         "title": "Smoke-Free Journey",
@@ -50,6 +52,9 @@
         "minutesTitle": "Minutes",
         "congratulations": "Congratulations!",
         "notStarted": "Set your quit date in profile to start tracking",
-        "goToProfile": "Go to Profile"
+        "goToProfile": "Go to Profile",
+        "moneySaved": "Money Saved",
+        "cigarettesNotSmoked": "Cigarettes Not Smoked",
+        "packsNotSmoked": "Packs Not Smoked"
     }
 }

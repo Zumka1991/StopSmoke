@@ -41,7 +41,9 @@
         "currency": "Валюта",
         "updateSuccess": "Профиль успешно обновлён",
         "updateError": "Ошибка обновления профиля",
-        "notSet": "Не установлено"
+        "notSet": "Не установлено",
+        "startNow": "Начать отказ сейчас",
+        "quitDateHelper": "Или выберите другую дату"
     },
     "tracker": {
         "title": "Путь к жизни без дыма",
@@ -50,6 +52,9 @@
         "minutesTitle": "Минут",
         "congratulations": "Поздравляем!",
         "notStarted": "Установите дату отказа в профиле, чтобы начать отслеживание",
-        "goToProfile": "Перейти в профиль"
+        "goToProfile": "Перейти в профиль",
+        "moneySaved": "Денег сэкономлено",
+        "cigarettesNotSmoked": "Сигарет не выкурено",
+        "packsNotSmoked": "Пачек не выкурено"
     }
 }

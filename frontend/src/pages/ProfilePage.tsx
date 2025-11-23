@@ -27,7 +27,17 @@ export default function ProfilePage() {
                 const response = await api.get('/profile');
                 const data: ProfileData = response.data;
 
-                setValue('quitDate', data.quitDate ? data.quitDate.split('T')[0] : '');
+                // Convert ISO date to datetime-local format (YYYY-MM-DDTHH:mm)
+                if (data.quitDate) {
+                    const date = new Date(data.quitDate);
+                    const localDateTime = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+                        .toISOString()
+                        .slice(0, 16);
+                    setValue('quitDate', localDateTime);
+                } else {
+                    setValue('quitDate', '');
+                }
+
                 setValue('cigarettesPerDay', data.cigarettesPerDay);
                 setValue('pricePerPack', data.pricePerPack);
                 setValue('currency', data.currency);
@@ -44,16 +54,20 @@ export default function ProfilePage() {
 
     const onSubmit = async (data: any) => {
         try {
+            // Convert datetime-local to ISO format for API
+            const quitDateValue = data.quitDate ? new Date(data.quitDate).toISOString() : null;
+
             await api.put('/profile', {
-                quitDate: data.quitDate || null,
-                cigarettesPerDay: parseInt(data.cigarettesPerDay),
-                pricePerPack: parseFloat(data.pricePerPack),
+                quitDate: quitDateValue,
+                cigarettesPerDay: parseInt(data.cigarettesPerDay) || 0,
+                pricePerPack: parseFloat(data.pricePerPack) || 0,
                 currency: data.currency
             });
             setSuccessMsg(t('profile.updateSuccess'));
             setTimeout(() => setSuccessMsg(''), 3000);
-        } catch (err) {
-            setErrorMsg(t('profile.updateError'));
+        } catch (err: any) {
+            console.error('Profile update error:', err);
+            setErrorMsg(err.response?.data?.message || t('profile.updateError'));
         }
     };
 
@@ -92,10 +106,82 @@ export default function ProfilePage() {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">
                             <label className="form-label">{t('profile.quitDate')}</label>
+
+                            {/* Quick Start Button */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const now = new Date();
+                                    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+                                        .toISOString()
+                                        .slice(0, 16);
+                                    setValue('quitDate', localDateTime);
+                                }}
+                                style={{
+                                    width: '100%',
+                                    padding: '1rem',
+                                    marginBottom: '1rem',
+                                    background: 'linear-gradient(135deg, var(--success-color), #16a34a)',
+                                    border: 'none',
+                                    borderRadius: '0.75rem',
+                                    color: 'white',
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(34, 197, 94, 0.4)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.3)';
+                                }}
+                            >
+                                🚭 {t('profile.startNow')}
+                            </button>
+
+                            {/* Divider */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                margin: '1rem 0',
+                                gap: '1rem'
+                            }}>
+                                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+                                <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+                                    {t('profile.quitDateHelper')}
+                                </span>
+                                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+                            </div>
+
+                            {/* Date/Time Picker */}
                             <input
                                 {...register('quitDate')}
-                                type="date"
+                                type="datetime-local"
                                 className="form-input"
+                                style={{
+                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1))',
+                                    border: '2px solid rgba(59, 130, 246, 0.3)',
+                                    padding: '1rem',
+                                    fontSize: '1rem',
+                                    fontWeight: '500',
+                                    color: 'var(--text-primary)',
+                                    borderRadius: '0.75rem',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    colorScheme: 'dark'
+                                }}
+                                onFocus={(e) => {
+                                    e.currentTarget.style.border = '2px solid var(--accent-color)';
+                                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                                }}
+                                onBlur={(e) => {
+                                    e.currentTarget.style.border = '2px solid rgba(59, 130, 246, 0.3)';
+                                    e.currentTarget.style.boxShadow = 'none';
+                                }}
                             />
                         </div>
 
