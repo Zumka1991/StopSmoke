@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: stopsmoke-postgres
+    environment:
+      POSTGRES_DB: stopsmoke
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - stopsmoke-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: stopsmoke-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5216
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=stopsmoke;Username=postgres;Password=${POSTGRES_PASSWORD:-changeme}
+      - JwtSettings__Secret=${JWT_SECRET}
+      - JwtSettings__Issuer=StopSmoke
+      - JwtSettings__Audience=StopSmoke
+    ports:
+      - "5216:5216"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - stopsmoke-network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:5216}
+    container_name: stopsmoke-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - stopsmoke-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  stopsmoke-network:
+    driver: bridge
