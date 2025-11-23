@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
-import LanguageSwitcher from '../components/LanguageSwitcher';
+import Navbar from '../components/Navbar';
 
 interface ProfileData {
     email: string;
@@ -83,25 +83,10 @@ export default function ProfilePage() {
 
     return (
         <>
-            <LanguageSwitcher />
+            <Navbar onLogout={handleLogout} />
             <div className="container" style={{ maxWidth: '600px', marginTop: '3rem' }}>
                 <div className="card">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                        <h2>{t('profile.title')}</h2>
-                        <button
-                            onClick={handleLogout}
-                            style={{
-                                padding: '0.5rem 1rem',
-                                background: 'var(--error-color)',
-                                border: 'none',
-                                borderRadius: '0.5rem',
-                                color: 'white',
-                                fontSize: '0.875rem'
-                            }}
-                        >
-                            {t('common.logout')}
-                        </button>
-                    </div>
+                    <h2 style={{ marginBottom: '2rem' }}>{t('profile.title')}</h2>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">

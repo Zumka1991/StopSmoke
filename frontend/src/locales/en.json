@@ -33,6 +33,10 @@
         "profile": "Profile",
         "save": "Save"
     },
+    "nav": {
+        "dashboard": "Dashboard",
+        "profile": "Profile"
+    },
     "profile": {
         "title": "My Profile",
         "quitDate": "Quit Date",
