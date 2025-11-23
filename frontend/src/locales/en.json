@@ -130,5 +130,62 @@
         "completed": "Completed",
         "inProgress": "In Progress",
         "locked": "Locked"
+    },
+    "achievements": {
+        "title": "Achievements",
+        "list": {
+            "time_24h": {
+                "title": "First Day",
+                "desc": "24 hours smoke-free"
+            },
+            "time_3d": {
+                "title": "Getting Serious",
+                "desc": "3 days smoke-free"
+            },
+            "time_1w": {
+                "title": "One Week",
+                "desc": "7 days smoke-free"
+            },
+            "time_1m": {
+                "title": "One Month",
+                "desc": "30 days smoke-free"
+            },
+            "time_3m": {
+                "title": "Quarter Year",
+                "desc": "90 days smoke-free"
+            },
+            "time_6m": {
+                "title": "Half Year",
+                "desc": "180 days smoke-free"
+            },
+            "time_1y": {
+                "title": "One Year",
+                "desc": "365 days smoke-free"
+            },
+            "cigs_100": {
+                "title": "Fresh Air",
+                "desc": "100 cigarettes not smoked"
+            },
+            "cigs_1000": {
+                "title": "Deep Breath",
+                "desc": "1,000 cigarettes not smoked"
+            },
+            "cigs_5000": {
+                "title": "Clean Lungs",
+                "desc": "5,000 cigarettes not smoked"
+            },
+            "money_1000": {
+                "title": "Piggy Bank",
+                "desc": "Saved 1,000"
+            },
+            "money_5000": {
+                "title": "Investor",
+                "desc": "Saved 5,000"
+            },
+            "money_10000": {
+                "title": "Tycoon",
+                "desc": "Saved 10,000"
+            }
+        }
     }
 }

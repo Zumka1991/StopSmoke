@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import HealthTimeline from '../components/HealthTimeline';
+import Achievements from '../components/Achievements';
 
 interface ProfileData {
     email: string;
@@ -28,7 +29,6 @@ export default function DashboardPage() {
                 setProfile(response.data);
             } catch (err) {
                 console.error('Failed to load profile', err);
-                // If unauthorized or other error, redirect to login
                 localStorage.removeItem('token');
                 localStorage.removeItem('userEmail');
                 navigate('/login');
@@ -294,6 +294,21 @@ export default function DashboardPage() {
                         )}
 
                         <HealthTimeline quitDate={profile.quitDate} />
+
+                        <Achievements
+                            daysClean={daysClean}
+                            moneySaved={
+                                profile.cigarettesPerDay > 0 && profile.pricePerPack > 0
+                                    ? (daysClean * profile.cigarettesPerDay / 20) * profile.pricePerPack
+                                    : 0
+                            }
+                            cigarettesNotSmoked={
+                                profile.cigarettesPerDay > 0
+                                    ? daysClean * profile.cigarettesPerDay
+                                    : 0
+                            }
+                            currency={profile.currency || 'RUB'}
+                        />
                     </>
                 )}
             </div>
