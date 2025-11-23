@@ -1,0 +1,55 @@
+{
+    "auth": {
+        "login": {
+            "title": "Welcome Back",
+            "email": "Email",
+            "password": "Password",
+            "submit": "Sign In",
+            "noAccount": "Don't have an account?",
+            "signUp": "Sign Up",
+            "error": "Invalid email or password"
+        },
+        "register": {
+            "title": "Create Account",
+            "email": "Email",
+            "password": "Password",
+            "submit": "Sign Up",
+            "hasAccount": "Already have an account?",
+            "signIn": "Sign In",
+            "error": "Registration failed",
+            "emailRequired": "Email is required",
+            "passwordRequired": "Password is required",
+            "passwordMinLength": "Min 6 chars"
+        }
+    },
+    "home": {
+        "title": "Welcome to StopSmoke",
+        "subtitle": "Your journey to a smoke-free life starts here.",
+        "getStarted": "Get Started"
+    },
+    "common": {
+        "language": "Language",
+        "logout": "Logout",
+        "profile": "Profile",
+        "save": "Save"
+    },
+    "profile": {
+        "title": "My Profile",
+        "quitDate": "Quit Date",
+        "cigarettesPerDay": "Cigarettes per day",
+        "pricePerPack": "Price per pack",
+        "currency": "Currency",
+        "updateSuccess": "Profile updated successfully",
+        "updateError": "Failed to update profile",
+        "notSet": "Not set yet"
+    },
+    "tracker": {
+        "title": "Smoke-Free Journey",
+        "daysTitle": "Days Without Smoking",
+        "hoursTitle": "Hours",
+        "minutesTitle": "Minutes",
+        "congratulations": "Congratulations!",
+        "notStarted": "Set your quit date in profile to start tracking",
+        "goToProfile": "Go to Profile"
+    }
+}

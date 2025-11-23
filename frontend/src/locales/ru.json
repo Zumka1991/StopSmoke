@@ -1,0 +1,55 @@
+{
+    "auth": {
+        "login": {
+            "title": "Добро пожаловать",
+            "email": "Email",
+            "password": "Пароль",
+            "submit": "Войти",
+            "noAccount": "Нет аккаунта?",
+            "signUp": "Регистрация",
+            "error": "Неверный email или пароль"
+        },
+        "register": {
+            "title": "Создать аккаунт",
+            "email": "Email",
+            "password": "Пароль",
+            "submit": "Зарегистрироваться",
+            "hasAccount": "Уже есть аккаунт?",
+            "signIn": "Войти",
+            "error": "Ошибка регистрации",
+            "emailRequired": "Email обязателен",
+            "passwordRequired": "Пароль обязателен",
+            "passwordMinLength": "Минимум 6 символов"
+        }
+    },
+    "home": {
+        "title": "Добро пожаловать в StopSmoke",
+        "subtitle": "Ваш путь к жизни без курения начинается здесь.",
+        "getStarted": "Начать"
+    },
+    "common": {
+        "language": "Язык",
+        "logout": "Выйти",
+        "profile": "Профиль",
+        "save": "Сохранить"
+    },
+    "profile": {
+        "title": "Мой профиль",
+        "quitDate": "Дата отказа от курения",
+        "cigarettesPerDay": "Сигарет в день",
+        "pricePerPack": "Цена за пачку",
+        "currency": "Валюта",
+        "updateSuccess": "Профиль успешно обновлён",
+        "updateError": "Ошибка обновления профиля",
+        "notSet": "Не установлено"
+    },
+    "tracker": {
+        "title": "Путь к жизни без дыма",
+        "daysTitle": "Дней без курения",
+        "hoursTitle": "Часов",
+        "minutesTitle": "Минут",
+        "congratulations": "Поздравляем!",
+        "notStarted": "Установите дату отказа в профиле, чтобы начать отслеживание",
+        "goToProfile": "Перейти в профиль"
+    }
+}
