@@ -17,7 +17,7 @@ services:
       - stopsmoke-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -43,6 +43,23 @@ services:
     networks:
       - stopsmoke-network
     restart: unless-stopped
+
+  # Migration service (runs EF Core migrations once)
+  migration:
+    image: mcr.microsoft.com/dotnet/sdk:10.0-preview
+    working_dir: /src
+    volumes:
+      - ./backend:/src
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=stopsmoke;Username=postgres;Password=${POSTGRES_PASSWORD:-changeme}
+      - JwtSettings__Secret=${JWT_SECRET}
+      - JwtSettings__Issuer=StopSmoke
+      - JwtSettings__Audience=StopSmoke
+    command: >
+      bash -c "dotnet tool restore && dotnet ef database update"
 
   # Frontend
   frontend:
