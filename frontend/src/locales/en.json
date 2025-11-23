@@ -74,5 +74,61 @@
         "empty": "No users yet. Be the first!",
         "you": "You",
         "days": "days"
+    },
+    "health": {
+        "title": "Health Recovery",
+        "milestones": {
+            "m20": {
+                "title": "20 Minutes",
+                "desc": "Your heart rate and blood pressure drop."
+            },
+            "h8": {
+                "title": "8 Hours",
+                "desc": "Carbon monoxide levels in your blood drop to normal."
+            },
+            "h24": {
+                "title": "24 Hours",
+                "desc": "Your risk of heart attack begins to decrease."
+            },
+            "h48": {
+                "title": "48 Hours",
+                "desc": "Your sense of smell and taste begin to improve."
+            },
+            "h72": {
+                "title": "72 Hours",
+                "desc": "Breathing becomes easier as bronchial tubes relax."
+            },
+            "w2": {
+                "title": "2 Weeks",
+                "desc": "Your circulation improves and lung function increases."
+            },
+            "m1": {
+                "title": "1 Month",
+                "desc": "Coughing and shortness of breath decrease."
+            },
+            "m3": {
+                "title": "3 Months",
+                "desc": "Lung function has increased by up to 30%."
+            },
+            "y1": {
+                "title": "1 Year",
+                "desc": "Risk of coronary heart disease is half that of a smoker."
+            },
+            "y5": {
+                "title": "5 Years",
+                "desc": "Stroke risk is reduced to that of a non-smoker."
+            },
+            "y10": {
+                "title": "10 Years",
+                "desc": "Lung cancer death risk is about half that of a smoker."
+            },
+            "y15": {
+                "title": "15 Years",
+                "desc": "Risk of coronary heart disease is that of a non-smoker."
+            }
+        },
+        "completed": "Completed",
+        "inProgress": "In Progress",
+        "locked": "Locked"
     }
 }

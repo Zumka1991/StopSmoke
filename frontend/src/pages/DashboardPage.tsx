@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
+import HealthTimeline from '../components/HealthTimeline';
 
 interface ProfileData {
     email: string;
@@ -26,12 +27,16 @@ export default function DashboardPage() {
                 const response = await api.get('/profile');
                 setProfile(response.data);
             } catch (err) {
-                console.error('Failed to load profile');
+                console.error('Failed to load profile', err);
+                // If unauthorized or other error, redirect to login
+                localStorage.removeItem('token');
+                localStorage.removeItem('userEmail');
+                navigate('/login');
             }
         };
 
         fetchProfile();
-    }, []);
+    }, [navigate]);
 
     useEffect(() => {
         if (!profile?.quitDate) return;
@@ -287,6 +292,8 @@ export default function DashboardPage() {
                                 </div>
                             </>
                         )}
+
+                        <HealthTimeline quitDate={profile.quitDate} />
                     </>
                 )}
             </div>
