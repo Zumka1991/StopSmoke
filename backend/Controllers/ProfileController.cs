@@ -32,6 +32,7 @@ public class ProfileController : ControllerBase
         var profile = new UserProfileDto
         {
             Email = user.Email!,
+            Name = user.Name,
             QuitDate = user.QuitDate,
             CigarettesPerDay = user.CigarettesPerDay,
             PricePerPack = user.PricePerPack,
@@ -52,6 +53,10 @@ public class ProfileController : ControllerBase
         if (user == null)
             return NotFound();
 
+        if (!string.IsNullOrWhiteSpace(model.Name))
+        {
+            user.Name = model.Name;
+        }
         user.QuitDate = model.QuitDate;
         user.CigarettesPerDay = model.CigarettesPerDay;
         user.PricePerPack = model.PricePerPack;

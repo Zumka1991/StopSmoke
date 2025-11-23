@@ -35,6 +35,7 @@ public class AuthController : ControllerBase
         var user = new User
         {
             Email = model.Email,
+            Name = model.Name,
             SecurityStamp = Guid.NewGuid().ToString(),
             UserName = model.Email
         };

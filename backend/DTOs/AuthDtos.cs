@@ -11,6 +11,9 @@ public class RegisterDto
     [Required]
     [MinLength(6)]
     public string Password { get; set; } = string.Empty;
+
+    [StringLength(100, MinimumLength = 3)]
+    public string? Name { get; set; }
 }
 
 public class LoginDto

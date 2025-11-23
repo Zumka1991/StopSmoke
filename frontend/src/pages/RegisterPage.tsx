@@ -34,6 +34,20 @@ export default function RegisterPage() {
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">
+                            <label className="form-label">{t('auth.register.name')}</label>
+                            <input
+                                {...register('name', {
+                                    required: t('auth.register.nameRequired'),
+                                    minLength: { value: 3, message: t('auth.register.nameMinLength') }
+                                })}
+                                type="text"
+                                className="form-input"
+                                placeholder={t('auth.register.namePlaceholder')}
+                            />
+                            {errors.name && <p className="error-msg">{errors.name.message as string}</p>}
+                        </div>
+
+                        <div className="form-group">
                             <label className="form-label">{t('auth.register.email')}</label>
                             <input
                                 {...register('email', { required: t('auth.register.emailRequired') })}

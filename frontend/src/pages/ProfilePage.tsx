@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar';
 
 interface ProfileData {
     email: string;
+    name: string;
     quitDate: string | null;
     cigarettesPerDay: number;
     pricePerPack: number;
@@ -26,6 +27,9 @@ export default function ProfilePage() {
             try {
                 const response = await api.get('/profile');
                 const data: ProfileData = response.data;
+
+                // Set name
+                setValue('name', data.name || '');
 
                 // Convert ISO date to datetime-local format (YYYY-MM-DDTHH:mm)
                 if (data.quitDate) {
@@ -58,6 +62,7 @@ export default function ProfilePage() {
             const quitDateValue = data.quitDate ? new Date(data.quitDate).toISOString() : null;
 
             await api.put('/profile', {
+                name: data.name,
                 quitDate: quitDateValue,
                 cigarettesPerDay: parseInt(data.cigarettesPerDay) || 0,
                 pricePerPack: parseFloat(data.pricePerPack) || 0,
@@ -89,6 +94,19 @@ export default function ProfilePage() {
                     <h2 style={{ marginBottom: '2rem' }}>{t('profile.title')}</h2>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="form-group">
+                            <label className="form-label">{t('profile.name')}</label>
+                            <input
+                                {...register('name', {
+                                    required: true,
+                                    minLength: 3
+                                })}
+                                type="text"
+                                className="form-input"
+                                placeholder={t('profile.namePlaceholder')}
+                            />
+                        </div>
+
                         <div className="form-group">
                             <label className="form-label">{t('profile.quitDate')}</label>
 

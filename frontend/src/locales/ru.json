@@ -11,15 +11,19 @@
         },
         "register": {
             "title": "Создать аккаунт",
+            "name": "Имя",
             "email": "Email",
             "password": "Пароль",
             "submit": "Зарегистрироваться",
             "hasAccount": "Уже есть аккаунт?",
             "signIn": "Войти",
             "error": "Ошибка регистрации",
+            "nameRequired": "Имя обязательно",
             "emailRequired": "Email обязателен",
             "passwordRequired": "Пароль обязателен",
-            "passwordMinLength": "Минимум 6 символов"
+            "nameMinLength": "Минимум 3 символа",
+            "passwordMinLength": "Минимум 6 символов",
+            "namePlaceholder": "Ваше имя"
         }
     },
     "home": {
@@ -35,10 +39,12 @@
     },
     "nav": {
         "dashboard": "Главная",
+        "leaderboard": "Таблица лидеров",
         "profile": "Профиль"
     },
     "profile": {
         "title": "Мой профиль",
+        "name": "Имя",
         "quitDate": "Дата отказа от курения",
         "cigarettesPerDay": "Сигарет в день",
         "pricePerPack": "Цена за пачку",
@@ -47,7 +53,8 @@
         "updateError": "Ошибка обновления профиля",
         "notSet": "Не установлено",
         "startNow": "Начать отказ сейчас",
-        "quitDateHelper": "Или выберите другую дату"
+        "quitDateHelper": "Или выберите другую дату",
+        "namePlaceholder": "Ваше имя"
     },
     "tracker": {
         "title": "Путь к жизни без дыма",
@@ -60,5 +67,12 @@
         "moneySaved": "Денег сэкономлено",
         "cigarettesNotSmoked": "Сигарет не выкурено",
         "packsNotSmoked": "Пачек не выкурено"
+    },
+    "leaderboard": {
+        "title": "Таблица лидеров",
+        "loading": "Загрузка...",
+        "empty": "Пока нет пользователей. Стань первым!",
+        "you": "Вы",
+        "days": "дней"
     }
 }

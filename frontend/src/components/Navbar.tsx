@@ -15,6 +15,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
     const navItems = [
         { path: '/dashboard', label: t('nav.dashboard'), icon: '🏠' },
+        { path: '/leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
         { path: '/profile', label: t('nav.profile'), icon: '👤' },
     ];
 

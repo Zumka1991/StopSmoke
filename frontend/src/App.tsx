@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import DashboardPage from './pages/DashboardPage';
+import LeaderboardPage from './pages/LeaderboardPage';
 import './i18n';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/profile" element={isAuthenticated() ? <ProfilePage /> : <Navigate to="/login" replace />} />
         <Route path="/dashboard" element={isAuthenticated() ? <DashboardPage /> : <Navigate to="/login" replace />} />
+        <Route path="/leaderboard" element={isAuthenticated() ? <LeaderboardPage /> : <Navigate to="/login" replace />} />
         <Route path="/" element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

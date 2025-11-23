@@ -11,15 +11,19 @@
         },
         "register": {
             "title": "Create Account",
+            "name": "Name",
             "email": "Email",
             "password": "Password",
             "submit": "Sign Up",
             "hasAccount": "Already have an account?",
             "signIn": "Sign In",
             "error": "Registration failed",
+            "nameRequired": "Name is required",
             "emailRequired": "Email is required",
             "passwordRequired": "Password is required",
-            "passwordMinLength": "Min 6 chars"
+            "nameMinLength": "Min 3 chars",
+            "passwordMinLength": "Min 6 chars",
+            "namePlaceholder": "Your name"
         }
     },
     "home": {
@@ -35,10 +39,12 @@
     },
     "nav": {
         "dashboard": "Dashboard",
+        "leaderboard": "Leaderboard",
         "profile": "Profile"
     },
     "profile": {
         "title": "My Profile",
+        "name": "Name",
         "quitDate": "Quit Date",
         "cigarettesPerDay": "Cigarettes per day",
         "pricePerPack": "Price per pack",
@@ -47,7 +53,8 @@
         "updateError": "Failed to update profile",
         "notSet": "Not set yet",
         "startNow": "Start Quitting Now",
-        "quitDateHelper": "Or choose a custom date"
+        "quitDateHelper": "Or choose a custom date",
+        "namePlaceholder": "Your name"
     },
     "tracker": {
         "title": "Smoke-Free Journey",
@@ -60,5 +67,12 @@
         "moneySaved": "Money Saved",
         "cigarettesNotSmoked": "Cigarettes Not Smoked",
         "packsNotSmoked": "Packs Not Smoked"
+    },
+    "leaderboard": {
+        "title": "Leaderboard",
+        "loading": "Loading...",
+        "empty": "No users yet. Be the first!",
+        "you": "You",
+        "days": "days"
     }
 }
