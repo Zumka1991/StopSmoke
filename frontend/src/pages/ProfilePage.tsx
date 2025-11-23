@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
+import Toast from '../components/Toast';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 interface ProfileData {
     email: string;
@@ -18,8 +20,8 @@ export default function ProfilePage() {
     const { t } = useTranslation();
     const { register, handleSubmit, setValue } = useForm();
     const [loading, setLoading] = useState(true);
-    const [successMsg, setSuccessMsg] = useState('');
-    const [errorMsg, setErrorMsg] = useState('');
+    const [saving, setSaving] = useState(false);
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,7 +51,7 @@ export default function ProfilePage() {
                 setLoading(false);
             } catch (err) {
                 setLoading(false);
-                setErrorMsg('Failed to load profile');
+                setToast({ message: 'Failed to load profile', type: 'error' });
             }
         };
 
@@ -57,6 +59,7 @@ export default function ProfilePage() {
     }, [setValue]);
 
     const onSubmit = async (data: any) => {
+        setSaving(true);
         try {
             // Convert datetime-local to ISO format for API
             const quitDateValue = data.quitDate ? new Date(data.quitDate).toISOString() : null;
@@ -68,11 +71,12 @@ export default function ProfilePage() {
                 pricePerPack: parseFloat(data.pricePerPack) || 0,
                 currency: data.currency
             });
-            setSuccessMsg(t('profile.updateSuccess'));
-            setTimeout(() => setSuccessMsg(''), 3000);
+            setToast({ message: t('profile.updateSuccess'), type: 'success' });
         } catch (err: any) {
             console.error('Profile update error:', err);
-            setErrorMsg(err.response?.data?.message || t('profile.updateError'));
+            setToast({ message: err.response?.data?.message || t('profile.updateError'), type: 'error' });
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -83,7 +87,19 @@ export default function ProfilePage() {
     };
 
     if (loading) {
-        return <div className="container text-center">Loading...</div>;
+        return (
+            <div className="container" style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '100vh',
+                flexDirection: 'column',
+                gap: '1rem'
+            }}>
+                <LoadingSpinner size="60px" />
+                <p style={{ color: 'var(--text-secondary)' }}>Loading profile...</p>
+            </div>
+        );
     }
 
     return (
@@ -218,13 +234,33 @@ export default function ProfilePage() {
                             </select>
                         </div>
 
-                        {successMsg && <p style={{ color: 'var(--success-color)', textAlign: 'center', marginBottom: '1rem' }}>{successMsg}</p>}
-                        {errorMsg && <p className="error-msg text-center">{errorMsg}</p>}
-
-                        <button type="submit" className="btn btn-primary">{t('common.save')}</button>
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={saving}
+                            style={{
+                                opacity: saving ? 0.7 : 1,
+                                cursor: saving ? 'not-allowed' : 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
+                            }}
+                        >
+                            {saving && <LoadingSpinner size="20px" />}
+                            {saving ? t('common.saving') || 'Saving...' : t('common.save')}
+                        </button>
                     </form>
                 </div>
             </div>
+
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </>
     );
 }
