@@ -100,7 +100,7 @@ export default function DashboardPage() {
                     </div>
                 ) : (
                     <>
-                        <h2 style={{
+                        <h2 className="fade-in" style={{
                             fontSize: '1.5rem',
                             marginBottom: '2rem',
                             textAlign: 'center',
@@ -115,14 +115,14 @@ export default function DashboardPage() {
                             gap: '1.5rem',
                             marginBottom: '3rem'
                         }}>
-                            <div style={{
+                            <div className="slide-up animate-delay-1 stat-card glow-success" style={{
                                 background: 'rgba(34, 197, 94, 0.1)',
                                 borderRadius: '1rem',
                                 padding: '2.5rem',
                                 border: '2px solid var(--success-color)',
                                 textAlign: 'center'
                             }}>
-                                <div style={{
+                                <div className="counter-number number-glow" style={{
                                     fontSize: '4.5rem',
                                     fontWeight: 'bold',
                                     color: 'var(--success-color)',
@@ -140,14 +140,14 @@ export default function DashboardPage() {
                                 </div>
                             </div>
 
-                            <div style={{
+                            <div className="slide-up animate-delay-2 stat-card glow-primary" style={{
                                 background: 'rgba(59, 130, 246, 0.1)',
                                 borderRadius: '1rem',
                                 padding: '2.5rem',
                                 border: '2px solid var(--accent-color)',
                                 textAlign: 'center'
                             }}>
-                                <div style={{
+                                <div className="counter-number number-glow" style={{
                                     fontSize: '3.5rem',
                                     fontWeight: 'bold',
                                     color: 'var(--accent-color)',
@@ -165,14 +165,14 @@ export default function DashboardPage() {
                                 </div>
                             </div>
 
-                            <div style={{
+                            <div className="slide-up animate-delay-3 stat-card glow-primary" style={{
                                 background: 'rgba(59, 130, 246, 0.1)',
                                 borderRadius: '1rem',
                                 padding: '2.5rem',
                                 border: '2px solid var(--accent-color)',
                                 textAlign: 'center'
                             }}>
-                                <div style={{
+                                <div className="counter-number number-glow" style={{
                                     fontSize: '3.5rem',
                                     fontWeight: 'bold',
                                     color: 'var(--accent-color)',
@@ -193,7 +193,7 @@ export default function DashboardPage() {
 
                         {profile.cigarettesPerDay > 0 && profile.pricePerPack > 0 && (
                             <>
-                                <h3 style={{
+                                <h3 className="fade-in animate-delay-1" style={{
                                     textAlign: 'center',
                                     marginBottom: '2rem',
                                     color: 'var(--text-secondary)',
@@ -207,14 +207,14 @@ export default function DashboardPage() {
                                     gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
                                     gap: '1.5rem'
                                 }}>
-                                    <div style={{
+                                    <div className="slide-up animate-delay-2 stat-card glow-success" style={{
                                         background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.1))',
                                         borderRadius: '1rem',
                                         padding: '2.5rem',
                                         border: '2px solid rgba(34, 197, 94, 0.4)',
                                         textAlign: 'center'
                                     }}>
-                                        <div style={{
+                                        <div className="counter-number" style={{
                                             fontSize: '3rem',
                                             fontWeight: 'bold',
                                             color: 'var(--success-color)',
@@ -244,14 +244,14 @@ export default function DashboardPage() {
                                         </div>
                                     </div>
 
-                                    <div style={{
+                                    <div className="slide-up animate-delay-3 stat-card glow-primary" style={{
                                         background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.1))',
                                         borderRadius: '1rem',
                                         padding: '2.5rem',
                                         border: '2px solid rgba(59, 130, 246, 0.4)',
                                         textAlign: 'center'
                                     }}>
-                                        <div style={{
+                                        <div className="counter-number" style={{
                                             fontSize: '3rem',
                                             fontWeight: 'bold',
                                             color: 'var(--accent-color)',
@@ -269,14 +269,14 @@ export default function DashboardPage() {
                                         </div>
                                     </div>
 
-                                    <div style={{
+                                    <div className="slide-up animate-delay-4 stat-card glow-purple" style={{
                                         background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(147, 51, 234, 0.1))',
                                         borderRadius: '1rem',
                                         padding: '2.5rem',
                                         border: '2px solid rgba(168, 85, 247, 0.4)',
                                         textAlign: 'center'
                                     }}>
-                                        <div style={{
+                                        <div className="counter-number" style={{
                                             fontSize: '3rem',
                                             fontWeight: 'bold',
                                             color: '#a855f7',
