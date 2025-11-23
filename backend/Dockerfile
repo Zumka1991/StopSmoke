@@ -3,16 +3,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore dependencies
-COPY ["backend.csproj", "./"]
-RUN dotnet restore "backend.csproj"
+COPY ["StopSmoke.Backend.csproj", "./"]
+RUN dotnet restore "StopSmoke.Backend.csproj"
 
 # Copy everything else and build
 COPY . .
-RUN dotnet build "backend.csproj" -c Release -o /app/build
+RUN dotnet build "StopSmoke.Backend.csproj" -c Release -o /app/build
 
 # Publish stage
 FROM build AS publish
-RUN dotnet publish "backend.csproj" -c Release -o /app/publish
+RUN dotnet publish "StopSmoke.Backend.csproj" -c Release -o /app/publish
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
@@ -24,4 +24,5 @@ RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
 EXPOSE 5216
-ENTRYPOINT ["dotnet", "backend.dll"]
+ENTRYPOINT ["dotnet", "StopSmoke.Backend.dll"]
+
