@@ -16,12 +16,23 @@ interface ProfileData {
     currency: string;
 }
 
+interface Relapse {
+    id: number;
+    date: string;
+    reason?: string;
+}
+
 export default function ProfilePage() {
     const { t } = useTranslation();
     const { register, handleSubmit, setValue } = useForm();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+    const [showRelapseModal, setShowRelapseModal] = useState(false);
+    const [showHistoryModal, setShowHistoryModal] = useState(false);
+    const [relapseReason, setRelapseReason] = useState('');
+    const [relapses, setRelapses] = useState<Relapse[]>([]);
+    const [submittingRelapse, setSubmittingRelapse] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -84,6 +95,35 @@ export default function ProfilePage() {
         localStorage.removeItem('token');
         localStorage.removeItem('userEmail');
         navigate('/login');
+    };
+
+    const fetchRelapses = async () => {
+        try {
+            const response = await api.get('/relapse');
+            setRelapses(response.data);
+        } catch (err) {
+            console.error('Failed to load relapses', err);
+        }
+    };
+
+    const handleRelapseSubmit = async () => {
+        setSubmittingRelapse(true);
+        try {
+            await api.post('/relapse', { reason: relapseReason || null });
+            setToast({ message: 'Срыв записан', type: 'success' });
+            setShowRelapseModal(false);
+            setRelapseReason('');
+            fetchRelapses();
+        } catch (err) {
+            setToast({ message: 'Не удалось записать срыв', type: 'error' });
+        } finally {
+            setSubmittingRelapse(false);
+        }
+    };
+
+    const openHistoryModal = () => {
+        fetchRelapses();
+        setShowHistoryModal(true);
     };
 
     if (loading) {
@@ -251,8 +291,224 @@ export default function ProfilePage() {
                             {saving ? t('common.saving') || 'Saving...' : t('common.save')}
                         </button>
                     </form>
+
+                    {/* Relapse Buttons */}
+                    <div style={{
+                        display: 'flex',
+                        gap: '1rem',
+                        marginTop: '2rem',
+                        flexWrap: 'wrap'
+                    }}>
+                        <button
+                            onClick={() => setShowRelapseModal(true)}
+                            style={{
+                                flex: 1,
+                                minWidth: '200px',
+                                padding: '1rem',
+                                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                                border: 'none',
+                                borderRadius: '0.75rem',
+                                color: 'white',
+                                fontSize: '1rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
+                                transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
+                            }}
+                        >
+                            😔 Сорвался
+                        </button>
+
+                        <button
+                            onClick={openHistoryModal}
+                            style={{
+                                flex: 1,
+                                minWidth: '200px',
+                                padding: '1rem',
+                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.2))',
+                                border: '2px solid rgba(59, 130, 246, 0.4)',
+                                borderRadius: '0.75rem',
+                                color: 'var(--text-primary)',
+                                fontSize: '1rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(99, 102, 241, 0.3))';
+                                e.currentTarget.style.border = '2px solid var(--accent-color)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.2))';
+                                e.currentTarget.style.border = '2px solid rgba(59, 130, 246, 0.4)';
+                            }}
+                        >
+                            📊 История срывов
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            {/* Relapse Modal */}
+            {showRelapseModal && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0, 0, 0, 0.7)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 1000,
+                    padding: '1rem'
+                }} onClick={() => setShowRelapseModal(false)}>
+                    <div className="card" style={{
+                        maxWidth: '500px',
+                        width: '100%',
+                        margin: 0
+                    }} onClick={(e) => e.stopPropagation()}>
+                        <h3 style={{ marginBottom: '1.5rem' }}>Запись срыва</h3>
+
+                        <div className="form-group">
+                            <label className="form-label">Что случилось?</label>
+                            <textarea
+                                value={relapseReason}
+                                onChange={(e) => setRelapseReason(e.target.value)}
+                                className="form-input"
+                                placeholder="Опишите причину срыва (необязательно)"
+                                rows={4}
+                                style={{ resize: 'vertical' }}
+                            />
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+                            <button
+                                onClick={handleRelapseSubmit}
+                                disabled={submittingRelapse}
+                                className="btn btn-primary"
+                                style={{
+                                    flex: 1,
+                                    opacity: submittingRelapse ? 0.7 : 1,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem'
+                                }}
+                            >
+                                {submittingRelapse && <LoadingSpinner size="20px" />}
+                                {submittingRelapse ? 'Сохранение...' : 'Записать'}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowRelapseModal(false);
+                                    setRelapseReason('');
+                                }}
+                                disabled={submittingRelapse}
+                                style={{
+                                    flex: 1,
+                                    padding: '0.75rem 1.5rem',
+                                    background: 'transparent',
+                                    border: '2px solid rgba(255, 255, 255, 0.2)',
+                                    borderRadius: '0.5rem',
+                                    color: 'var(--text-primary)',
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    cursor: submittingRelapse ? 'not-allowed' : 'pointer',
+                                    opacity: submittingRelapse ? 0.5 : 1
+                                }}
+                            >
+                                Отмена
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* History Modal */}
+            {showHistoryModal && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0, 0, 0, 0.7)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 1000,
+                    padding: '1rem'
+                }} onClick={() => setShowHistoryModal(false)}>
+                    <div className="card" style={{
+                        maxWidth: '600px',
+                        width: '100%',
+                        maxHeight: '80vh',
+                        overflow: 'auto',
+                        margin: 0
+                    }} onClick={(e) => e.stopPropagation()}>
+                        <h3 style={{ marginBottom: '1.5rem' }}>История срывов</h3>
+
+                        {relapses.length === 0 ? (
+                            <p style={{
+                                textAlign: 'center',
+                                color: 'var(--text-secondary)',
+                                padding: '2rem'
+                            }}>
+                                Срывов пока нет. Так держать! 💪
+                            </p>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                {relapses.map((relapse) => (
+                                    <div key={relapse.id} style={{
+                                        padding: '1rem',
+                                        background: 'rgba(239, 68, 68, 0.1)',
+                                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                                        borderRadius: '0.5rem'
+                                    }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            marginBottom: '0.5rem'
+                                        }}>
+                                            <strong>Дата:</strong>
+                                            <span>{new Date(relapse.date).toLocaleString('ru-RU')}</span>
+                                        </div>
+                                        {relapse.reason && (
+                                            <div>
+                                                <strong>Причина:</strong>
+                                                <p style={{
+                                                    marginTop: '0.5rem',
+                                                    color: 'var(--text-secondary)'
+                                                }}>
+                                                    {relapse.reason}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <button
+                            onClick={() => setShowHistoryModal(false)}
+                            className="btn btn-primary"
+                            style={{ marginTop: '1.5rem', width: '100%' }}
+                        >
+                            Закрыть
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {toast && (
                 <Toast

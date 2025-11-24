@@ -6,6 +6,8 @@ namespace StopSmoke.Backend.Data;
 
 public class ApplicationDbContext : IdentityDbContext<User>
 {
+    public DbSet<Relapse> Relapses { get; set; }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
