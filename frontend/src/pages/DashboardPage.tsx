@@ -18,6 +18,7 @@ export default function DashboardPage() {
     const { t } = useTranslation();
     const [profile, setProfile] = useState<ProfileData | null>(null);
     const [daysClean, setDaysClean] = useState(0);
+    const [preciseDays, setPreciseDays] = useState(0);
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const navigate = useNavigate();
@@ -54,10 +55,12 @@ export default function DashboardPage() {
             }
 
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const precise = diff / (1000 * 60 * 60 * 24);
             const hoursLeft = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutesLeft = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
             setDaysClean(days);
+            setPreciseDays(precise);
             setHours(hoursLeft);
             setMinutes(minutesLeft);
         };
@@ -221,10 +224,10 @@ export default function DashboardPage() {
                                             marginBottom: '0.5rem'
                                         }}>
                                             {(() => {
-                                                const cigarettesNotSmoked = daysClean * profile.cigarettesPerDay;
+                                                const cigarettesNotSmoked = preciseDays * profile.cigarettesPerDay;
                                                 const packsNotSmoked = cigarettesNotSmoked / 20;
                                                 const moneySaved = packsNotSmoked * profile.pricePerPack;
-                                                return moneySaved.toLocaleString('en-US', { maximumFractionDigits: 0 });
+                                                return moneySaved.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                                             })()}
                                         </div>
                                         <div style={{
@@ -257,7 +260,7 @@ export default function DashboardPage() {
                                             color: 'var(--accent-color)',
                                             marginBottom: '0.5rem'
                                         }}>
-                                            {(daysClean * profile.cigarettesPerDay).toLocaleString()}
+                                            {(preciseDays * profile.cigarettesPerDay).toLocaleString('en-US', { maximumFractionDigits: 1 })}
                                         </div>
                                         <div style={{
                                             fontSize: '1rem',
@@ -282,7 +285,7 @@ export default function DashboardPage() {
                                             color: '#a855f7',
                                             marginBottom: '0.5rem'
                                         }}>
-                                            {((daysClean * profile.cigarettesPerDay) / 20).toLocaleString('en-US', { maximumFractionDigits: 1 })}
+                                            {((preciseDays * profile.cigarettesPerDay) / 20).toLocaleString('en-US', { maximumFractionDigits: 1 })}
                                         </div>
                                         <div style={{
                                             fontSize: '1rem',
@@ -303,12 +306,12 @@ export default function DashboardPage() {
                             daysClean={daysClean}
                             moneySaved={
                                 profile.cigarettesPerDay > 0 && profile.pricePerPack > 0
-                                    ? (daysClean * profile.cigarettesPerDay / 20) * profile.pricePerPack
+                                    ? (preciseDays * profile.cigarettesPerDay / 20) * profile.pricePerPack
                                     : 0
                             }
                             cigarettesNotSmoked={
                                 profile.cigarettesPerDay > 0
-                                    ? daysClean * profile.cigarettesPerDay
+                                    ? preciseDays * profile.cigarettesPerDay
                                     : 0
                             }
                             currency={profile.currency || 'RUB'}
