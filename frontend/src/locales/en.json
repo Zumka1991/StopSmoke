@@ -206,5 +206,23 @@
             "Think about how far you've come.",
             "Don't trade your future for a moment of relief."
         ]
+    },
+    "relapse": {
+        "title": "Relapse Management",
+        "description": "If a relapse occurred, record it here. This helps track progress and analyze reasons.",
+        "iRelapsed": "I Relapsed",
+        "history": "Relapse History",
+        "modalTitle": "Record Relapse",
+        "reasonLabel": "What happened?",
+        "reasonPlaceholder": "Describe the reason (optional)",
+        "submit": "Record",
+        "cancel": "Cancel",
+        "historyTitle": "Relapse History",
+        "emptyHistory": "No relapses yet. Keep it up! 💪",
+        "date": "Date",
+        "reason": "Reason",
+        "close": "Close",
+        "success": "Relapse recorded",
+        "error": "Failed to record relapse"
     }
 }

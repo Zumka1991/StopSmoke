@@ -24,7 +24,8 @@ interface Relapse {
 
 export default function ProfilePage() {
     const { t } = useTranslation();
-    const { register, handleSubmit, setValue } = useForm();
+    const { register, handleSubmit, setValue, watch } = useForm();
+    const quitDate = watch('quitDate');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -110,12 +111,13 @@ export default function ProfilePage() {
         setSubmittingRelapse(true);
         try {
             await api.post('/relapse', { reason: relapseReason || null });
-            setToast({ message: 'Срыв записан', type: 'success' });
+            setToast({ message: t('relapse.success'), type: 'success' });
             setShowRelapseModal(false);
             setRelapseReason('');
+            setValue('quitDate', ''); // Reset quit date locally
             fetchRelapses();
         } catch (err) {
-            setToast({ message: 'Не удалось записать срыв', type: 'error' });
+            setToast({ message: t('relapse.error'), type: 'error' });
         } finally {
             setSubmittingRelapse(false);
         }
@@ -304,14 +306,14 @@ export default function ProfilePage() {
 
                 {/* Relapse Management Card */}
                 <div className="card">
-                    <h2 style={{ marginBottom: '1rem' }}>Управление срывами</h2>
+                    <h2 style={{ marginBottom: '1rem' }}>{t('relapse.title')}</h2>
                     <p style={{
                         color: 'var(--text-secondary)',
                         marginBottom: '1.5rem',
                         fontSize: '0.95rem',
                         lineHeight: '1.5'
                     }}>
-                        Если произошел срыв, запишите его здесь. Это поможет отслеживать прогресс и анализировать причины.
+                        {t('relapse.description')}
                     </p>
 
                     <div style={{
@@ -319,36 +321,38 @@ export default function ProfilePage() {
                         gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
                         gap: '1rem'
                     }}>
-                        <button
-                            onClick={() => setShowRelapseModal(true)}
-                            style={{
-                                padding: '1.25rem',
-                                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                                border: 'none',
-                                borderRadius: '0.75rem',
-                                color: 'white',
-                                fontSize: '1rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
-                                transition: 'all 0.2s',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
-                            }}
-                        >
-                            <span style={{ fontSize: '1.5rem' }}>😔</span>
-                            <span>Сорвался</span>
-                        </button>
+                        {quitDate && (
+                            <button
+                                onClick={() => setShowRelapseModal(true)}
+                                style={{
+                                    padding: '1.25rem',
+                                    background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                                    border: 'none',
+                                    borderRadius: '0.75rem',
+                                    color: 'white',
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
+                                    transition: 'all 0.2s',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
+                                }}
+                            >
+                                <span style={{ fontSize: '1.5rem' }}>😔</span>
+                                <span>{t('relapse.iRelapsed')}</span>
+                            </button>
+                        )}
 
                         <button
                             onClick={openHistoryModal}
@@ -377,7 +381,7 @@ export default function ProfilePage() {
                             }}
                         >
                             <span style={{ fontSize: '1.5rem' }}>📊</span>
-                            <span>История срывов</span>
+                            <span>{t('relapse.history')}</span>
                         </button>
                     </div>
                 </div>
@@ -403,15 +407,15 @@ export default function ProfilePage() {
                         width: '100%',
                         margin: 0
                     }} onClick={(e) => e.stopPropagation()}>
-                        <h3 style={{ marginBottom: '1.5rem' }}>Запись срыва</h3>
+                        <h3 style={{ marginBottom: '1.5rem' }}>{t('relapse.modalTitle')}</h3>
 
                         <div className="form-group">
-                            <label className="form-label">Что случилось?</label>
+                            <label className="form-label">{t('relapse.reasonLabel')}</label>
                             <textarea
                                 value={relapseReason}
                                 onChange={(e) => setRelapseReason(e.target.value)}
                                 className="form-input"
-                                placeholder="Опишите причину срыва (необязательно)"
+                                placeholder={t('relapse.reasonPlaceholder')}
                                 rows={4}
                                 style={{ resize: 'vertical' }}
                             />
@@ -432,7 +436,7 @@ export default function ProfilePage() {
                                 }}
                             >
                                 {submittingRelapse && <LoadingSpinner size="20px" />}
-                                {submittingRelapse ? 'Сохранение...' : 'Записать'}
+                                {submittingRelapse ? t('common.saving') : t('relapse.submit')}
                             </button>
                             <button
                                 onClick={() => {
@@ -453,7 +457,7 @@ export default function ProfilePage() {
                                     opacity: submittingRelapse ? 0.5 : 1
                                 }}
                             >
-                                Отмена
+                                {t('relapse.cancel')}
                             </button>
                         </div>
                     </div>
@@ -482,7 +486,7 @@ export default function ProfilePage() {
                         overflow: 'auto',
                         margin: 0
                     }} onClick={(e) => e.stopPropagation()}>
-                        <h3 style={{ marginBottom: '1.5rem' }}>История срывов</h3>
+                        <h3 style={{ marginBottom: '1.5rem' }}>{t('relapse.historyTitle')}</h3>
 
                         {relapses.length === 0 ? (
                             <p style={{
@@ -490,7 +494,7 @@ export default function ProfilePage() {
                                 color: 'var(--text-secondary)',
                                 padding: '2rem'
                             }}>
-                                Срывов пока нет. Так держать! 💪
+                                {t('relapse.emptyHistory')}
                             </p>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -506,12 +510,12 @@ export default function ProfilePage() {
                                             justifyContent: 'space-between',
                                             marginBottom: '0.5rem'
                                         }}>
-                                            <strong>Дата:</strong>
+                                            <strong>{t('relapse.date')}:</strong>
                                             <span>{new Date(relapse.date).toLocaleString('ru-RU')}</span>
                                         </div>
                                         {relapse.reason && (
                                             <div>
-                                                <strong>Причина:</strong>
+                                                <strong>{t('relapse.reason')}:</strong>
                                                 <p style={{
                                                     marginTop: '0.5rem',
                                                     color: 'var(--text-secondary)'
@@ -530,7 +534,7 @@ export default function ProfilePage() {
                             className="btn btn-primary"
                             style={{ marginTop: '1.5rem', width: '100%' }}
                         >
-                            Закрыть
+                            {t('relapse.close')}
                         </button>
                     </div>
                 </div>
