@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import DashboardPage from './pages/DashboardPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import MarathonPage from './pages/MarathonPage';
+import SecretAdminPage from './pages/SecretAdminPage';
 import './i18n';
 
 function App() {
@@ -45,6 +46,14 @@ function App() {
           element={
             <ProtectedRoute>
               <MarathonPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/secret-admin-access"
+          element={
+            <ProtectedRoute>
+              <SecretAdminPage />
             </ProtectedRoute>
           }
         />
