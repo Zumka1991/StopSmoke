@@ -52,6 +52,18 @@
         "cigarettesPerDay": "Сигарет в день",
         "pricePerPack": "Цена за пачку",
         "currency": "Валюта",
+        "updateSuccess": "Профиль успешно обновлён",
+        "updateError": "Ошибка обновления профиля",
+        "notSet": "Не установлено",
+        "startNow": "Начать отказ сейчас",
+        "quitDateHelper": "Или выберите другую дату",
+        "namePlaceholder": "Ваше имя",
+        "futureDateError": "Дата не может быть в будущем"
+    },
+    "tracker": {
+        "title": "Путь к жизни без дыма",
+        "daysTitle": "Дней без курения",
+        "hoursTitle": "Часов",
         "minutesTitle": "Минут",
         "congratulations": "Поздравляем!",
         "notStarted": "Установите дату отказа в профиле, чтобы начать отслеживание",
