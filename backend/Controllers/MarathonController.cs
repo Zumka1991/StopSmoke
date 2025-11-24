@@ -104,6 +104,11 @@ public class MarathonController : ControllerBase
 
         if (existingParticipant != null)
         {
+            // Check if user was disqualified
+            if (existingParticipant.Status == MarathonStatus.Disqualified)
+            {
+                return BadRequest("You were disqualified from this marathon and cannot rejoin");
+            }
             return BadRequest("Already joined");
         }
 
