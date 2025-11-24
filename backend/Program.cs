@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using StopSmoke.Backend.Data;
 using StopSmoke.Backend.Models;
+using StopSmoke.Backend.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +56,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Register background service for marathon completion
+builder.Services.AddSingleton<MarathonCompletionService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<MarathonCompletionService>());
 
 var app = builder.Build();
 

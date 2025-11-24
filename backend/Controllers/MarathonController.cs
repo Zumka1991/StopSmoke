@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using StopSmoke.Backend.Data;
 using StopSmoke.Backend.DTOs;
 using StopSmoke.Backend.Models;
+using StopSmoke.Backend.Services;
 using System.Security.Claims;
 
 namespace StopSmoke.Backend.Controllers;
@@ -16,11 +17,16 @@ public class MarathonController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<User> _userManager;
+    private readonly MarathonCompletionService _completionService;
 
-    public MarathonController(ApplicationDbContext context, UserManager<User> userManager)
+    public MarathonController(
+        ApplicationDbContext context, 
+        UserManager<User> userManager,
+        MarathonCompletionService completionService)
     {
         _context = context;
         _userManager = userManager;
+        _completionService = completionService;
     }
 
     [HttpGet]
@@ -112,5 +118,21 @@ public class MarathonController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok();
+    }
+
+    [HttpPost("complete-ended")]
+    public async Task<IActionResult> CompleteEndedMarathons()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null || !user.IsAdmin)
+        {
+            return Forbid();
+        }
+
+        await _completionService.CompleteEndedMarathonsAsync();
+
+        return Ok(new { Message = "Ended marathons completed successfully" });
     }
 }
