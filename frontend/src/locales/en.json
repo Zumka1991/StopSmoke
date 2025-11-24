@@ -1,4 +1,7 @@
 {
+    "app": {
+        "slogan": "Let's quit smoking together!"
+    },
     "auth": {
         "login": {
             "title": "Welcome Back",
