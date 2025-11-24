@@ -11,6 +11,7 @@ public class UserProfileDto
     public decimal PricePerPack { get; set; }
     public string Currency { get; set; } = "USD";
     public bool IsAdmin { get; set; }
+    public int CompletedMarathonsCount { get; set; }
 }
 
 public class UpdateProfileDto

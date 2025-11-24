@@ -190,6 +190,18 @@
             "money_10000": {
                 "title": "Tycoon",
                 "desc": "Saved 10,000"
+            },
+            "marathon_1": {
+                "title": "First Marathon",
+                "desc": "Completed 1 marathon"
+            },
+            "marathon_3": {
+                "title": "Marathon Veteran",
+                "desc": "Completed 3 marathons"
+            },
+            "marathon_5": {
+                "title": "Marathon Champion",
+                "desc": "Completed 5 marathons"
             }
         }
     },

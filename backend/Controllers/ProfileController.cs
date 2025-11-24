@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StopSmoke.Backend.Data;
 using StopSmoke.Backend.DTOs;
 using StopSmoke.Backend.Models;
 
@@ -12,10 +14,12 @@ namespace StopSmoke.Backend.Controllers;
 public class ProfileController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
+    private readonly ApplicationDbContext _context;
 
-    public ProfileController(UserManager<User> userManager)
+    public ProfileController(UserManager<User> userManager, ApplicationDbContext context)
     {
         _userManager = userManager;
+        _context = context;
     }
 
     [HttpGet]
@@ -29,6 +33,11 @@ public class ProfileController : ControllerBase
         if (user == null)
             return NotFound();
 
+        // Count completed marathons
+        var completedMarathonsCount = await _context.MarathonParticipants
+            .Where(p => p.UserId == userId && p.Status == MarathonStatus.Completed)
+            .CountAsync();
+
         var profile = new UserProfileDto
         {
             Email = user.Email!,
@@ -37,7 +46,8 @@ public class ProfileController : ControllerBase
             CigarettesPerDay = user.CigarettesPerDay,
             PricePerPack = user.PricePerPack,
             Currency = user.Currency,
-            IsAdmin = user.IsAdmin
+            IsAdmin = user.IsAdmin,
+            CompletedMarathonsCount = completedMarathonsCount
         };
 
         return Ok(profile);

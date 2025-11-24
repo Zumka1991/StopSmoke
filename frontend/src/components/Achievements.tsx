@@ -5,6 +5,7 @@ interface AchievementsProps {
     moneySaved: number;
     cigarettesNotSmoked: number;
     currency: string;
+    marathonsCompleted: number;
 }
 
 interface Achievement {
@@ -99,14 +100,34 @@ const achievements: Achievement[] = [
         icon: '🏦',
         translationKey: 'money_10000',
         condition: (p) => p.moneySaved >= 10000
+    },
+
+    // Marathon based
+    {
+        id: 'marathon_1',
+        icon: '🏃',
+        translationKey: 'marathon_1',
+        condition: (p) => p.marathonsCompleted >= 1
+    },
+    {
+        id: 'marathon_3',
+        icon: '🏃‍♂️',
+        translationKey: 'marathon_3',
+        condition: (p) => p.marathonsCompleted >= 3
+    },
+    {
+        id: 'marathon_5',
+        icon: '🏆',
+        translationKey: 'marathon_5',
+        condition: (p) => p.marathonsCompleted >= 5
     }
 ];
 
-export default function Achievements({ daysClean, moneySaved, cigarettesNotSmoked, currency }: AchievementsProps) {
+export default function Achievements({ daysClean, moneySaved, cigarettesNotSmoked, currency, marathonsCompleted }: AchievementsProps) {
     const { t } = useTranslation();
 
     // Calculate props for condition checking
-    const checkProps = { daysClean, moneySaved, cigarettesNotSmoked, currency };
+    const checkProps = { daysClean, moneySaved, cigarettesNotSmoked, currency, marathonsCompleted };
 
     const unlockedCount = achievements.filter(a => a.condition(checkProps)).length;
     const totalCount = achievements.length;

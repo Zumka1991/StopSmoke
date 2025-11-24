@@ -12,6 +12,7 @@ interface ProfileData {
     cigarettesPerDay: number;
     pricePerPack: number;
     currency: string;
+    completedMarathonsCount: number;
 }
 
 export default function DashboardPage() {
@@ -315,6 +316,7 @@ export default function DashboardPage() {
                                     : 0
                             }
                             currency={profile.currency || 'RUB'}
+                            marathonsCompleted={profile.completedMarathonsCount || 0}
                         />
                     </>
                 )}
