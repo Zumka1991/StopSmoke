@@ -57,7 +57,8 @@
         "notSet": "Not set yet",
         "startNow": "Start Quitting Now",
         "quitDateHelper": "Or choose a custom date",
-        "namePlaceholder": "Your name"
+        "namePlaceholder": "Your name",
+        "futureDateError": "Date cannot be in the future"
     },
     "tracker": {
         "title": "Smoke-Free Journey",

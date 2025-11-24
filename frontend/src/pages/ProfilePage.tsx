@@ -24,7 +24,7 @@ interface Relapse {
 
 export default function ProfilePage() {
     const { t } = useTranslation();
-    const { register, handleSubmit, setValue, watch } = useForm();
+    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
     const quitDate = watch('quitDate');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -144,6 +144,11 @@ export default function ProfilePage() {
         );
     }
 
+    const now = new Date();
+    const maxDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16);
+
     return (
         <>
             <Navbar onLogout={handleLogout} />
@@ -229,7 +234,13 @@ export default function ProfilePage() {
 
                             {/* Date/Time Picker */}
                             <input
-                                {...register('quitDate')}
+                                {...register('quitDate', {
+                                    validate: (value) => {
+                                        if (!value) return true;
+                                        return new Date(value) <= new Date() || t('profile.futureDateError');
+                                    }
+                                })}
+                                max={maxDate}
                                 type="datetime-local"
                                 className="form-input"
                                 style={{
@@ -253,6 +264,11 @@ export default function ProfilePage() {
                                     e.currentTarget.style.boxShadow = 'none';
                                 }}
                             />
+                            {errors.quitDate && (
+                                <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.5rem', display: 'block' }}>
+                                    {errors.quitDate.message as string}
+                                </span>
+                            )}
                         </div>
 
                         <div className="form-group">
