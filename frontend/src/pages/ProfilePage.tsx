@@ -145,7 +145,16 @@ export default function ProfilePage() {
     return (
         <>
             <Navbar onLogout={handleLogout} />
-            <div className="container" style={{ maxWidth: '600px', marginTop: '3rem' }}>
+            <div className="container" style={{
+                maxWidth: '1000px',
+                margin: '3rem auto',
+                paddingBottom: '3rem',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+                gap: '1.5rem',
+                alignItems: 'stretch'
+            }}>
+                {/* Profile Settings Card */}
                 <div className="card">
                     <h2 style={{ marginBottom: '2rem' }}>{t('profile.title')}</h2>
 
@@ -291,20 +300,29 @@ export default function ProfilePage() {
                             {saving ? t('common.saving') || 'Saving...' : t('common.save')}
                         </button>
                     </form>
+                </div>
 
-                    {/* Relapse Buttons */}
+                {/* Relapse Management Card */}
+                <div className="card">
+                    <h2 style={{ marginBottom: '1rem' }}>Управление срывами</h2>
+                    <p style={{
+                        color: 'var(--text-secondary)',
+                        marginBottom: '1.5rem',
+                        fontSize: '0.95rem',
+                        lineHeight: '1.5'
+                    }}>
+                        Если произошел срыв, запишите его здесь. Это поможет отслеживать прогресс и анализировать причины.
+                    </p>
+
                     <div style={{
-                        display: 'flex',
-                        gap: '1rem',
-                        marginTop: '2rem',
-                        flexWrap: 'wrap'
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                        gap: '1rem'
                     }}>
                         <button
                             onClick={() => setShowRelapseModal(true)}
                             style={{
-                                flex: 1,
-                                minWidth: '200px',
-                                padding: '1rem',
+                                padding: '1.25rem',
                                 background: 'linear-gradient(135deg, #ef4444, #dc2626)',
                                 border: 'none',
                                 borderRadius: '0.75rem',
@@ -313,7 +331,11 @@ export default function ProfilePage() {
                                 fontWeight: '600',
                                 cursor: 'pointer',
                                 boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
-                                transition: 'all 0.2s'
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
                             }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.transform = 'translateY(-2px)';
@@ -324,15 +346,14 @@ export default function ProfilePage() {
                                 e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
                             }}
                         >
-                            😔 Сорвался
+                            <span style={{ fontSize: '1.5rem' }}>😔</span>
+                            <span>Сорвался</span>
                         </button>
 
                         <button
                             onClick={openHistoryModal}
                             style={{
-                                flex: 1,
-                                minWidth: '200px',
-                                padding: '1rem',
+                                padding: '1.25rem',
                                 background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.2))',
                                 border: '2px solid rgba(59, 130, 246, 0.4)',
                                 borderRadius: '0.75rem',
@@ -340,7 +361,11 @@ export default function ProfilePage() {
                                 fontSize: '1rem',
                                 fontWeight: '600',
                                 cursor: 'pointer',
-                                transition: 'all 0.2s'
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
                             }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(99, 102, 241, 0.3))';
@@ -351,7 +376,8 @@ export default function ProfilePage() {
                                 e.currentTarget.style.border = '2px solid rgba(59, 130, 246, 0.4)';
                             }}
                         >
-                            📊 История срывов
+                            <span style={{ fontSize: '1.5rem' }}>📊</span>
+                            <span>История срывов</span>
                         </button>
                     </div>
                 </div>
