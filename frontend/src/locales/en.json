@@ -43,7 +43,8 @@
     "nav": {
         "dashboard": "Dashboard",
         "leaderboard": "Leaderboard",
-        "profile": "Profile"
+        "profile": "Profile",
+        "community": "Community"
     },
     "profile": {
         "title": "My Profile",
@@ -225,5 +226,26 @@
         "close": "Close",
         "success": "Relapse recorded",
         "error": "Failed to record relapse"
+    },
+    "marathon": {
+        "title": "Smoke-Free Marathons",
+        "create": "Create Marathon",
+        "join": "Join",
+        "joined": "Joined",
+        "startsIn": "Starts in",
+        "started": "Started",
+        "participants": "Participants",
+        "disqualified": "Disqualified",
+        "completed": "Completed",
+        "createTitle": "Create Marathon",
+        "formTitle": "Title",
+        "formDesc": "Description",
+        "formStart": "Start Date",
+        "formEnd": "End Date",
+        "createBtn": "Create",
+        "cancelBtn": "Cancel",
+        "days": "d",
+        "hours": "h",
+        "minutes": "m"
     }
 }

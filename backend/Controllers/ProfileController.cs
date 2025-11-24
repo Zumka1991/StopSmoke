@@ -36,7 +36,8 @@ public class ProfileController : ControllerBase
             QuitDate = user.QuitDate,
             CigarettesPerDay = user.CigarettesPerDay,
             PricePerPack = user.PricePerPack,
-            Currency = user.Currency
+            Currency = user.Currency,
+            IsAdmin = user.IsAdmin
         };
 
         return Ok(profile);

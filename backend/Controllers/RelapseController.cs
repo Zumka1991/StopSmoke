@@ -52,6 +52,22 @@ public class RelapseController : ControllerBase
         };
 
         _context.Relapses.Add(relapse);
+
+        // Disqualify from active marathons
+        var activeMarathonParticipations = await _context.MarathonParticipants
+            .Include(p => p.Marathon)
+            .Where(p => p.UserId == userId && 
+                        p.Status == MarathonStatus.Active &&
+                        p.Marathon.IsActive &&
+                        p.Marathon.StartDate <= DateTime.UtcNow &&
+                        p.Marathon.EndDate >= DateTime.UtcNow)
+            .ToListAsync();
+
+        foreach (var participation in activeMarathonParticipations)
+        {
+            participation.Status = MarathonStatus.Disqualified;
+        }
+
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetRelapses), new { id = relapse.Id }, relapse);

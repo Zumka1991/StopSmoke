@@ -34,16 +34,11 @@
         "subtitle": "Ваш путь к жизни без курения начинается здесь.",
         "getStarted": "Начать"
     },
-    "common": {
-        "language": "Язык",
-        "logout": "Выйти",
-        "profile": "Профиль",
-        "save": "Сохранить"
-    },
     "nav": {
         "dashboard": "Главная",
         "leaderboard": "Таблица лидеров",
-        "profile": "Профиль"
+        "profile": "Профиль",
+        "community": "Сообщество"
     },
     "profile": {
         "title": "Мой профиль",
@@ -225,5 +220,32 @@
         "close": "Закрыть",
         "success": "Срыв записан",
         "error": "Не удалось записать срыв"
+    },
+    "marathon": {
+        "title": "Марафоны некурения",
+        "create": "Создать марафон",
+        "join": "Вступить",
+        "joined": "Вы участвуете",
+        "startsIn": "Начало через",
+        "started": "Идет уже",
+        "participants": "Участников",
+        "disqualified": "Выбыли",
+        "completed": "Завершен",
+        "createTitle": "Создание марафона",
+        "formTitle": "Название",
+        "formDesc": "Описание",
+        "formStart": "Дата начала",
+        "formEnd": "Дата окончания",
+        "createBtn": "Создать",
+        "cancelBtn": "Отмена",
+        "days": "дн.",
+        "hours": "ч.",
+        "minutes": "мин."
+    },
+    "common": {
+        "logout": "Выйти",
+        "language": "Язык",
+        "profile": "Профиль",
+        "save": "Сохранить"
     }
 }

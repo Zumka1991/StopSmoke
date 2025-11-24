@@ -10,6 +10,7 @@ public class UserProfileDto
     public int CigarettesPerDay { get; set; }
     public decimal PricePerPack { get; set; }
     public string Currency { get; set; } = "USD";
+    public bool IsAdmin { get; set; }
 }
 
 public class UpdateProfileDto

@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import DashboardPage from './pages/DashboardPage';
 import LeaderboardPage from './pages/LeaderboardPage';
+import MarathonPage from './pages/MarathonPage';
 import './i18n';
 
 function App() {
@@ -40,6 +41,14 @@ function App() {
           }
         />
         <Route
+          path="/marathons"
+          element={
+            <ProtectedRoute>
+              <MarathonPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/"
           element={
             <ProtectedRoute>
@@ -49,7 +58,7 @@ function App() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </Router>
+    </Router >
   );
 }
 

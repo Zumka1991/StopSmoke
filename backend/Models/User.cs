@@ -12,4 +12,5 @@ public class User : IdentityUser
     public int CigarettesPerDay { get; set; }
     public decimal PricePerPack { get; set; }
     public string Currency { get; set; } = "USD";
+    public bool IsAdmin { get; set; } = false;
 }
