@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using StopSmoke.Backend.Models;
 
 namespace StopSmoke.Backend.Controllers;
 
