@@ -118,26 +118,28 @@ export default function MarathonPage() {
 
                 <div style={{ display: 'grid', gap: '1.5rem' }}>
                     {marathons.map(marathon => (
-                        <div key={marathon.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div>
-                                    <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{marathon.title}</h3>
-                                    <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>{marathon.description}</p>
-                                    <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                        <span>📅 {new Date(marathon.startDate).toLocaleDateString()} - {new Date(marathon.endDate).toLocaleDateString()}</span>
-                                        <span>👥 {marathon.participantsCount} {t('marathon.participants')}</span>
-                                        <span>⏱️ {getTimeStatus(marathon)}</span>
-                                    </div>
+                        <div key={marathon.id} className="card" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '2rem', padding: '2rem', width: '100%', maxWidth: 'none' }}>
+                            <div style={{ flex: 1 }}>
+                                <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#3b82f6', fontWeight: '700' }}>{marathon.title}</h3>
+                                <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>{marathon.description}</p>
+                                <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                                    <span>📅 {new Date(marathon.startDate).toLocaleDateString()} - {new Date(marathon.endDate).toLocaleDateString()}</span>
+                                    <span>👥 {marathon.participantsCount} {t('marathon.participants')}</span>
+                                    <span>⏱️ {getTimeStatus(marathon)}</span>
                                 </div>
+                            </div>
 
+                            <div style={{ minWidth: '180px', display: 'flex', justifyContent: 'flex-end' }}>
                                 {marathon.isJoined ? (
                                     <div style={{
-                                        padding: '0.5rem 1rem',
-                                        borderRadius: '2rem',
+                                        padding: '0.75rem 1.5rem',
+                                        borderRadius: '1rem',
                                         background: marathon.userStatus === 'Active' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
                                         color: marathon.userStatus === 'Active' ? '#4ade80' : '#f87171',
-                                        fontWeight: '600',
-                                        fontSize: '0.9rem'
+                                        fontWeight: '700',
+                                        fontSize: '0.95rem',
+                                        textAlign: 'center',
+                                        minWidth: '150px'
                                     }}>
                                         {marathon.userStatus === 'Active' ? t('marathon.joined') : t('marathon.disqualified')}
                                     </div>
@@ -146,7 +148,7 @@ export default function MarathonPage() {
                                         <button
                                             className="btn btn-primary"
                                             onClick={() => handleJoin(marathon.id)}
-                                            style={{ padding: '0.5rem 1.5rem' }}
+                                            style={{ padding: '0.75rem 2rem', fontSize: '1rem', fontWeight: '600', minWidth: '150px' }}
                                         >
                                             {t('marathon.join')}
                                         </button>
