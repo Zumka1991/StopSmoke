@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Message } from '../types/chatTypes';
-import { Send } from 'lucide-react';
+import { Send, ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface ChatWindowProps {
@@ -10,6 +10,7 @@ interface ChatWindowProps {
     isOtherUserOnline: boolean;
     currentUserId: string;
     onSendMessage: (content: string) => void;
+    onBack?: () => void;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
@@ -18,6 +19,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     isOtherUserOnline,
     currentUserId,
     onSendMessage,
+    onBack,
 }) => {
     const { t } = useTranslation();
     const [messageInput, setMessageInput] = useState('');
@@ -47,6 +49,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     return (
         <div className="chat-window">
             <div className="chat-window-header">
+                {onBack && (
+                    <button className="chat-back-button" onClick={onBack}>
+                        <ArrowLeft size={24} />
+                    </button>
+                )}
                 <div className="chat-window-user">
                     <div className="chat-window-avatar">
                         {otherUserName.charAt(0).toUpperCase()}

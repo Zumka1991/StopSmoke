@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { signalRService } from '../api/signalrService';
+import Navbar from '../components/Navbar';
 import ChatList from '../components/ChatList';
 import ChatWindow from '../components/ChatWindow';
 import UserSearch from '../components/UserSearch';
@@ -17,6 +18,7 @@ const MessagesPage: React.FC = () => {
     const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
     const [currentUserId, setCurrentUserId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
+    const [showMobileSidebar, setShowMobileSidebar] = useState(true);
 
     // Use refs to avoid stale closures in SignalR callbacks
     const selectedConversationIdRef = useRef<number | null>(null);
@@ -111,6 +113,7 @@ const MessagesPage: React.FC = () => {
             });
             setCurrentConversation(response.data);
             setSelectedConversationId(id);
+            setShowMobileSidebar(false); // Hide sidebar on mobile when chat is opened
 
             // Join conversation room
             await signalRService.joinConversation(id);
@@ -190,52 +193,74 @@ const MessagesPage: React.FC = () => {
         };
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userId');
+        navigate('/login');
+    };
+
+    const handleBackToList = () => {
+        setShowMobileSidebar(true);
+        setSelectedConversationId(null);
+        setCurrentConversation(null);
+    };
+
     if (isLoading) {
         return (
-            <div className="messages-page">
-                <div className="loading">Loading...</div>
-            </div>
+            <>
+                <Navbar onLogout={handleLogout} />
+                <div className="container" style={{ marginTop: '2rem', textAlign: 'center' }}>
+                    <div className="loading">Loading...</div>
+                </div>
+            </>
         );
     }
 
     const otherUserInfo = getOtherUserInfo();
 
     return (
-        <div className="messages-page">
-            <div className="messages-sidebar">
-                <div className="messages-sidebar-header">
-                    <h2>
-                        <MessageCircle size={24} />
-                        {t('messages.title')}
-                    </h2>
-                </div>
-                <UserSearch onCreateConversation={handleCreateConversation} />
-                <ChatList
-                    conversations={conversations}
-                    selectedConversationId={selectedConversationId}
-                    onSelectConversation={loadConversation}
-                />
-            </div>
-
-            <div className="messages-main">
-                {currentConversation ? (
-                    <ChatWindow
-                        conversationId={currentConversation.id}
-                        messages={currentConversation.messages}
-                        otherUserName={otherUserInfo.name}
-                        isOtherUserOnline={otherUserInfo.isOnline}
-                        currentUserId={currentUserId}
-                        onSendMessage={handleSendMessage}
-                    />
-                ) : (
-                    <div className="messages-empty">
-                        <MessageCircle size={64} />
-                        <h3>{t('messages.selectConversation')}</h3>
-                        <p>{t('messages.selectConversationHint')}</p>
+        <>
+            <Navbar onLogout={handleLogout} />
+            <div className="container" style={{ marginTop: '2rem', maxWidth: '1400px' }}>
+                <div className="messages-page">
+                    <div className={`messages-sidebar ${showMobileSidebar ? 'show' : ''}`}>
+                        <div className="messages-sidebar-header">
+                            <h2>
+                                <MessageCircle size={24} />
+                                {t('messages.title')}
+                            </h2>
+                        </div>
+                        <UserSearch onCreateConversation={handleCreateConversation} />
+                        <ChatList
+                            conversations={conversations}
+                            selectedConversationId={selectedConversationId}
+                            onSelectConversation={loadConversation}
+                        />
                     </div>
-                )}
+
+                    <div className={`messages-main ${!showMobileSidebar ? 'show' : ''}`}>
+                        {currentConversation ? (
+                            <ChatWindow
+                                conversationId={currentConversation.id}
+                                messages={currentConversation.messages}
+                                otherUserName={otherUserInfo.name}
+                                isOtherUserOnline={otherUserInfo.isOnline}
+                                currentUserId={currentUserId}
+                                onSendMessage={handleSendMessage}
+                                onBack={handleBackToList}
+                            />
+                        ) : (
+                            <div className="messages-empty">
+                                <MessageCircle size={64} />
+                                <h3>{t('messages.selectConversation')}</h3>
+                                <p>{t('messages.selectConversationHint')}</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

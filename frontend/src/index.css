@@ -615,9 +615,13 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 .messages-page {
   display: grid;
   grid-template-columns: 350px 1fr;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 140px);
+  /* Navbar (70px) + container margin (2rem = ~32px) + padding */
   gap: 0;
   background: var(--bg-color);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .messages-sidebar {
@@ -646,6 +650,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   display: flex;
   flex-direction: column;
   background: var(--bg-color);
+  height: 100%;
+  overflow: hidden;
 }
 
 .messages-empty {
@@ -909,18 +915,42 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
+  /* Important for flex scrolling */
 }
 
 .chat-window-header {
   padding: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chat-back-button {
+  display: none;
+  /* Hidden by default, shown on mobile */
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  color: var(--accent-color);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.chat-back-button:hover {
+  background: rgba(59, 130, 246, 0.2);
+  transform: translateX(-2px);
 }
 
 .chat-window-user {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex: 1;
 }
 
 .chat-window-avatar {
@@ -958,6 +988,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-height: 0;
+  /* Important for flex scrolling */
 }
 
 .message {
@@ -1058,23 +1090,75 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 @media (max-width: 768px) {
   .messages-page {
     grid-template-columns: 1fr;
+    height: calc(100vh - 120px);
+    /* Adjust for mobile navbar */
   }
 
+  /* On mobile, hide sidebar by default */
   .messages-sidebar {
     display: none;
   }
 
+  /* Show sidebar when .show class is added */
   .messages-sidebar.show {
     display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 100;
+  }
+
+  /* On mobile, hide main by default */
+  .messages-main {
+    display: none;
+  }
+
+  /* Show main when .show class is added */
+  .messages-main.show {
+    display: flex;
+  }
+
+  .chat-back-button {
+    display: flex !important;
+    /* Show back button on mobile */
   }
 
   .message-content {
     max-width: 85%;
+  }
+
+  .chat-window-header {
+    padding: 1rem;
+  }
+
+  .chat-window-messages {
+    padding: 1rem;
+  }
+
+  .chat-window-input {
+    padding: 1rem;
+  }
+
+  .messages-sidebar-header {
+    padding: 1rem;
+  }
+
+  .user-search {
+    padding: 0.75rem;
+  }
+
+  .chat-list-item {
+    padding: 0.75rem;
+  }
+}
+
+/* Desktop - ensure both sidebar and main are always visible */
+@media (min-width: 769px) {
+  .messages-sidebar {
+    display: flex !important;
+  }
+
+  .messages-main {
+    display: flex !important;
+  }
+
+  .chat-back-button {
+    display: none !important;
   }
 }
