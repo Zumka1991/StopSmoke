@@ -6,7 +6,7 @@ class SignalRService {
 
     async start(token: string): Promise<void> {
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl('http://localhost:5216/chatHub', {
+            .withUrl('/chatHub', {
                 accessTokenFactory: () => token,
             })
             .withAutomaticReconnect()

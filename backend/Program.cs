@@ -64,7 +64,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "https://stopsmoke.info")
+        policy.WithOrigins("http://localhost:5173", "https://stopsmoke.info", "http://stopsmoke.info")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
