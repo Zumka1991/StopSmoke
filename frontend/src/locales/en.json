@@ -269,6 +269,7 @@
         "searching": "Searching...",
         "selectConversation": "Select a conversation",
         "selectConversationHint": "Choose a chat from the list or search for a user to start messaging",
-        "errorCreatingConversation": "Failed to create conversation. Please try again."
+        "errorCreatingConversation": "Failed to create conversation. Please try again.",
+        "loadingOlder": "Loading older messages"
     }
 }

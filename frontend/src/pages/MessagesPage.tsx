@@ -9,6 +9,7 @@ import ChatWindow from '../components/ChatWindow';
 import UserSearch from '../components/UserSearch';
 import type { ConversationListItem, Conversation, Message } from '../types/chatTypes';
 import { MessageCircle } from 'lucide-react';
+import { useNotifications } from '../contexts/NotificationContext';
 
 const MessagesPage: React.FC = () => {
     const { t } = useTranslation();
@@ -19,6 +20,7 @@ const MessagesPage: React.FC = () => {
     const [currentUserId, setCurrentUserId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
     const [showMobileSidebar, setShowMobileSidebar] = useState(true);
+    const { setUnreadCount, playNotificationSound } = useNotifications();
 
     // Use refs to avoid stale closures in SignalR callbacks
     const selectedConversationIdRef = useRef<number | null>(null);
@@ -57,6 +59,16 @@ const MessagesPage: React.FC = () => {
 
             signalRService.onReceiveMessage((message: Message) => {
                 console.log('Received message:', message);
+
+                // Play notification sound if:
+                // 1. Message is not in currently active conversation
+                // 2. Or user is not on messages page
+                const isOnMessagesPage = window.location.pathname === '/messages';
+                const isActiveConversation = selectedConversationIdRef.current === message.conversationId;
+
+                if (!isOnMessagesPage || !isActiveConversation) {
+                    playNotificationSound();
+                }
 
                 // Update current conversation if it's the active one
                 if (selectedConversationIdRef.current === message.conversationId) {
@@ -98,6 +110,12 @@ const MessagesPage: React.FC = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setConversations(response.data);
+
+            // Calculate total unread count
+            const totalUnread = response.data.reduce((sum: number, conv: ConversationListItem) =>
+                sum + conv.unreadCount, 0
+            );
+            setUnreadCount(totalUnread);
         } catch (error) {
             console.error('Error loading conversations:', error);
         } finally {
@@ -131,6 +149,37 @@ const MessagesPage: React.FC = () => {
             loadConversations();
         } catch (error) {
             console.error('Error loading conversation:', error);
+        }
+    };
+
+    const loadOlderMessages = async () => {
+        if (!currentConversation || currentConversation.messages.length === 0) {
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            const oldestMessage = currentConversation.messages[0];
+
+            const response = await axios.get(
+                `http://localhost:5216/api/messages/conversations/${currentConversation.id}/messages?beforeMessageId=${oldestMessage.id}&count=50`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (response.data.length > 0) {
+                setCurrentConversation(prev => {
+                    if (!prev) return prev;
+                    return {
+                        ...prev,
+                        messages: [...response.data, ...prev.messages]
+                    };
+                });
+                return true; // Indicate that more messages were loaded
+            }
+            return false; // No more messages
+        } catch (error) {
+            console.error('Error loading older messages:', error);
+            return false;
         }
     };
 
@@ -249,6 +298,7 @@ const MessagesPage: React.FC = () => {
                                 currentUserId={currentUserId}
                                 onSendMessage={handleSendMessage}
                                 onBack={handleBackToList}
+                                onLoadOlderMessages={loadOlderMessages}
                             />
                         ) : (
                             <div className="messages-empty">

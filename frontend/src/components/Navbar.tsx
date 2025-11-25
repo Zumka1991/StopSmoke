@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 import SOSModal from './SOSModal';
+import { useNotifications } from '../contexts/NotificationContext';
 
 interface NavbarProps {
     onLogout: () => void;
@@ -15,6 +16,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [communityOpen, setCommunityOpen] = useState(false);
     const [sosOpen, setSosOpen] = useState(false);
+    const { unreadCount } = useNotifications();
 
     interface NavItem {
         path?: string;
@@ -181,6 +183,21 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                                 >
                                                     <span>{child.icon}</span>
                                                     {child.label}
+                                                    {child.path === '/messages' && unreadCount > 0 && (
+                                                        <span style={{
+                                                            marginLeft: 'auto',
+                                                            background: 'var(--error-color)',
+                                                            color: 'white',
+                                                            fontSize: '0.75rem',
+                                                            fontWeight: '600',
+                                                            padding: '0.125rem 0.5rem',
+                                                            borderRadius: '1rem',
+                                                            minWidth: '20px',
+                                                            textAlign: 'center'
+                                                        }}>
+                                                            {unreadCount > 99 ? '99+' : unreadCount}
+                                                        </span>
+                                                    )}
                                                 </button>
                                             ))}
                                         </div>
@@ -397,6 +414,21 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                             >
                                                 <span style={{ fontSize: '1.2rem' }}>{child.icon}</span>
                                                 {child.label}
+                                                {child.path === '/messages' && unreadCount > 0 && (
+                                                    <span style={{
+                                                        marginLeft: 'auto',
+                                                        background: 'var(--error-color)',
+                                                        color: 'white',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: '600',
+                                                        padding: '0.125rem 0.5rem',
+                                                        borderRadius: '1rem',
+                                                        minWidth: '20px',
+                                                        textAlign: 'center'
+                                                    }}>
+                                                        {unreadCount > 99 ? '99+' : unreadCount}
+                                                    </span>
+                                                )}
                                             </button>
                                         ))}
                                     </div>

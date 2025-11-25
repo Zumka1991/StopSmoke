@@ -11,19 +11,26 @@ interface ChatWindowProps {
     currentUserId: string;
     onSendMessage: (content: string) => void;
     onBack?: () => void;
+    onLoadOlderMessages?: () => Promise<boolean | void>;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
+    conversationId,
     messages,
     otherUserName,
     isOtherUserOnline,
     currentUserId,
     onSendMessage,
     onBack,
+    onLoadOlderMessages,
 }) => {
     const { t } = useTranslation();
     const [messageInput, setMessageInput] = useState('');
+    const [isLoadingOlder, setIsLoadingOlder] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
+    const previousScrollHeightRef = useRef<number>(0);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,6 +39,31 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    // Auto-focus input when component mounts or conversation changes
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, [conversationId]);
+
+    const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {
+        const container = e.currentTarget;
+
+        // Check if scrolled to top (with 50px threshold)
+        if (container.scrollTop < 50 && !isLoadingOlder && onLoadOlderMessages) {
+            setIsLoadingOlder(true);
+            previousScrollHeightRef.current = container.scrollHeight;
+
+            const hasMore = await onLoadOlderMessages();
+
+            setIsLoadingOlder(false);
+
+            // Maintain scroll position after loading
+            if (hasMore) {
+                const newScrollHeight = container.scrollHeight;
+                container.scrollTop = newScrollHeight - previousScrollHeightRef.current;
+            }
+        }
+    };
 
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault();
@@ -67,7 +99,21 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 </div>
             </div>
 
-            <div className="chat-window-messages">
+            <div
+                className="chat-window-messages"
+                ref={messagesContainerRef}
+                onScroll={handleScroll}
+            >
+                {isLoadingOlder && (
+                    <div style={{
+                        textAlign: 'center',
+                        padding: '1rem',
+                        color: 'var(--text-secondary)',
+                        fontSize: '0.875rem'
+                    }}>
+                        {t('messages.loadingOlder')}...
+                    </div>
+                )}
                 {messages.map((message) => (
                     <div
                         key={message.id}
@@ -85,6 +131,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
             <form className="chat-window-input" onSubmit={handleSendMessage}>
                 <input
+                    ref={inputRef}
                     type="text"
                     value={messageInput}
                     onChange={(e) => setMessageInput(e.target.value)}

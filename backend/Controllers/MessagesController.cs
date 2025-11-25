@@ -111,7 +111,67 @@ public class MessagesController : ControllerBase
                 Email = p.User.Email ?? "",
                 JoinedAt = p.JoinedAt
             }).ToList(),
-            Messages = conversation.Messages.OrderBy(m => m.SentAt).Select(m => new MessageResponse
+            // Load only last 50 messages by default
+            Messages = conversation.Messages
+                .OrderByDescending(m => m.SentAt)
+                .Take(50)
+                .OrderBy(m => m.SentAt)
+                .Select(m => new MessageResponse
+                {
+                    Id = m.Id,
+                    ConversationId = m.ConversationId,
+                    SenderId = m.SenderId,
+                    SenderName = m.Sender.Name ?? m.Sender.Email ?? "Unknown",
+                    Content = m.Content,
+                    SentAt = m.SentAt,
+                    IsRead = m.IsRead
+                }).ToList()
+        };
+
+        return Ok(response);
+    }
+
+    // GET: api/messages/conversations/{id}/messages?beforeMessageId={messageId}&count={count}
+    [HttpGet("conversations/{id}/messages")]
+    public async Task<ActionResult<List<MessageResponse>>> GetOlderMessages(
+        int id, 
+        [FromQuery] int? beforeMessageId = null, 
+        [FromQuery] int count = 50)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+
+        // Check if user is participant
+        var isParticipant = await _context.ConversationParticipants
+            .AnyAsync(p => p.ConversationId == id && p.UserId == userId);
+
+        if (!isParticipant)
+        {
+            return Forbid();
+        }
+
+        var query = _context.Messages
+            .Include(m => m.Sender)
+            .Where(m => m.ConversationId == id);
+
+        // If beforeMessageId is provided, get messages before that message
+        if (beforeMessageId.HasValue)
+        {
+            var beforeMessage = await _context.Messages.FindAsync(beforeMessageId.Value);
+            if (beforeMessage != null)
+            {
+                query = query.Where(m => m.SentAt < beforeMessage.SentAt);
+            }
+        }
+
+        var messages = await query
+            .OrderByDescending(m => m.SentAt)
+            .Take(count)
+            .OrderBy(m => m.SentAt)
+            .Select(m => new MessageResponse
             {
                 Id = m.Id,
                 ConversationId = m.ConversationId,
@@ -120,10 +180,10 @@ public class MessagesController : ControllerBase
                 Content = m.Content,
                 SentAt = m.SentAt,
                 IsRead = m.IsRead
-            }).ToList()
-        };
+            })
+            .ToListAsync();
 
-        return Ok(response);
+        return Ok(messages);
     }
 
     // POST: api/messages/conversations

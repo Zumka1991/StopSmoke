@@ -269,6 +269,7 @@
         "searching": "Поиск...",
         "selectConversation": "Выберите диалог",
         "selectConversationHint": "Выберите чат из списка или найдите пользователя, чтобы начать общение",
-        "errorCreatingConversation": "Не удалось создать диалог. Попробуйте снова."
+        "errorCreatingConversation": "Не удалось создать диалог. Попробуйте снова.",
+        "loadingOlder": "Загрузка старых сообщений"
     }
 }
