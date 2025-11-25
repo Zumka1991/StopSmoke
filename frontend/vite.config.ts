@@ -10,6 +10,12 @@ export default defineConfig({
         target: 'http://localhost:5216',
         changeOrigin: true,
         secure: false,
+      },
+      '/chatHub': {
+        target: 'http://localhost:5216',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
       }
     }
   }
