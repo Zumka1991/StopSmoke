@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import DashboardPage from './pages/DashboardPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import MarathonPage from './pages/MarathonPage';
+import MessagesPage from './pages/MessagesPage';
 import SecretAdminPage from './pages/SecretAdminPage';
 import './i18n';
 
@@ -46,6 +47,14 @@ function App() {
           element={
             <ProtectedRoute>
               <MarathonPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/messages"
+          element={
+            <ProtectedRoute>
+              <MessagesPage />
             </ProtectedRoute>
           }
         />

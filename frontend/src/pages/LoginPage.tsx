@@ -16,6 +16,7 @@ export default function LoginPage() {
             const response = await api.post('/auth/login', data);
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('userEmail', response.data.email);
+            localStorage.setItem('userId', response.data.userId);
             navigate('/dashboard');
         } catch (err: any) {
             setServerError(t('auth.login.error'));

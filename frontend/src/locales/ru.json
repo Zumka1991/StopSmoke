@@ -259,5 +259,16 @@
         "language": "Язык",
         "profile": "Профиль",
         "save": "Сохранить"
+    },
+    "messages": {
+        "title": "Сообщения",
+        "online": "Онлайн",
+        "offline": "Оффлайн",
+        "typeMessage": "Введите сообщение...",
+        "searchUsers": "Поиск по имени или email...",
+        "searching": "Поиск...",
+        "selectConversation": "Выберите диалог",
+        "selectConversationHint": "Выберите чат из списка или найдите пользователя, чтобы начать общение",
+        "errorCreatingConversation": "Не удалось создать диалог. Попробуйте снова."
     }
 }

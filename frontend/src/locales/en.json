@@ -259,5 +259,16 @@
         "days": "d",
         "hours": "h",
         "minutes": "m"
+    },
+    "messages": {
+        "title": "Messages",
+        "online": "Online",
+        "offline": "Offline",
+        "typeMessage": "Type a message...",
+        "searchUsers": "Search by name or email...",
+        "searching": "Searching...",
+        "selectConversation": "Select a conversation",
+        "selectConversationHint": "Choose a chat from the list or search for a user to start messaging",
+        "errorCreatingConversation": "Failed to create conversation. Please try again."
     }
 }
