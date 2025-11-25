@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 import { signalRService } from '../api/signalrService';
 import Navbar from '../components/Navbar';
 import ChatList from '../components/ChatList';
@@ -105,10 +105,7 @@ const MessagesPage: React.FC = () => {
 
     const loadConversations = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5216/api/messages/conversations', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const response = await api.get('/messages/conversations');
             setConversations(response.data);
 
             // Calculate total unread count
@@ -125,10 +122,7 @@ const MessagesPage: React.FC = () => {
 
     const loadConversation = async (id: number) => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`http://localhost:5216/api/messages/conversations/${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const response = await api.get(`/messages/conversations/${id}`);
             setCurrentConversation(response.data);
             setSelectedConversationId(id);
             setShowMobileSidebar(false); // Hide sidebar on mobile when chat is opened
@@ -138,11 +132,7 @@ const MessagesPage: React.FC = () => {
             console.log('Joined conversation:', id);
 
             // Mark as read
-            await axios.put(
-                `http://localhost:5216/api/messages/conversations/${id}/read`,
-                {},
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            await api.put(`/messages/conversations/${id}/read`);
             await signalRService.markAsRead(id);
 
             // Reload conversations to update unread count
@@ -158,12 +148,10 @@ const MessagesPage: React.FC = () => {
         }
 
         try {
-            const token = localStorage.getItem('token');
             const oldestMessage = currentConversation.messages[0];
 
-            const response = await axios.get(
-                `http://localhost:5216/api/messages/conversations/${currentConversation.id}/messages?beforeMessageId=${oldestMessage.id}&count=50`,
-                { headers: { Authorization: `Bearer ${token}` } }
+            const response = await api.get(
+                `/messages/conversations/${currentConversation.id}/messages?beforeMessageId=${oldestMessage.id}&count=50`
             );
 
             if (response.data.length > 0) {
@@ -198,11 +186,9 @@ const MessagesPage: React.FC = () => {
 
     const handleCreateConversation = async (email: string) => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(
-                'http://localhost:5216/api/messages/conversations',
-                { participantEmail: email },
-                { headers: { Authorization: `Bearer ${token}` } }
+            const response = await api.post(
+                '/messages/conversations',
+                { participantEmail: email }
             );
 
             const conversationId = response.data.conversationId;

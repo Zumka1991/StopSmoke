@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, UserPlus } from 'lucide-react';
 import type { UserSearchResult } from '../types/chatTypes';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '../api/axios';
 
 interface UserSearchProps {
     onCreateConversation: (email: string) => void;
@@ -24,12 +24,8 @@ const UserSearch: React.FC<UserSearchProps> = ({ onCreateConversation }) => {
 
         setIsSearching(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(
-                `http://localhost:5216/api/messages/search-users?query=${encodeURIComponent(query)}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
+            const response = await api.get(
+                `/messages/search-users?query=${encodeURIComponent(query)}`
             );
             setSearchResults(response.data);
         } catch (error) {

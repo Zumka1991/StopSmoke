@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNotifications } from '../contexts/NotificationContext';
 import { signalRService } from '../api/signalrService';
-import axios from 'axios';
+import api from '../api/axios';
 
 export const GlobalNotificationListener: React.FC = () => {
     const { setUnreadCount, playNotificationSound } = useNotifications();
@@ -38,9 +38,7 @@ export const GlobalNotificationListener: React.FC = () => {
 
         const loadUnreadCount = async () => {
             try {
-                const response = await axios.get('http://localhost:5216/api/messages/conversations', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const response = await api.get('/messages/conversations');
                 const totalUnread = response.data.reduce((sum: number, conv: any) =>
                     sum + conv.unreadCount, 0
                 );
