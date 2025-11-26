@@ -46,13 +46,26 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const previousScrollHeightRef = useRef<number>(0);
     const inputRef = useRef<HTMLInputElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+    const previousMessageCountRef = useRef<number>(0);
+    const isLoadingOlderRef = useRef<boolean>(false);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     useEffect(() => {
-        scrollToBottom();
+        // Only scroll to bottom if:
+        // 1. New messages were added at the end (not loading older messages)
+        // 2. Or it's the initial load
+        const currentCount = messages.length;
+        const previousCount = previousMessageCountRef.current;
+
+        if (currentCount > previousCount && !isLoadingOlderRef.current) {
+            // New message added at the end, scroll to bottom
+            scrollToBottom();
+        }
+
+        previousMessageCountRef.current = currentCount;
     }, [messages]);
 
     // Auto-focus input when component mounts or conversation changes
@@ -63,6 +76,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         // Reset hasMoreMessages when conversation changes
         setHasMoreMessages(true);
         setShowMenu(false);
+        // Reset message count to allow initial scroll to bottom
+        previousMessageCountRef.current = 0;
+        isLoadingOlderRef.current = false;
     }, [conversationId, isBlocked, isBlockedByOther]);
 
     // Close menu when clicking outside
@@ -86,22 +102,27 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         // Only attempt to load if we haven't reached the end of message history
         if (container.scrollTop < 50 && !isLoadingOlder && hasMoreMessages && onLoadOlderMessages) {
             setIsLoadingOlder(true);
+            isLoadingOlderRef.current = true;
             previousScrollHeightRef.current = container.scrollHeight;
 
             const hasMore = await onLoadOlderMessages();
 
-            setIsLoadingOlder(false);
+            // Wait a frame for messages to be rendered
+            requestAnimationFrame(() => {
+                // Update hasMoreMessages flag based on result
+                if (hasMore === false) {
+                    setHasMoreMessages(false);
+                }
 
-            // Update hasMoreMessages flag based on result
-            if (hasMore === false) {
-                setHasMoreMessages(false);
-            }
+                // Maintain scroll position after loading
+                if (hasMore && messagesContainerRef.current) {
+                    const newScrollHeight = messagesContainerRef.current.scrollHeight;
+                    messagesContainerRef.current.scrollTop = newScrollHeight - previousScrollHeightRef.current;
+                }
 
-            // Maintain scroll position after loading
-            if (hasMore) {
-                const newScrollHeight = container.scrollHeight;
-                container.scrollTop = newScrollHeight - previousScrollHeightRef.current;
-            }
+                setIsLoadingOlder(false);
+                isLoadingOlderRef.current = false;
+            });
         }
     };
 
