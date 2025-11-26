@@ -257,42 +257,44 @@ const MessagesPage: React.FC = () => {
     return (
         <>
             <Navbar onLogout={handleLogout} />
-            <div className="container" style={{ marginTop: '2rem', maxWidth: '1400px' }}>
-                <div className="messages-page">
-                    <div className={`messages-sidebar ${showMobileSidebar ? 'show' : ''}`}>
-                        <div className="messages-sidebar-header">
-                            <h2>
-                                <MessageCircle size={24} />
-                                {t('messages.title')}
-                            </h2>
-                        </div>
-                        <UserSearch onCreateConversation={handleCreateConversation} />
-                        <ChatList
-                            conversations={conversations}
-                            selectedConversationId={selectedConversationId}
-                            onSelectConversation={loadConversation}
-                        />
-                    </div>
-
-                    <div className={`messages-main ${!showMobileSidebar ? 'show' : ''}`}>
-                        {currentConversation ? (
-                            <ChatWindow
-                                conversationId={currentConversation.id}
-                                messages={currentConversation.messages}
-                                otherUserName={otherUserInfo.name}
-                                isOtherUserOnline={otherUserInfo.isOnline}
-                                currentUserId={currentUserId}
-                                onSendMessage={handleSendMessage}
-                                onBack={handleBackToList}
-                                onLoadOlderMessages={loadOlderMessages}
-                            />
-                        ) : (
-                            <div className="messages-empty">
-                                <MessageCircle size={64} />
-                                <h3>{t('messages.selectConversation')}</h3>
-                                <p>{t('messages.selectConversationHint')}</p>
+            <div className="messages-page-wrapper">
+                <div className="container" style={{ maxWidth: '1400px', padding: '0 1rem', height: '100%' }}>
+                    <div className="messages-page">
+                        <div className={`messages-sidebar ${showMobileSidebar ? 'show' : ''}`}>
+                            <div className="messages-sidebar-header">
+                                <h2>
+                                    <MessageCircle size={24} />
+                                    {t('messages.title')}
+                                </h2>
                             </div>
-                        )}
+                            <UserSearch onCreateConversation={handleCreateConversation} />
+                            <ChatList
+                                conversations={conversations}
+                                selectedConversationId={selectedConversationId}
+                                onSelectConversation={loadConversation}
+                            />
+                        </div>
+
+                        <div className={`messages-main ${!showMobileSidebar ? 'show' : ''}`}>
+                            {currentConversation ? (
+                                <ChatWindow
+                                    conversationId={currentConversation.id}
+                                    messages={currentConversation.messages}
+                                    otherUserName={otherUserInfo.name}
+                                    isOtherUserOnline={otherUserInfo.isOnline}
+                                    currentUserId={currentUserId}
+                                    onSendMessage={handleSendMessage}
+                                    onBack={handleBackToList}
+                                    onLoadOlderMessages={loadOlderMessages}
+                                />
+                            ) : (
+                                <div className="messages-empty">
+                                    <MessageCircle size={64} />
+                                    <h3>{t('messages.selectConversation')}</h3>
+                                    <p>{t('messages.selectConversationHint')}</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

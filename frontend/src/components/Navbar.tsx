@@ -52,8 +52,11 @@ export default function Navbar({ onLogout }: NavbarProps) {
                 background: 'rgba(30, 41, 59, 0.95)',
                 backdropFilter: 'blur(10px)',
                 borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
-                position: 'sticky',
+                position: 'fixed',
                 top: 0,
+                left: 0,
+                right: 0,
+                width: '100%',
                 zIndex: 1000,
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
             }}>

@@ -21,6 +21,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
+  padding-top: 70px;
 }
 
 button {
@@ -612,11 +613,26 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* Messages Page Styles */
+.messages-page-wrapper {
+  position: fixed;
+  top: 85px;
+  /* 70px navbar + 15px gap */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  /* Let top/bottom define height */
+  overflow: hidden;
+  z-index: 10;
+  background-color: var(--bg-color);
+  touch-action: manipulation;
+  /* Improve touch handling */
+}
+
 .messages-page {
   display: grid;
   grid-template-columns: 350px 1fr;
-  height: calc(100vh - 140px);
-  /* Navbar (70px) + container margin (2rem = ~32px) + padding */
+  height: 100%;
   gap: 0;
   background: var(--bg-color);
   border-radius: 1rem;
@@ -1090,8 +1106,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 @media (max-width: 768px) {
   .messages-page {
     grid-template-columns: 1fr;
-    height: calc(100vh - 120px);
-    /* Adjust for mobile navbar */
+    height: 100%;
+    border-radius: 0;
   }
 
   /* On mobile, hide sidebar by default */
@@ -1124,7 +1140,17 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   }
 
   .chat-window-header {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .chat-window-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .chat-window-user-info h3 {
+    font-size: 1rem;
   }
 
   .chat-window-messages {
@@ -1160,5 +1186,31 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 
   .chat-back-button {
     display: none !important;
+  }
+}
+
+/* Very small mobile screens - extra compact */
+@media (max-width: 400px) {
+
+  .chat-window-header {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .chat-window-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .chat-window-user-info h3 {
+    font-size: 0.9rem;
+  }
+
+  .chat-window-user-info .status {
+    font-size: 0.7rem;
+  }
+
+  .chat-back-button {
+    padding: 0.4rem;
   }
 }

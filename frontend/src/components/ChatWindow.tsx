@@ -27,6 +27,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const { t } = useTranslation();
     const [messageInput, setMessageInput] = useState('');
     const [isLoadingOlder, setIsLoadingOlder] = useState(false);
+    const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const previousScrollHeightRef = useRef<number>(0);
@@ -43,19 +44,27 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     // Auto-focus input when component mounts or conversation changes
     useEffect(() => {
         inputRef.current?.focus();
+        // Reset hasMoreMessages when conversation changes
+        setHasMoreMessages(true);
     }, [conversationId]);
 
     const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {
         const container = e.currentTarget;
 
         // Check if scrolled to top (with 50px threshold)
-        if (container.scrollTop < 50 && !isLoadingOlder && onLoadOlderMessages) {
+        // Only attempt to load if we haven't reached the end of message history
+        if (container.scrollTop < 50 && !isLoadingOlder && hasMoreMessages && onLoadOlderMessages) {
             setIsLoadingOlder(true);
             previousScrollHeightRef.current = container.scrollHeight;
 
             const hasMore = await onLoadOlderMessages();
 
             setIsLoadingOlder(false);
+
+            // Update hasMoreMessages flag based on result
+            if (hasMore === false) {
+                setHasMoreMessages(false);
+            }
 
             // Maintain scroll position after loading
             if (hasMore) {
