@@ -29,10 +29,9 @@ export default function LeaderboardPage() {
 
     const handleMessageUser = async (email: string) => {
         try {
-            const response = await api.post('/messages/conversations', {
+            await api.post('/messages/conversations', {
                 participantEmail: email
             });
-            const conversationId = response.data.conversationId;
             navigate('/messages');
         } catch (error) {
             console.error('Failed to create conversation:', error);
