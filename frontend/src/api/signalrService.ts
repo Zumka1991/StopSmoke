@@ -99,6 +99,19 @@ class SignalRService {
         }
     }
 
+    async getOnlineUsers(): Promise<string[]> {
+        if (!this.connection) {
+            throw new Error('SignalR connection not established');
+        }
+
+        try {
+            return await this.connection.invoke('GetOnlineUsers');
+        } catch (err) {
+            console.error('Error getting online users: ', err);
+            throw err;
+        }
+    }
+
     onReceiveMessage(callback: (message: Message) => void): void {
         if (!this.connection) {
             throw new Error('SignalR connection not established');

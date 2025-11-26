@@ -20,6 +20,7 @@ export interface Conversation {
 
 export interface ConversationListItem {
     id: number;
+    otherUserId: string;
     otherUserName: string;
     otherUserEmail: string;
     lastMessage?: string;

@@ -67,6 +67,7 @@ public class MessagesController : ControllerBase
             result.Add(new ConversationListItemResponse
             {
                 Id = conv.Id,
+                OtherUserId = otherParticipant.UserId,
                 OtherUserName = otherParticipant.User.Name ?? otherParticipant.User.Email ?? "Unknown",
                 OtherUserEmail = otherParticipant.User.Email ?? "",
                 LastMessage = lastMessage?.Content,

@@ -38,6 +38,7 @@ public class ConversationResponse
 public class ConversationListItemResponse
 {
     public int Id { get; set; }
+    public string OtherUserId { get; set; } = null!;
     public string OtherUserName { get; set; } = null!;
     public string OtherUserEmail { get; set; } = null!;
     public string? LastMessage { get; set; }

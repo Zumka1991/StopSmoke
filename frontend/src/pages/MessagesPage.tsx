@@ -25,6 +25,7 @@ const MessagesPage: React.FC = () => {
     // Use refs to avoid stale closures in SignalR callbacks
     const selectedConversationIdRef = useRef<number | null>(null);
     const currentConversationRef = useRef<Conversation | null>(null);
+    const onlineUsersRef = useRef<Set<string>>(new Set());
 
     useEffect(() => {
         selectedConversationIdRef.current = selectedConversationId;
@@ -56,6 +57,19 @@ const MessagesPage: React.FC = () => {
         try {
             await signalRService.start(token);
             console.log('SignalR connected successfully');
+
+            // Get initial online users
+            const onlineUsers = await signalRService.getOnlineUsers();
+            console.log('Initial online users:', onlineUsers);
+
+            // Update ref
+            onlineUsers.forEach(id => onlineUsersRef.current.add(id));
+
+            // Trigger update of conversations list to reflect online status
+            setConversations(prev => prev.map(conv => ({
+                ...conv,
+                isOtherUserOnline: onlineUsersRef.current.has(conv.otherUserId)
+            })));
 
             signalRService.onReceiveMessage((message: Message) => {
                 console.log('Received message:', message);
@@ -90,11 +104,13 @@ const MessagesPage: React.FC = () => {
 
             signalRService.onUserOnline((userId: string) => {
                 console.log('User online:', userId);
+                onlineUsersRef.current.add(userId);
                 updateUserOnlineStatus(userId, true);
             });
 
             signalRService.onUserOffline((userId: string) => {
                 console.log('User offline:', userId);
+                onlineUsersRef.current.delete(userId);
                 updateUserOnlineStatus(userId, false);
             });
         } catch (error) {
@@ -106,7 +122,13 @@ const MessagesPage: React.FC = () => {
     const loadConversations = async () => {
         try {
             const response = await api.get('/messages/conversations');
-            setConversations(response.data);
+            // Map response to include online status from ref
+            const conversationsWithStatus = response.data.map((conv: ConversationListItem) => ({
+                ...conv,
+                isOtherUserOnline: onlineUsersRef.current.has(conv.otherUserId)
+            }));
+
+            setConversations(conversationsWithStatus);
 
             // Calculate total unread count
             const totalUnread = response.data.reduce((sum: number, conv: ConversationListItem) =>
@@ -203,9 +225,7 @@ const MessagesPage: React.FC = () => {
     const updateUserOnlineStatus = (userId: string, isOnline: boolean) => {
         setConversations((prev) =>
             prev.map((conv) => {
-                // Find if this conversation has this user
-                const hasUser = currentConversation?.participants.some((p) => p.userId === userId);
-                if (hasUser && conv.id === selectedConversationId) {
+                if (conv.otherUserId === userId) {
                     return { ...conv, isOtherUserOnline: isOnline };
                 }
                 return conv;

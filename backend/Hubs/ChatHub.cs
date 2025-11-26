@@ -11,7 +11,8 @@ namespace StopSmoke.Backend.Hubs;
 public class ChatHub : Hub
 {
     private readonly ApplicationDbContext _context;
-    private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
+    // Store multiple connection IDs per user
+    private static readonly ConcurrentDictionary<string, HashSet<string>> _onlineUsers = new();
 
     public ChatHub(ApplicationDbContext context)
     {
@@ -23,8 +24,24 @@ public class ChatHub : Hub
         var userId = Context.UserIdentifier;
         if (userId != null)
         {
-            _onlineUsers[userId] = Context.ConnectionId;
-            await Clients.All.SendAsync("UserOnline", userId);
+            _onlineUsers.AddOrUpdate(userId, 
+                // Add new user with first connection
+                key => new HashSet<string> { Context.ConnectionId }, 
+                // Update existing user with new connection
+                (key, connections) => 
+                {
+                    lock (connections)
+                    {
+                        connections.Add(Context.ConnectionId);
+                    }
+                    return connections;
+                });
+
+            // Notify others only if this is the first connection for the user
+            if (_onlineUsers[userId].Count == 1)
+            {
+                await Clients.All.SendAsync("UserOnline", userId);
+            }
         }
         await base.OnConnectedAsync();
     }
@@ -34,8 +51,20 @@ public class ChatHub : Hub
         var userId = Context.UserIdentifier;
         if (userId != null)
         {
-            _onlineUsers.TryRemove(userId, out _);
-            await Clients.All.SendAsync("UserOffline", userId);
+            if (_onlineUsers.TryGetValue(userId, out var connections))
+            {
+                lock (connections)
+                {
+                    connections.Remove(Context.ConnectionId);
+                }
+
+                // If no connections left, remove user and notify others
+                if (connections.Count == 0)
+                {
+                    _onlineUsers.TryRemove(userId, out _);
+                    await Clients.All.SendAsync("UserOffline", userId);
+                }
+            }
         }
         await base.OnDisconnectedAsync(exception);
     }
@@ -127,6 +156,11 @@ public class ChatHub : Hub
             participant.LastReadAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
+    }
+
+    public Task<List<string>> GetOnlineUsers()
+    {
+        return Task.FromResult(_onlineUsers.Keys.ToList());
     }
 
     public static bool IsUserOnline(string userId)
