@@ -126,7 +126,8 @@ export default function LeaderboardPage() {
                                     alignItems: 'center',
                                     gap: '1rem',
                                     transition: 'all 0.2s',
-                                    cursor: entry.isCurrentUser ? 'default' : 'pointer'
+                                    cursor: entry.isCurrentUser ? 'default' : 'pointer',
+                                    zIndex: menuOpen === entry.rank ? 100 : 1
                                 }}
                                 onMouseEnter={(e) => {
                                     if (!entry.isCurrentUser) {
@@ -213,7 +214,7 @@ export default function LeaderboardPage() {
                                             borderRadius: '0.5rem',
                                             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
                                             overflow: 'hidden',
-                                            zIndex: 1000,
+                                            zIndex: 10,
                                             minWidth: '200px'
                                         }}
                                     >
