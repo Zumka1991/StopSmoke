@@ -51,7 +51,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const lastMessageTimeRef = useRef<number>(0);
     const [canSendMessage, setCanSendMessage] = useState(true);
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
-    const cooldownIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const cooldownIntervalRef = useRef<number | null>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

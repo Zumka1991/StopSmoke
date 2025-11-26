@@ -27,7 +27,6 @@ export default function MarathonPage() {
 
     // Participants Modal State
     const [showParticipantsModal, setShowParticipantsModal] = useState(false);
-    const [selectedMarathonId, setSelectedMarathonId] = useState<number | null>(null);
     const [participants, setParticipants] = useState<MarathonParticipant[]>([]);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
 
@@ -88,7 +87,6 @@ export default function MarathonPage() {
     };
 
     const handleShowParticipants = async (marathonId: number) => {
-        setSelectedMarathonId(marathonId);
         setShowParticipantsModal(true);
         setLoadingParticipants(true);
 
