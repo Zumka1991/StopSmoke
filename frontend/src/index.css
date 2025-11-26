@@ -1326,6 +1326,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   gap: 1rem;
   transition: all 0.3s ease;
   border: 1px solid rgba(59, 130, 246, 0.1);
+  width: 100%;
+  max-width: none;
 }
 
 .marathon-card:hover {
