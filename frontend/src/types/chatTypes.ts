@@ -14,6 +14,8 @@ export interface Conversation {
     lastMessageAt?: string;
     participants: Participant[];
     messages: Message[];
+    isBlocked: boolean;
+    isBlockedByOther: boolean;
 }
 
 export interface ConversationListItem {
@@ -24,6 +26,7 @@ export interface ConversationListItem {
     lastMessageAt?: string;
     unreadCount: number;
     isOtherUserOnline: boolean;
+    isBlocked: boolean;
 }
 
 export interface Participant {

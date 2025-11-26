@@ -33,26 +33,34 @@ public class MessagesController : ControllerBase
             return Unauthorized();
         }
 
-        var conversations = await _context.ConversationParticipants
-            .Where(p => p.UserId == userId)
+        var userParticipants = await _context.ConversationParticipants
+            .Where(p => p.UserId == userId && !p.IsDeleted)
             .Include(p => p.Conversation)
                 .ThenInclude(c => c.Participants)
                 .ThenInclude(p => p.User)
             .Include(p => p.Conversation)
                 .ThenInclude(c => c.Messages)
-            .Select(p => p.Conversation)
             .ToListAsync();
 
         var result = new List<ConversationListItemResponse>();
 
-        foreach (var conv in conversations)
+        foreach (var userParticipant in userParticipants)
         {
+            var conv = userParticipant.Conversation;
             var otherParticipant = conv.Participants.FirstOrDefault(p => p.UserId != userId);
             if (otherParticipant == null) continue;
 
-            var lastMessage = conv.Messages.OrderByDescending(m => m.SentAt).FirstOrDefault();
-            var userParticipant = conv.Participants.First(p => p.UserId == userId);
-            var unreadCount = conv.Messages.Count(m => 
+            // Filter messages based on ClearedHistoryAt
+            var visibleMessages = conv.Messages
+                .Where(m => userParticipant.ClearedHistoryAt == null || m.SentAt > userParticipant.ClearedHistoryAt)
+                .ToList();
+
+            var lastMessage = visibleMessages.OrderByDescending(m => m.SentAt).FirstOrDefault();
+            
+            // If history is cleared and no new messages, and it's not a new empty conversation, maybe we shouldn't show it?
+            // But usually we show it if it's not deleted.
+
+            var unreadCount = visibleMessages.Count(m => 
                 m.SenderId != userId && 
                 (userParticipant.LastReadAt == null || m.SentAt > userParticipant.LastReadAt));
 
@@ -64,7 +72,8 @@ public class MessagesController : ControllerBase
                 LastMessage = lastMessage?.Content,
                 LastMessageAt = lastMessage?.SentAt,
                 UnreadCount = unreadCount,
-                IsOtherUserOnline = ChatHub.IsUserOnline(otherParticipant.UserId)
+                IsOtherUserOnline = ChatHub.IsUserOnline(otherParticipant.UserId),
+                IsBlocked = userParticipant.IsBlocked
             });
         }
 
@@ -99,11 +108,16 @@ public class MessagesController : ControllerBase
             return Forbid();
         }
 
+        var userParticipant = conversation.Participants.First(p => p.UserId == userId);
+        var otherParticipant = conversation.Participants.FirstOrDefault(p => p.UserId != userId);
+
         var response = new ConversationResponse
         {
             Id = conversation.Id,
             CreatedAt = conversation.CreatedAt,
             LastMessageAt = conversation.LastMessageAt,
+            IsBlocked = userParticipant.IsBlocked,
+            IsBlockedByOther = otherParticipant?.IsBlocked ?? false,
             Participants = conversation.Participants.Select(p => new ParticipantResponse
             {
                 UserId = p.UserId,
@@ -111,8 +125,9 @@ public class MessagesController : ControllerBase
                 Email = p.User.Email ?? "",
                 JoinedAt = p.JoinedAt
             }).ToList(),
-            // Load only last 50 messages by default
+            // Load only last 50 messages by default, respecting ClearedHistoryAt
             Messages = conversation.Messages
+                .Where(m => userParticipant.ClearedHistoryAt == null || m.SentAt > userParticipant.ClearedHistoryAt)
                 .OrderByDescending(m => m.SentAt)
                 .Take(50)
                 .OrderBy(m => m.SentAt)
@@ -144,11 +159,11 @@ public class MessagesController : ControllerBase
             return Unauthorized();
         }
 
-        // Check if user is participant
-        var isParticipant = await _context.ConversationParticipants
-            .AnyAsync(p => p.ConversationId == id && p.UserId == userId);
+        // Get participant to check ClearedHistoryAt
+        var participant = await _context.ConversationParticipants
+            .FirstOrDefaultAsync(p => p.ConversationId == id && p.UserId == userId);
 
-        if (!isParticipant)
+        if (participant == null)
         {
             return Forbid();
         }
@@ -156,6 +171,12 @@ public class MessagesController : ControllerBase
         var query = _context.Messages
             .Include(m => m.Sender)
             .Where(m => m.ConversationId == id);
+
+        // Filter by ClearedHistoryAt
+        if (participant.ClearedHistoryAt != null)
+        {
+            query = query.Where(m => m.SentAt > participant.ClearedHistoryAt);
+        }
 
         // If beforeMessageId is provided, get messages before that message
         if (beforeMessageId.HasValue)
@@ -209,15 +230,22 @@ public class MessagesController : ControllerBase
         }
 
         // Check if conversation already exists
-        var existingConversation = await _context.ConversationParticipants
+        var existingParticipant = await _context.ConversationParticipants
             .Where(p => p.UserId == userId)
-            .Select(p => p.Conversation)
-            .Where(c => c.Participants.Any(p => p.UserId == otherUser.Id))
-            .FirstOrDefaultAsync();
+            .Include(p => p.Conversation)
+                .ThenInclude(c => c.Participants)
+            .FirstOrDefaultAsync(p => p.Conversation.Participants.Any(cp => cp.UserId == otherUser.Id));
 
-        if (existingConversation != null)
+        if (existingParticipant != null)
         {
-            return Ok(new { conversationId = existingConversation.Id, message = "Conversation already exists" });
+            // If it was deleted, restore it
+            if (existingParticipant.IsDeleted)
+            {
+                existingParticipant.IsDeleted = false;
+                await _context.SaveChangesAsync();
+            }
+            
+            return Ok(new { conversationId = existingParticipant.ConversationId, message = "Conversation already exists" });
         }
 
         // Create new conversation
@@ -308,5 +336,77 @@ public class MessagesController : ControllerBase
             .ToListAsync();
 
         return Ok(users);
+    }
+
+    // POST: api/messages/conversations/{id}/block
+    [HttpPost("conversations/{id}/block")]
+    public async Task<IActionResult> BlockUser(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return Unauthorized();
+
+        var participant = await _context.ConversationParticipants
+            .FirstOrDefaultAsync(p => p.ConversationId == id && p.UserId == userId);
+
+        if (participant == null) return NotFound();
+
+        participant.IsBlocked = true;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "User blocked" });
+    }
+
+    // POST: api/messages/conversations/{id}/unblock
+    [HttpPost("conversations/{id}/unblock")]
+    public async Task<IActionResult> UnblockUser(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return Unauthorized();
+
+        var participant = await _context.ConversationParticipants
+            .FirstOrDefaultAsync(p => p.ConversationId == id && p.UserId == userId);
+
+        if (participant == null) return NotFound();
+
+        participant.IsBlocked = false;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "User unblocked" });
+    }
+
+    // DELETE: api/messages/conversations/{id}/messages
+    [HttpDelete("conversations/{id}/messages")]
+    public async Task<IActionResult> ClearHistory(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return Unauthorized();
+
+        var participant = await _context.ConversationParticipants
+            .FirstOrDefaultAsync(p => p.ConversationId == id && p.UserId == userId);
+
+        if (participant == null) return NotFound();
+
+        participant.ClearedHistoryAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "History cleared" });
+    }
+
+    // DELETE: api/messages/conversations/{id}
+    [HttpDelete("conversations/{id}")]
+    public async Task<IActionResult> DeleteConversation(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return Unauthorized();
+
+        var participant = await _context.ConversationParticipants
+            .FirstOrDefaultAsync(p => p.ConversationId == id && p.UserId == userId);
+
+        if (participant == null) return NotFound();
+
+        participant.IsDeleted = true;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Conversation deleted" });
     }
 }

@@ -16,4 +16,10 @@ public class ConversationParticipant
     public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? LastReadAt { get; set; }
+
+    public bool IsBlocked { get; set; } = false;
+
+    public DateTime? ClearedHistoryAt { get; set; }
+
+    public bool IsDeleted { get; set; } = false;
 }

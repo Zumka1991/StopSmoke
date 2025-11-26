@@ -241,6 +241,54 @@ const MessagesPage: React.FC = () => {
         setCurrentConversation(null);
     };
 
+    const handleBlockUser = async () => {
+        if (!selectedConversationId) return;
+        try {
+            await api.post(`/messages/conversations/${selectedConversationId}/block`);
+            if (currentConversation) {
+                setCurrentConversation({ ...currentConversation, isBlocked: true });
+            }
+        } catch (error) {
+            console.error('Error blocking user:', error);
+        }
+    };
+
+    const handleUnblockUser = async () => {
+        if (!selectedConversationId) return;
+        try {
+            await api.post(`/messages/conversations/${selectedConversationId}/unblock`);
+            if (currentConversation) {
+                setCurrentConversation({ ...currentConversation, isBlocked: false });
+            }
+        } catch (error) {
+            console.error('Error unblocking user:', error);
+        }
+    };
+
+    const handleClearHistory = async () => {
+        if (!selectedConversationId) return;
+        try {
+            await api.delete(`/messages/conversations/${selectedConversationId}/messages`);
+            if (currentConversation) {
+                setCurrentConversation({ ...currentConversation, messages: [] });
+            }
+            loadConversations();
+        } catch (error) {
+            console.error('Error clearing history:', error);
+        }
+    };
+
+    const handleDeleteConversation = async () => {
+        if (!selectedConversationId) return;
+        try {
+            await api.delete(`/messages/conversations/${selectedConversationId}`);
+            handleBackToList();
+            loadConversations();
+        } catch (error) {
+            console.error('Error deleting conversation:', error);
+        }
+    };
+
     if (isLoading) {
         return (
             <>
@@ -283,9 +331,15 @@ const MessagesPage: React.FC = () => {
                                     otherUserName={otherUserInfo.name}
                                     isOtherUserOnline={otherUserInfo.isOnline}
                                     currentUserId={currentUserId}
+                                    isBlocked={currentConversation.isBlocked}
+                                    isBlockedByOther={currentConversation.isBlockedByOther}
                                     onSendMessage={handleSendMessage}
                                     onBack={handleBackToList}
                                     onLoadOlderMessages={loadOlderMessages}
+                                    onBlock={handleBlockUser}
+                                    onUnblock={handleUnblockUser}
+                                    onClearHistory={handleClearHistory}
+                                    onDeleteConversation={handleDeleteConversation}
                                 />
                             ) : (
                                 <div className="messages-empty">

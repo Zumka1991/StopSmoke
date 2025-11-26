@@ -31,6 +31,8 @@ public class ConversationResponse
     public DateTime? LastMessageAt { get; set; }
     public List<ParticipantResponse> Participants { get; set; } = new();
     public List<MessageResponse> Messages { get; set; } = new();
+    public bool IsBlocked { get; set; }
+    public bool IsBlockedByOther { get; set; }
 }
 
 public class ConversationListItemResponse
@@ -42,6 +44,7 @@ public class ConversationListItemResponse
     public DateTime? LastMessageAt { get; set; }
     public int UnreadCount { get; set; }
     public bool IsOtherUserOnline { get; set; }
+    public bool IsBlocked { get; set; }
 }
 
 public class ParticipantResponse
