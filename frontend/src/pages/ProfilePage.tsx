@@ -25,8 +25,13 @@ interface Relapse {
 
 export default function ProfilePage() {
     const { t } = useTranslation();
-    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+        defaultValues: {
+            showInLeaderboard: true
+        }
+    });
     const quitDate = watch('quitDate');
+    const showInLeaderboard = watch('showInLeaderboard');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -312,7 +317,6 @@ export default function ProfilePage() {
                             background: 'rgba(59, 130, 246, 0.1)',
                             border: '2px solid rgba(59, 130, 246, 0.3)',
                             borderRadius: '0.75rem',
-                            cursor: 'pointer',
                             transition: 'all 0.2s'
                         }}
                         onMouseEnter={(e) => {
@@ -322,12 +326,6 @@ export default function ProfilePage() {
                         onMouseLeave={(e) => {
                             e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
                             e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
-                        }}
-                        onClick={(e) => {
-                            const checkbox = e.currentTarget.querySelector('input[type="checkbox"]') as HTMLInputElement;
-                            if (e.target !== checkbox) {
-                                checkbox.click();
-                            }
                         }}>
                             <div>
                                 <label className="form-label" style={{ marginBottom: '0.25rem', cursor: 'pointer' }}>
@@ -341,47 +339,40 @@ export default function ProfilePage() {
                                     {t('profile.showInLeaderboardHint')}
                                 </p>
                             </div>
-                            <label style={{
-                                position: 'relative',
-                                display: 'inline-block',
-                                width: '60px',
-                                height: '34px',
-                                flexShrink: 0
-                            }}>
+                            <div
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setValue('showInLeaderboard', !showInLeaderboard);
+                                }}
+                                style={{
+                                    position: 'relative',
+                                    display: 'inline-block',
+                                    width: '60px',
+                                    height: '34px',
+                                    flexShrink: 0,
+                                    backgroundColor: showInLeaderboard ? 'var(--success-color)' : 'rgba(255, 255, 255, 0.2)',
+                                    borderRadius: '34px',
+                                    cursor: 'pointer',
+                                    transition: 'background-color 0.3s'
+                                }}
+                            >
                                 <input
                                     {...register('showInLeaderboard')}
                                     type="checkbox"
-                                    style={{
-                                        opacity: 0,
-                                        width: 0,
-                                        height: 0
-                                    }}
+                                    style={{ display: 'none' }}
                                 />
-                                <span style={{
+                                <div style={{
                                     position: 'absolute',
-                                    cursor: 'pointer',
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    backgroundColor: watch('showInLeaderboard') ? 'var(--success-color)' : 'rgba(255, 255, 255, 0.2)',
-                                    transition: '0.3s',
-                                    borderRadius: '34px'
-                                }}>
-                                    <span style={{
-                                        position: 'absolute',
-                                        content: '""',
-                                        height: '26px',
-                                        width: '26px',
-                                        left: watch('showInLeaderboard') ? '30px' : '4px',
-                                        bottom: '4px',
-                                        backgroundColor: 'white',
-                                        transition: '0.3s',
-                                        borderRadius: '50%',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                                    }}></span>
-                                </span>
-                            </label>
+                                    width: '26px',
+                                    height: '26px',
+                                    borderRadius: '50%',
+                                    backgroundColor: 'white',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                    top: '4px',
+                                    left: showInLeaderboard ? '30px' : '4px',
+                                    transition: 'left 0.3s'
+                                }}></div>
+                            </div>
                         </div>
 
                         <button
