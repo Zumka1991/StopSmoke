@@ -118,43 +118,51 @@ export default function MarathonPage() {
 
                 <div style={{ display: 'grid', gap: '1.5rem' }}>
                     {marathons.map(marathon => (
-                        <div key={marathon.id} className="card" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '2rem', padding: '2rem', width: '100%', maxWidth: 'none' }}>
-                            <div style={{ flex: 1 }}>
-                                <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#3b82f6', fontWeight: '700' }}>{marathon.title}</h3>
-                                <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>{marathon.description}</p>
-                                <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                                    <span>📅 {new Date(marathon.startDate).toLocaleDateString()} - {new Date(marathon.endDate).toLocaleDateString()}</span>
-                                    <span>👥 {marathon.participantsCount} {t('marathon.participants')}</span>
-                                    <span>⏱️ {getTimeStatus(marathon)}</span>
+                        <div key={marathon.id} className="card marathon-card">
+                            <div className="marathon-card-header">
+                                <h3 className="marathon-card-title">{marathon.title}</h3>
+                                {marathon.isJoined && (
+                                    <div className={`marathon-status-badge ${marathon.userStatus === 'Active' ? 'status-active' : 'status-disqualified'}`}>
+                                        {marathon.userStatus === 'Active' ? t('marathon.joined') : t('marathon.disqualified')}
+                                    </div>
+                                )}
+                            </div>
+
+                            <p className="marathon-card-description">{marathon.description}</p>
+
+                            <div className="marathon-card-info">
+                                <div className="marathon-info-item">
+                                    <span className="info-icon">📅</span>
+                                    <div className="info-content">
+                                        <div className="info-dates">
+                                            {new Date(marathon.startDate).toLocaleDateString()}
+                                            <span style={{ margin: '0 0.5rem' }}>-</span>
+                                            {new Date(marathon.endDate).toLocaleDateString()}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="marathon-info-row">
+                                    <div className="marathon-info-item">
+                                        <span className="info-icon">👥</span>
+                                        <span className="info-text">{marathon.participantsCount} {t('marathon.participants')}</span>
+                                    </div>
+
+                                    <div className="marathon-info-item">
+                                        <span className="info-icon">⏱️</span>
+                                        <span className="info-text">{getTimeStatus(marathon)}</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div style={{ minWidth: '180px', display: 'flex', justifyContent: 'flex-end' }}>
-                                {marathon.isJoined ? (
-                                    <div style={{
-                                        padding: '0.75rem 1.5rem',
-                                        borderRadius: '1rem',
-                                        background: marathon.userStatus === 'Active' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                                        color: marathon.userStatus === 'Active' ? '#4ade80' : '#f87171',
-                                        fontWeight: '700',
-                                        fontSize: '0.95rem',
-                                        textAlign: 'center',
-                                        minWidth: '150px'
-                                    }}>
-                                        {marathon.userStatus === 'Active' ? t('marathon.joined') : t('marathon.disqualified')}
-                                    </div>
-                                ) : (
-                                    new Date(marathon.startDate) > new Date() && (
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={() => handleJoin(marathon.id)}
-                                            style={{ padding: '0.75rem 2rem', fontSize: '1rem', fontWeight: '600', minWidth: '150px' }}
-                                        >
-                                            {t('marathon.join')}
-                                        </button>
-                                    )
-                                )}
-                            </div>
+                            {!marathon.isJoined && new Date(marathon.startDate) > new Date() && (
+                                <button
+                                    className="btn btn-primary marathon-join-btn"
+                                    onClick={() => handleJoin(marathon.id)}
+                                >
+                                    {t('marathon.join')}
+                                </button>
+                            )}
                         </div>
                     ))}
 
