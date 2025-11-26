@@ -5,6 +5,7 @@ import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Button from '../components/Button';
 import type { Marathon, CreateMarathonDto, User, MarathonParticipant } from '../types';
 
 export default function MarathonPage() {
@@ -127,12 +128,12 @@ export default function MarathonPage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                     <h2>{t('marathon.title')}</h2>
                     {user?.isAdmin && (
-                        <button
-                            className="btn btn-primary"
+                        <Button
+                            variant="primary"
                             onClick={() => setShowCreateModal(true)}
                         >
                             {t('marathon.create')}
-                        </button>
+                        </Button>
                     )}
                 </div>
 
@@ -181,12 +182,13 @@ export default function MarathonPage() {
                             </div>
 
                             {!marathon.isJoined && new Date(marathon.startDate) > new Date() && (
-                                <button
-                                    className="btn btn-primary marathon-join-btn"
+                                <Button
+                                    variant="primary"
                                     onClick={() => handleJoin(marathon.id)}
+                                    className="marathon-join-btn"
                                 >
                                     {t('marathon.join')}
-                                </button>
+                                </Button>
                             )}
                         </div>
                     ))}
@@ -249,20 +251,17 @@ export default function MarathonPage() {
                                 />
                             </div>
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                                <button type="submit" className="btn btn-primary" disabled={creating} style={{ flex: 1 }}>
-                                    {creating ? <LoadingSpinner size="20px" /> : t('marathon.createBtn')}
-                                </button>
-                                <button
+                                <Button type="submit" variant="primary" disabled={creating} loading={creating} style={{ flex: 1 }}>
+                                    {creating ? t('marathon.creating') : t('marathon.createBtn')}
+                                </Button>
+                                <Button
                                     type="button"
+                                    variant="ghost"
                                     onClick={() => setShowCreateModal(false)}
-                                    style={{
-                                        flex: 1, padding: '0.75rem', background: 'transparent',
-                                        border: '1px solid var(--text-secondary)', borderRadius: '0.5rem',
-                                        color: 'var(--text-primary)', cursor: 'pointer'
-                                    }}
+                                    style={{ flex: 1 }}
                                 >
                                     {t('marathon.cancelBtn')}
-                                </button>
+                                </Button>
                             </div>
                         </form>
                     </div>
@@ -333,8 +332,8 @@ export default function MarathonPage() {
                                     const statusText = participant.status === 'Active'
                                         ? t('marathon.statusActive')
                                         : participant.status === 'Completed'
-                                        ? t('marathon.statusCompleted')
-                                        : t('marathon.statusDisqualified');
+                                            ? t('marathon.statusCompleted')
+                                            : t('marathon.statusDisqualified');
 
                                     return (
                                         <div
@@ -390,24 +389,17 @@ export default function MarathonPage() {
                             </div>
                         )}
 
-                        <button
+                        <Button
+                            variant="ghost"
+                            fullWidth
                             onClick={() => {
                                 setShowParticipantsModal(false);
                                 setParticipants([]);
                             }}
-                            style={{
-                                marginTop: '1.5rem',
-                                padding: '0.75rem',
-                                background: 'transparent',
-                                border: '1px solid var(--text-secondary)',
-                                borderRadius: '0.5rem',
-                                color: 'var(--text-primary)',
-                                cursor: 'pointer',
-                                fontWeight: '600'
-                            }}
+                            style={{ marginTop: '1.5rem' }}
                         >
                             {t('marathon.closeBtn')}
-                        </button>
+                        </Button>
                     </div>
                 </div>
             )}

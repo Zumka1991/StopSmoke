@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -45,6 +45,18 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
     const isActive = (path?: string) => path ? location.pathname === path : false;
     const isChildActive = (children: { path: string }[]) => children.some(child => isActive(child.path));
+
+    // Block body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileMenuOpen]);
 
     return (
         <>
@@ -242,28 +254,31 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         {/* SOS Button */}
                         <button
                             onClick={() => setSosOpen(true)}
+                            className="sos-button"
                             style={{
                                 padding: '0.5rem 1rem',
-                                background: 'var(--error-color)',
-                                border: 'none',
+                                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%)',
+                                border: '2px solid rgba(239, 68, 68, 0.6)',
                                 borderRadius: '0.75rem',
                                 color: 'white',
                                 fontSize: '0.9rem',
                                 fontWeight: 'bold',
                                 cursor: 'pointer',
-                                transition: 'all 0.2s',
+                                transition: 'all 0.3s',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '0.4rem',
-                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)'
+                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3)',
+                                position: 'relative',
+                                animation: 'sos-pulse 2s ease-in-out infinite'
                             }}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.6)';
+                                e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                                e.currentTarget.style.boxShadow = '0 6px 20px rgba(239, 68, 68, 0.7), 0 0 30px rgba(239, 68, 68, 0.5)';
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.4)';
+                                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3)';
                             }}
                         >
                             🆘 {t('sos.button')}
@@ -331,16 +346,21 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         top: '70px',
                         left: 0,
                         right: 0,
+                        maxHeight: 'calc(100vh - 70px)',
                         background: 'rgba(30, 41, 59, 0.98)',
                         backdropFilter: 'blur(10px)',
                         borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
                         padding: '1rem',
                         transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
                         transition: 'transform 0.3s ease',
-                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)'
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
+                        WebkitOverflowScrolling: 'touch',
+                        zIndex: 999
                     }}
                 >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingBottom: '2rem' }}>
                         {navItems.map((item) => (
                             <div key={item.path || item.id}>
                                 <button
@@ -432,10 +452,11 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                 setSosOpen(true);
                                 setMobileMenuOpen(false);
                             }}
+                            className="sos-button"
                             style={{
                                 padding: '1rem',
-                                background: 'var(--error-color)',
-                                border: 'none',
+                                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%)',
+                                border: '2px solid rgba(239, 68, 68, 0.6)',
                                 borderRadius: '0.75rem',
                                 color: 'white',
                                 fontSize: '1rem',
@@ -445,7 +466,9 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                 alignItems: 'center',
                                 gap: '0.75rem',
                                 textAlign: 'left',
-                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)'
+                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3)',
+                                animation: 'sos-pulse 2s ease-in-out infinite',
+                                width: '100%'
                             }}
                         >
                             <span style={{ fontSize: '1.5rem' }}>🆘</span>
@@ -484,6 +507,15 @@ export default function Navbar({ onLogout }: NavbarProps) {
                 </div>
 
                 <style>{`
+                    @keyframes sos-pulse {
+                        0%, 100% {
+                            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3);
+                        }
+                        50% {
+                            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.7), 0 0 30px rgba(239, 68, 68, 0.5);
+                        }
+                    }
+
                     @media (max-width: 1150px) {
                         .desktop-nav {
                             display: none !important;

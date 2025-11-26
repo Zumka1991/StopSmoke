@@ -6,6 +6,7 @@ import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Button from '../components/Button';
 
 interface ProfileData {
     email: string;
@@ -222,8 +223,11 @@ export default function ProfilePage() {
                             <label className="form-label">{t('profile.quitDate')}</label>
 
                             {/* Quick Start Button */}
-                            <button
+                            <Button
                                 type="button"
+                                variant="purple"
+                                fullWidth
+                                size="lg"
                                 onClick={() => {
                                     const now = new Date();
                                     const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
@@ -231,31 +235,10 @@ export default function ProfilePage() {
                                         .slice(0, 16);
                                     setValue('quitDate', localDateTime);
                                 }}
-                                style={{
-                                    width: '100%',
-                                    padding: '1rem',
-                                    marginBottom: '1rem',
-                                    background: 'linear-gradient(135deg, var(--success-color), #16a34a)',
-                                    border: 'none',
-                                    borderRadius: '0.75rem',
-                                    color: 'white',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
-                                    transition: 'all 0.2s'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(-2px)';
-                                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(34, 197, 94, 0.4)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.3)';
-                                }}
+                                style={{ marginBottom: '1rem' }}
                             >
                                 🚭 {t('profile.startNow')}
-                            </button>
+                            </Button>
 
                             {/* Divider */}
                             <div style={{
@@ -362,14 +345,14 @@ export default function ProfilePage() {
                             borderRadius: '0.75rem',
                             transition: 'all 0.2s'
                         }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
-                            e.currentTarget.style.borderColor = 'var(--accent-color)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
-                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
-                        }}>
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                                e.currentTarget.style.borderColor = 'var(--accent-color)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
+                                e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                            }}>
                             <div>
                                 <label className="form-label" style={{ marginBottom: '0.25rem', cursor: 'pointer' }}>
                                     {t('profile.showInLeaderboard')}
@@ -418,23 +401,15 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        <button
+                        <Button
                             type="submit"
-                            className="btn btn-primary"
+                            variant="primary"
+                            fullWidth
                             disabled={saving}
-                            style={{
-                                width: '100%',
-                                opacity: saving ? 0.7 : 1,
-                                cursor: saving ? 'not-allowed' : 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}
+                            loading={saving}
                         >
-                            {saving && <LoadingSpinner size="20px" />}
                             {saving ? t('common.saving') || 'Saving...' : t('common.save')}
-                        </button>
+                        </Button>
                     </form>
                 </div>
 
@@ -456,67 +431,24 @@ export default function ProfilePage() {
                         gap: '1rem'
                     }}>
                         {quitDate && (
-                            <button
+                            <Button
+                                variant="danger"
+                                size="lg"
                                 onClick={() => setShowRelapseModal(true)}
-                                style={{
-                                    padding: '1.25rem',
-                                    background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                                    border: 'none',
-                                    borderRadius: '0.75rem',
-                                    color: 'white',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
-                                    transition: 'all 0.2s',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(-2px)';
-                                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
-                                }}
+                                icon={<span style={{ fontSize: '1.5rem' }}>😔</span>}
                             >
-                                <span style={{ fontSize: '1.5rem' }}>😔</span>
-                                <span>{t('relapse.iRelapsed')}</span>
-                            </button>
+                                {t('relapse.iRelapsed')}
+                            </Button>
                         )}
 
-                        <button
+                        <Button
+                            variant="outline"
+                            size="lg"
                             onClick={openHistoryModal}
-                            style={{
-                                padding: '1.25rem',
-                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.2))',
-                                border: '2px solid rgba(59, 130, 246, 0.4)',
-                                borderRadius: '0.75rem',
-                                color: 'var(--text-primary)',
-                                fontSize: '1rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '0.5rem'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(99, 102, 241, 0.3))';
-                                e.currentTarget.style.border = '2px solid var(--accent-color)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.2))';
-                                e.currentTarget.style.border = '2px solid rgba(59, 130, 246, 0.4)';
-                            }}
+                            icon={<span style={{ fontSize: '1.5rem' }}>📊</span>}
                         >
-                            <span style={{ fontSize: '1.5rem' }}>📊</span>
-                            <span>{t('relapse.history')}</span>
-                        </button>
+                            {t('relapse.history')}
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -556,43 +488,26 @@ export default function ProfilePage() {
                         </div>
 
                         <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                            <button
+                            <Button
                                 onClick={handleRelapseSubmit}
                                 disabled={submittingRelapse}
-                                className="btn btn-primary"
-                                style={{
-                                    flex: 1,
-                                    opacity: submittingRelapse ? 0.7 : 1,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem'
-                                }}
+                                loading={submittingRelapse}
+                                variant="primary"
+                                style={{ flex: 1 }}
                             >
-                                {submittingRelapse && <LoadingSpinner size="20px" />}
                                 {submittingRelapse ? t('common.saving') : t('relapse.submit')}
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => {
                                     setShowRelapseModal(false);
                                     setRelapseReason('');
                                 }}
                                 disabled={submittingRelapse}
-                                style={{
-                                    flex: 1,
-                                    padding: '0.75rem 1.5rem',
-                                    background: 'transparent',
-                                    border: '2px solid rgba(255, 255, 255, 0.2)',
-                                    borderRadius: '0.5rem',
-                                    color: 'var(--text-primary)',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: submittingRelapse ? 'not-allowed' : 'pointer',
-                                    opacity: submittingRelapse ? 0.5 : 1
-                                }}
+                                variant="ghost"
+                                style={{ flex: 1 }}
                             >
                                 {t('relapse.cancel')}
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -663,13 +578,14 @@ export default function ProfilePage() {
                             </div>
                         )}
 
-                        <button
+                        <Button
                             onClick={() => setShowHistoryModal(false)}
-                            className="btn btn-primary"
-                            style={{ marginTop: '1.5rem', width: '100%' }}
+                            variant="primary"
+                            fullWidth
+                            style={{ marginTop: '1.5rem' }}
                         >
                             {t('relapse.close')}
-                        </button>
+                        </Button>
                     </div>
                 </div>
             )}

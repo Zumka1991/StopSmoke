@@ -5,6 +5,7 @@ import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import HealthTimeline from '../components/HealthTimeline';
 import Achievements from '../components/Achievements';
+import Button from '../components/Button';
 
 interface ProfileData {
     email: string;
@@ -106,18 +107,12 @@ export default function DashboardPage() {
                                 {t('admin.manageContent')}
                             </p>
                         </div>
-                        <button
+                        <Button
                             onClick={() => navigate('/admin/articles')}
-                            className="btn"
-                            style={{
-                                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(147, 51, 234, 0.2))',
-                                border: '2px solid rgba(168, 85, 247, 0.5)',
-                                color: '#a855f7',
-                                fontWeight: '600'
-                            }}
+                            variant="purple"
                         >
                             {t('admin.manageArticles')}
-                        </button>
+                        </Button>
                     </div>
                 )}
 
@@ -128,13 +123,14 @@ export default function DashboardPage() {
                         margin: '0 auto'
                     }}>
                         <h2 style={{ marginBottom: '1.5rem' }}>{t('tracker.notStarted')}</h2>
-                        <button
+                        <Button
                             onClick={() => navigate('/profile')}
-                            className="btn btn-primary"
-                            style={{ width: 'auto', padding: '0.75rem 2rem', margin: '0 auto' }}
+                            variant="primary"
+                            size="lg"
+                            style={{ margin: '0 auto' }}
                         >
                             {t('tracker.goToProfile')}
-                        </button>
+                        </Button>
                     </div>
                 ) : (
                     <>

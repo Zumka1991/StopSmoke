@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Button from '../components/Button';
 
 interface Article {
     id: number;
@@ -145,17 +146,15 @@ export default function AdminArticlesPage() {
                         {t('articles.adminTitle')}
                     </h1>
 
-                    <button
+                    <Button
                         onClick={handleCreate}
-                        className="btn btn-primary"
+                        variant="primary"
                         style={{
-                            display: showForm ? 'none' : 'block',
-                            whiteSpace: 'nowrap',
-                            minWidth: 'auto'
+                            display: showForm ? 'none' : 'block'
                         }}
                     >
                         + {t('articles.createNew')}
-                    </button>
+                    </Button>
                 </div>
 
                 {error && (
@@ -232,25 +231,21 @@ export default function AdminArticlesPage() {
                             </div>
 
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-                                <button
+                                <Button
                                     type="submit"
-                                    className="btn btn-primary"
+                                    variant="primary"
                                     disabled={submitting}
+                                    loading={submitting}
                                 >
-                                    {submitting ? <LoadingSpinner size="20px" /> : t('articles.save')}
-                                </button>
-                                <button
+                                    {submitting ? t('articles.saving') : t('articles.save')}
+                                </Button>
+                                <Button
                                     type="button"
-                                    className="btn"
+                                    variant="danger"
                                     onClick={() => setShowForm(false)}
-                                    style={{
-                                        background: 'rgba(239, 68, 68, 0.1)',
-                                        border: '2px solid rgba(239, 68, 68, 0.3)',
-                                        color: '#ef4444'
-                                    }}
                                 >
                                     {t('articles.cancel')}
-                                </button>
+                                </Button>
                             </div>
                         </form>
                     </div>
@@ -328,34 +323,22 @@ export default function AdminArticlesPage() {
                                 </div>
 
                                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                                    <button
+                                    <Button
                                         onClick={() => handleEdit(article)}
-                                        className="btn"
-                                        style={{
-                                            flex: '1 1 120px',
-                                            background: 'rgba(59, 130, 246, 0.1)',
-                                            border: '2px solid rgba(59, 130, 246, 0.3)',
-                                            color: 'var(--accent-color)',
-                                            fontSize: '0.85rem',
-                                            minWidth: '120px'
-                                        }}
+                                        variant="outline"
+                                        size="sm"
+                                        style={{ flex: '1 1 120px', minWidth: '120px' }}
                                     >
                                         {t('articles.edit')}
-                                    </button>
-                                    <button
+                                    </Button>
+                                    <Button
                                         onClick={() => handleDelete(article.id)}
-                                        className="btn"
-                                        style={{
-                                            flex: '1 1 100px',
-                                            background: 'rgba(239, 68, 68, 0.1)',
-                                            border: '2px solid rgba(239, 68, 68, 0.3)',
-                                            color: '#ef4444',
-                                            fontSize: '0.85rem',
-                                            minWidth: '100px'
-                                        }}
+                                        variant="danger"
+                                        size="sm"
+                                        style={{ flex: '1 1 100px', minWidth: '100px' }}
                                     >
                                         {t('articles.delete')}
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         ))}

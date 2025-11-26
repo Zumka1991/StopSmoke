@@ -256,6 +256,29 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   background: radial-gradient(circle, rgba(59, 130, 246, 0.8), rgba(99, 102, 241, 0.4));
   animation: breathe 4s ease-in-out infinite;
   box-shadow: 0 0 60px rgba(59, 130, 246, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Mobile responsive breathing circle */
+@media (max-width: 768px) {
+  .breathing-circle {
+    width: 150px;
+    height: 150px;
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+  }
+}
+
+@media (max-width: 480px) {
+  .breathing-circle {
+    width: 120px;
+    height: 120px;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+  }
 }
 
 .breathing-circle.hold {
@@ -919,9 +942,12 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 }
 
 @keyframes unreadPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
   }
+
   50% {
     box-shadow: 0 0 15px 0 rgba(59, 130, 246, 0.3);
   }
@@ -1498,5 +1524,12 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 
   .marathon-info-item {
     font-size: 0.8rem;
+  }
+}
+
+/* Force single column grid on mobile devices */
+@media (max-width: 768px) {
+  .container[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
   }
 }

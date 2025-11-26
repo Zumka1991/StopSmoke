@@ -6,6 +6,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import api from '../api/axios';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import Logo from '../components/Logo';
+import Button from '../components/Button';
 
 export default function RegisterPage() {
     const { t } = useTranslation();
@@ -122,7 +123,7 @@ export default function RegisterPage() {
                             </div>
                             {recaptchaError && <p className="error-msg text-center">{recaptchaError}</p>}
 
-                            <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>{t('auth.register.submit')}</button>
+                            <Button type="submit" variant="primary" fullWidth>{t('auth.register.submit')}</Button>
                         </form>
 
                         <p className="text-center" style={{ marginTop: '1.5rem', color: 'var(--text-secondary)' }}>
