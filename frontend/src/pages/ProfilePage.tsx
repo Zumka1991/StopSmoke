@@ -14,6 +14,7 @@ interface ProfileData {
     cigarettesPerDay: number;
     pricePerPack: number;
     currency: string;
+    showInLeaderboard: boolean;
 }
 
 interface Relapse {
@@ -59,6 +60,7 @@ export default function ProfilePage() {
                 setValue('cigarettesPerDay', data.cigarettesPerDay);
                 setValue('pricePerPack', data.pricePerPack);
                 setValue('currency', data.currency);
+                setValue('showInLeaderboard', data.showInLeaderboard ?? true);
 
                 setLoading(false);
             } catch (err) {
@@ -81,7 +83,8 @@ export default function ProfilePage() {
                 quitDate: quitDateValue,
                 cigarettesPerDay: parseInt(data.cigarettesPerDay) || 0,
                 pricePerPack: parseFloat(data.pricePerPack) || 0,
-                currency: data.currency
+                currency: data.currency,
+                showInLeaderboard: data.showInLeaderboard ?? true
             });
             setToast({ message: t('profile.updateSuccess'), type: 'success' });
         } catch (err: any) {
@@ -299,6 +302,86 @@ export default function ProfilePage() {
                                 <option value="EUR">EUR</option>
                                 <option value="RUB">RUB</option>
                             </select>
+                        </div>
+
+                        <div className="form-group" style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '1rem',
+                            background: 'rgba(59, 130, 246, 0.1)',
+                            border: '2px solid rgba(59, 130, 246, 0.3)',
+                            borderRadius: '0.75rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                            e.currentTarget.style.borderColor = 'var(--accent-color)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                        }}
+                        onClick={(e) => {
+                            const checkbox = e.currentTarget.querySelector('input[type="checkbox"]') as HTMLInputElement;
+                            if (e.target !== checkbox) {
+                                checkbox.click();
+                            }
+                        }}>
+                            <div>
+                                <label className="form-label" style={{ marginBottom: '0.25rem', cursor: 'pointer' }}>
+                                    {t('profile.showInLeaderboard')}
+                                </label>
+                                <p style={{
+                                    fontSize: '0.875rem',
+                                    color: 'var(--text-secondary)',
+                                    margin: 0
+                                }}>
+                                    {t('profile.showInLeaderboardHint')}
+                                </p>
+                            </div>
+                            <label style={{
+                                position: 'relative',
+                                display: 'inline-block',
+                                width: '60px',
+                                height: '34px',
+                                flexShrink: 0
+                            }}>
+                                <input
+                                    {...register('showInLeaderboard')}
+                                    type="checkbox"
+                                    style={{
+                                        opacity: 0,
+                                        width: 0,
+                                        height: 0
+                                    }}
+                                />
+                                <span style={{
+                                    position: 'absolute',
+                                    cursor: 'pointer',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    backgroundColor: watch('showInLeaderboard') ? 'var(--success-color)' : 'rgba(255, 255, 255, 0.2)',
+                                    transition: '0.3s',
+                                    borderRadius: '34px'
+                                }}>
+                                    <span style={{
+                                        position: 'absolute',
+                                        content: '""',
+                                        height: '26px',
+                                        width: '26px',
+                                        left: watch('showInLeaderboard') ? '30px' : '4px',
+                                        bottom: '4px',
+                                        backgroundColor: 'white',
+                                        transition: '0.3s',
+                                        borderRadius: '50%',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                    }}></span>
+                                </span>
+                            </label>
                         </div>
 
                         <button

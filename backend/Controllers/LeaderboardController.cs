@@ -22,7 +22,7 @@ public class LeaderboardController : ControllerBase
     public async Task<IActionResult> GetLeaderboard()
     {
         var users = await _userManager.Users
-            .Where(u => u.QuitDate != null && !string.IsNullOrWhiteSpace(u.Name))
+            .Where(u => u.QuitDate != null && !string.IsNullOrWhiteSpace(u.Name) && u.ShowInLeaderboard)
             .ToListAsync();
 
         var currentUserEmail = User.Identity!.Name;

@@ -47,7 +47,8 @@ public class ProfileController : ControllerBase
             PricePerPack = user.PricePerPack,
             Currency = user.Currency,
             IsAdmin = user.IsAdmin,
-            CompletedMarathonsCount = completedMarathonsCount
+            CompletedMarathonsCount = completedMarathonsCount,
+            ShowInLeaderboard = user.ShowInLeaderboard
         };
 
         return Ok(profile);
@@ -72,6 +73,7 @@ public class ProfileController : ControllerBase
         user.CigarettesPerDay = model.CigarettesPerDay;
         user.PricePerPack = model.PricePerPack;
         user.Currency = model.Currency;
+        user.ShowInLeaderboard = model.ShowInLeaderboard;
 
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)

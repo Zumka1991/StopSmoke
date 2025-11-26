@@ -60,7 +60,9 @@
         "startNow": "Start Quitting Now",
         "quitDateHelper": "Or choose a custom date",
         "namePlaceholder": "Your name",
-        "futureDateError": "Date cannot be in the future"
+        "futureDateError": "Date cannot be in the future",
+        "showInLeaderboard": "Show in Leaderboard",
+        "showInLeaderboardHint": "Allow others to see your progress in the leaderboard"
     },
     "tracker": {
         "title": "Smoke-Free Journey",
