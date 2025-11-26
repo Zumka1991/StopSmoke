@@ -41,7 +41,7 @@ const ChatList: React.FC<ChatListProps> = ({
                 conversations.map((conv) => (
                     <div
                         key={conv.id}
-                        className={`chat-list-item ${selectedConversationId === conv.id ? 'active' : ''
+                        className={`chat-list-item ${selectedConversationId === conv.id ? 'active' : ''} ${conv.unreadCount > 0 && selectedConversationId !== conv.id ? 'has-unread' : ''
                             }`}
                         onClick={() => onSelectConversation(conv.id)}
                     >

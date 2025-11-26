@@ -901,6 +901,31 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   border-left: 3px solid var(--accent-color);
 }
 
+.chat-list-item.has-unread {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.03));
+  border-left: 3px solid var(--accent-color);
+  animation: unreadPulse 2s ease-in-out infinite;
+}
+
+.chat-list-item.has-unread .chat-list-item-name {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.chat-list-item.has-unread .chat-list-item-preview {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+@keyframes unreadPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+  50% {
+    box-shadow: 0 0 15px 0 rgba(59, 130, 246, 0.3);
+  }
+}
+
 .chat-list-item-avatar {
   width: 48px;
   height: 48px;
