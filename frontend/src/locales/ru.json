@@ -252,7 +252,14 @@
         "cancelBtn": "Отмена",
         "days": "дн.",
         "hours": "ч.",
-        "minutes": "мин."
+        "minutes": "мин.",
+        "daysSmokeFreeSingular": "день без курения",
+        "daysSmokeFreePlural": "дней без курения",
+        "noParticipants": "Участников пока нет",
+        "closeBtn": "Закрыть",
+        "statusActive": "Активен",
+        "statusCompleted": "Завершил",
+        "statusDisqualified": "Выбыл"
     },
     "common": {
         "logout": "Выйти",

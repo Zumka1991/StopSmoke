@@ -5,7 +5,7 @@ import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
-import type { Marathon, CreateMarathonDto, User } from '../types';
+import type { Marathon, CreateMarathonDto, User, MarathonParticipant } from '../types';
 
 export default function MarathonPage() {
     const { t } = useTranslation();
@@ -24,6 +24,12 @@ export default function MarathonPage() {
         startDate: '',
         endDate: ''
     });
+
+    // Participants Modal State
+    const [showParticipantsModal, setShowParticipantsModal] = useState(false);
+    const [selectedMarathonId, setSelectedMarathonId] = useState<number | null>(null);
+    const [participants, setParticipants] = useState<MarathonParticipant[]>([]);
+    const [loadingParticipants, setLoadingParticipants] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -81,6 +87,22 @@ export default function MarathonPage() {
         }
     };
 
+    const handleShowParticipants = async (marathonId: number) => {
+        setSelectedMarathonId(marathonId);
+        setShowParticipantsModal(true);
+        setLoadingParticipants(true);
+
+        try {
+            const response = await api.get(`/marathon/${marathonId}/participants`);
+            setParticipants(response.data);
+        } catch (err) {
+            console.error('Failed to load participants', err);
+            setToast({ message: 'Failed to load participants', type: 'error' });
+        } finally {
+            setLoadingParticipants(false);
+        }
+    };
+
     const getTimeStatus = (marathon: Marathon) => {
         const now = new Date();
         const start = new Date(marathon.startDate);
@@ -120,7 +142,12 @@ export default function MarathonPage() {
                     {marathons.map(marathon => (
                         <div key={marathon.id} className="card marathon-card">
                             <div className="marathon-card-header">
-                                <h3 className="marathon-card-title">{marathon.title}</h3>
+                                <h3
+                                    className="marathon-card-title marathon-card-title-clickable"
+                                    onClick={() => handleShowParticipants(marathon.id)}
+                                >
+                                    {marathon.title}
+                                </h3>
                                 {marathon.isJoined && (
                                     <div className={`marathon-status-badge ${marathon.userStatus === 'Active' ? 'status-active' : 'status-disqualified'}`}>
                                         {marathon.userStatus === 'Active' ? t('marathon.joined') : t('marathon.disqualified')}
@@ -240,6 +267,149 @@ export default function MarathonPage() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Participants Modal */}
+            {showParticipantsModal && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.7)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1000,
+                        padding: '1rem'
+                    }}
+                    onClick={() => {
+                        setShowParticipantsModal(false);
+                        setParticipants([]);
+                    }}
+                >
+                    <div
+                        className="card"
+                        style={{
+                            maxWidth: '600px',
+                            width: '100%',
+                            margin: 0,
+                            maxHeight: '80vh',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            👥 {t('marathon.participants')}
+                        </h3>
+
+                        {loadingParticipants ? (
+                            <div style={{ textAlign: 'center', padding: '3rem' }}>
+                                <LoadingSpinner />
+                            </div>
+                        ) : participants.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
+                                {t('marathon.noParticipants')}
+                            </div>
+                        ) : (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.75rem',
+                                    overflowY: 'auto',
+                                    maxHeight: 'calc(80vh - 120px)'
+                                }}
+                            >
+                                {participants.map((participant) => {
+                                    const daysText = participant.daysSinceLapse === 1
+                                        ? t('marathon.daysSmokeFreeSingular')
+                                        : t('marathon.daysSmokeFreePlural');
+
+                                    const statusText = participant.status === 'Active'
+                                        ? t('marathon.statusActive')
+                                        : participant.status === 'Completed'
+                                        ? t('marathon.statusCompleted')
+                                        : t('marathon.statusDisqualified');
+
+                                    return (
+                                        <div
+                                            key={participant.userId}
+                                            className="participant-item"
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                padding: '1rem',
+                                                background: 'rgba(59, 130, 246, 0.05)',
+                                                borderRadius: '0.75rem',
+                                                border: '1px solid rgba(59, 130, 246, 0.1)',
+                                                gap: '1rem'
+                                            }}
+                                        >
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ fontWeight: '600', fontSize: '1rem', color: 'var(--text-primary)', marginBottom: '0.25rem', wordBreak: 'break-word' }}>
+                                                    {participant.userName}
+                                                </div>
+                                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                                    {participant.daysSinceLapse} {daysText}
+                                                </div>
+                                            </div>
+                                            <div
+                                                style={{
+                                                    padding: '0.4rem 0.875rem',
+                                                    borderRadius: '1.5rem',
+                                                    fontSize: '0.8rem',
+                                                    fontWeight: '600',
+                                                    whiteSpace: 'nowrap',
+                                                    flexShrink: 0,
+                                                    ...(participant.status === 'Active' ? {
+                                                        background: 'rgba(34, 197, 94, 0.15)',
+                                                        color: '#4ade80',
+                                                        border: '1px solid rgba(34, 197, 94, 0.3)'
+                                                    } : participant.status === 'Completed' ? {
+                                                        background: 'rgba(59, 130, 246, 0.15)',
+                                                        color: '#60a5fa',
+                                                        border: '1px solid rgba(59, 130, 246, 0.3)'
+                                                    } : {
+                                                        background: 'rgba(239, 68, 68, 0.15)',
+                                                        color: '#f87171',
+                                                        border: '1px solid rgba(239, 68, 68, 0.3)'
+                                                    })
+                                                }}
+                                            >
+                                                {statusText}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        <button
+                            onClick={() => {
+                                setShowParticipantsModal(false);
+                                setParticipants([]);
+                            }}
+                            style={{
+                                marginTop: '1.5rem',
+                                padding: '0.75rem',
+                                background: 'transparent',
+                                border: '1px solid var(--text-secondary)',
+                                borderRadius: '0.5rem',
+                                color: 'var(--text-primary)',
+                                cursor: 'pointer',
+                                fontWeight: '600'
+                            }}
+                        >
+                            {t('marathon.closeBtn')}
+                        </button>
                     </div>
                 </div>
             )}

@@ -1354,6 +1354,21 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   word-break: break-word;
 }
 
+.marathon-card-title-clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.marathon-card-title-clickable:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.marathon-card-title-clickable:active {
+  transform: scale(0.98);
+}
+
 .marathon-status-badge {
   padding: 0.5rem 1rem;
   border-radius: 2rem;

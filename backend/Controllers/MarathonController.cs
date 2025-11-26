@@ -140,4 +140,34 @@ public class MarathonController : ControllerBase
 
         return Ok(new { Message = "Ended marathons completed successfully" });
     }
+
+    [HttpGet("{id}/participants")]
+    public async Task<ActionResult<IEnumerable<MarathonParticipantDto>>> GetMarathonParticipants(int id)
+    {
+        var marathon = await _context.Marathons
+            .Include(m => m.Participants)
+            .ThenInclude(p => p.User)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (marathon == null)
+        {
+            return NotFound();
+        }
+
+        var participants = marathon.Participants
+            .Select(p => new MarathonParticipantDto
+            {
+                UserId = p.UserId,
+                UserName = p.User.Name,
+                Status = p.Status.ToString(),
+                JoinedAt = p.JoinedAt,
+                DaysSinceLapse = p.User.QuitDate.HasValue
+                    ? (int)(DateTime.UtcNow - p.User.QuitDate.Value).TotalDays
+                    : 0
+            })
+            .OrderByDescending(p => p.DaysSinceLapse)
+            .ToList();
+
+        return Ok(participants);
+    }
 }

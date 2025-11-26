@@ -258,7 +258,14 @@
         "cancelBtn": "Cancel",
         "days": "d",
         "hours": "h",
-        "minutes": "m"
+        "minutes": "m",
+        "daysSmokeFreeSingular": "day smoke-free",
+        "daysSmokeFreePlural": "days smoke-free",
+        "noParticipants": "No participants yet",
+        "closeBtn": "Close",
+        "statusActive": "Active",
+        "statusCompleted": "Completed",
+        "statusDisqualified": "Disqualified"
     },
     "messages": {
         "title": "Messages",

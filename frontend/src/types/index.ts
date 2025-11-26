@@ -26,3 +26,11 @@ export interface CreateMarathonDto {
     startDate: string;
     endDate: string;
 }
+
+export interface MarathonParticipant {
+    userId: string;
+    userName: string;
+    status: 'Active' | 'Disqualified' | 'Completed';
+    joinedAt: string;
+    daysSinceLapse: number;
+}
