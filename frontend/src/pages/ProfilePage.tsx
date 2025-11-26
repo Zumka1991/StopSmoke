@@ -25,7 +25,7 @@ interface Relapse {
 
 export default function ProfilePage() {
     const { t } = useTranslation();
-    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<any>({
         defaultValues: {
             showInLeaderboard: true
         }
