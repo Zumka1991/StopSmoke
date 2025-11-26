@@ -26,7 +26,8 @@
             "passwordRequired": "Пароль обязателен",
             "nameMinLength": "Минимум 3 символа",
             "passwordMinLength": "Минимум 6 символов",
-            "namePlaceholder": "Ваше имя"
+            "namePlaceholder": "Ваше имя",
+            "recaptchaRequired": "Пожалуйста, подтвердите, что вы не робот"
         }
     },
     "home": {

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import ReCAPTCHA from 'react-google-recaptcha';
 import api from '../api/axios';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
@@ -9,11 +10,23 @@ export default function RegisterPage() {
     const { t } = useTranslation();
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [serverError, setServerError] = useState('');
+    const [recaptchaError, setRecaptchaError] = useState('');
     const navigate = useNavigate();
+    const recaptchaRef = useRef<ReCAPTCHA>(null);
 
     const onSubmit = async (data: any) => {
+        // Check reCAPTCHA
+        const recaptchaToken = recaptchaRef.current?.getValue();
+        if (!recaptchaToken) {
+            setRecaptchaError(t('auth.register.recaptchaRequired'));
+            return;
+        }
+
         try {
-            await api.post('/auth/register', data);
+            await api.post('/auth/register', {
+                ...data,
+                recaptchaToken
+            });
             navigate('/login');
         } catch (err: any) {
             if (err.response?.data?.errors) {
@@ -22,6 +35,8 @@ export default function RegisterPage() {
             } else {
                 setServerError(err.response?.data?.message || t('auth.register.error'));
             }
+            // Reset reCAPTCHA on error
+            recaptchaRef.current?.reset();
         }
     };
 
@@ -109,6 +124,16 @@ export default function RegisterPage() {
                             </div>
 
                             {serverError && <p className="error-msg text-center">{serverError}</p>}
+
+                            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+                                <ReCAPTCHA
+                                    ref={recaptchaRef}
+                                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                                    onChange={() => setRecaptchaError('')}
+                                    theme="dark"
+                                />
+                            </div>
+                            {recaptchaError && <p className="error-msg text-center">{recaptchaError}</p>}
 
                             <button type="submit" className="btn btn-primary">{t('auth.register.submit')}</button>
                         </form>

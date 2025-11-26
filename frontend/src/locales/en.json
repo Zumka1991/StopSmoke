@@ -26,7 +26,8 @@
             "passwordRequired": "Password is required",
             "nameMinLength": "Min 3 chars",
             "passwordMinLength": "Min 6 chars",
-            "namePlaceholder": "Your name"
+            "namePlaceholder": "Your name",
+            "recaptchaRequired": "Please complete the reCAPTCHA"
         }
     },
     "home": {

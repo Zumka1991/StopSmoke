@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using StopSmoke.Backend.DTOs;
 using StopSmoke.Backend.Models;
+using StopSmoke.Backend.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,11 +16,16 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;
+    private readonly IRecaptchaService _recaptchaService;
 
-    public AuthController(UserManager<User> userManager, IConfiguration configuration)
+    public AuthController(
+        UserManager<User> userManager,
+        IConfiguration configuration,
+        IRecaptchaService recaptchaService)
     {
         _userManager = userManager;
         _configuration = configuration;
+        _recaptchaService = recaptchaService;
     }
 
     [HttpPost("register")]
@@ -27,6 +33,11 @@ public class AuthController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+
+        // Verify reCAPTCHA
+        var isRecaptchaValid = await _recaptchaService.VerifyTokenAsync(model.RecaptchaToken);
+        if (!isRecaptchaValid)
+            return BadRequest(new { Message = "reCAPTCHA verification failed. Please try again." });
 
         var userExists = await _userManager.FindByEmailAsync(model.Email);
         if (userExists != null)

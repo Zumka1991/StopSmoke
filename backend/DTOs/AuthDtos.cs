@@ -14,6 +14,9 @@ public class RegisterDto
 
     [StringLength(100, MinimumLength = 3)]
     public string? Name { get; set; }
+
+    [Required]
+    public string RecaptchaToken { get; set; } = string.Empty;
 }
 
 public class LoginDto

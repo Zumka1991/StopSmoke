@@ -75,6 +75,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddSingleton<MarathonCompletionService>();
 builder.Services.AddHostedService(provider => provider.GetRequiredService<MarathonCompletionService>());
 
+// Register reCAPTCHA service
+builder.Services.AddHttpClient<IRecaptchaService, RecaptchaService>();
+
 // Add SignalR
 builder.Services.AddSignalR();
 
