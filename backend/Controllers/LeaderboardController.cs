@@ -25,6 +25,8 @@ public class LeaderboardController : ControllerBase
             .Where(u => u.QuitDate != null && !string.IsNullOrWhiteSpace(u.Name))
             .ToListAsync();
 
+        var currentUserEmail = User.Identity!.Name;
+
         var leaderboard = users
             .Select(u => new
             {
@@ -39,8 +41,9 @@ public class LeaderboardController : ControllerBase
             {
                 Rank = index + 1,
                 u.Name,
+                u.Email,
                 u.DaysClean,
-                IsCurrentUser = u.Email == User.Identity!.Name
+                IsCurrentUser = u.Email == currentUserEmail
             })
             .ToList();
 

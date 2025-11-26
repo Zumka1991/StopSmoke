@@ -79,7 +79,8 @@
         "loading": "Loading...",
         "empty": "No users yet. Be the first!",
         "you": "You",
-        "days": "days"
+        "days": "days",
+        "sendMessage": "Send Message"
     },
     "health": {
         "title": "Health Recovery",

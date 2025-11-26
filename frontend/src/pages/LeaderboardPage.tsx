@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
+import { MessageCircle } from 'lucide-react';
 
 interface LeaderboardEntry {
     rank: number;
     name: string;
+    email: string;
     daysClean: number;
     isCurrentUser: boolean;
 }
@@ -15,6 +17,8 @@ export default function LeaderboardPage() {
     const { t } = useTranslation();
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
+    const [menuOpen, setMenuOpen] = useState<number | null>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -22,6 +26,41 @@ export default function LeaderboardPage() {
         localStorage.removeItem('userEmail');
         navigate('/login');
     };
+
+    const handleMessageUser = async (email: string) => {
+        try {
+            const response = await api.post('/messages/conversations', {
+                participantEmail: email
+            });
+            const conversationId = response.data.conversationId;
+            navigate('/messages');
+        } catch (error) {
+            console.error('Failed to create conversation:', error);
+            alert('Failed to create conversation. Please try again.');
+        }
+        setMenuOpen(null);
+    };
+
+    const handleEntryClick = (entry: LeaderboardEntry, e: React.MouseEvent) => {
+        if (!entry.isCurrentUser) {
+            e.stopPropagation();
+            setMenuOpen(menuOpen === entry.rank ? null : entry.rank);
+        }
+    };
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setMenuOpen(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
@@ -68,7 +107,9 @@ export default function LeaderboardPage() {
                         {leaderboard.map((entry) => (
                             <div
                                 key={entry.rank}
+                                onClick={(e) => handleEntryClick(entry, e)}
                                 style={{
+                                    position: 'relative',
                                     background: entry.isCurrentUser
                                         ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.1))'
                                         : entry.rank <= 3
@@ -157,6 +198,54 @@ export default function LeaderboardPage() {
                                         {t('leaderboard.days')}
                                     </div>
                                 </div>
+
+                                {/* Popup Menu */}
+                                {menuOpen === entry.rank && !entry.isCurrentUser && (
+                                    <div
+                                        ref={menuRef}
+                                        onClick={(e) => e.stopPropagation()}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '100%',
+                                            right: '1rem',
+                                            marginTop: '0.5rem',
+                                            background: 'var(--card-bg)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '0.5rem',
+                                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                                            overflow: 'hidden',
+                                            zIndex: 1000,
+                                            minWidth: '200px'
+                                        }}
+                                    >
+                                        <button
+                                            onClick={() => handleMessageUser(entry.email)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '0.75rem 1rem',
+                                                background: 'transparent',
+                                                border: 'none',
+                                                color: 'var(--text-primary)',
+                                                textAlign: 'left',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.75rem',
+                                                fontSize: '1rem',
+                                                transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.background = 'transparent';
+                                            }}
+                                        >
+                                            <MessageCircle size={18} />
+                                            {t('leaderboard.sendMessage') || 'Send Message'}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
