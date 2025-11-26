@@ -77,6 +77,30 @@ export default function ProfilePage() {
         fetchProfile();
     }, [setValue]);
 
+    const handleToggleLeaderboard = async (newValue: boolean) => {
+        setValue('showInLeaderboard', newValue);
+
+        try {
+            const formData = watch();
+            const quitDateValue = formData.quitDate ? new Date(formData.quitDate).toISOString() : null;
+
+            await api.put('/profile', {
+                name: formData.name,
+                quitDate: quitDateValue,
+                cigarettesPerDay: parseInt(formData.cigarettesPerDay) || 0,
+                pricePerPack: parseFloat(formData.pricePerPack) || 0,
+                currency: formData.currency,
+                showInLeaderboard: newValue
+            });
+            setToast({ message: t('profile.updateSuccess'), type: 'success' });
+        } catch (err: any) {
+            console.error('Profile update error:', err);
+            setToast({ message: err.response?.data?.message || t('profile.updateError'), type: 'error' });
+            // Revert on error
+            setValue('showInLeaderboard', !newValue);
+        }
+    };
+
     const onSubmit = async (data: any) => {
         setSaving(true);
         try {
@@ -342,7 +366,7 @@ export default function ProfilePage() {
                             <div
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setValue('showInLeaderboard', !showInLeaderboard);
+                                    handleToggleLeaderboard(!showInLeaderboard);
                                 }}
                                 style={{
                                     position: 'relative',
