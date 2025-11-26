@@ -115,7 +115,33 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
     const formatMessageTime = (dateString: string) => {
         const date = new Date(dateString);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Today - show only time
+        if (messageDate.getTime() === today.getTime()) {
+            return time;
+        }
+
+        // Yesterday - show "Yesterday" + time
+        if (messageDate.getTime() === yesterday.getTime()) {
+            return `${t('messages.yesterday')}, ${time}`;
+        }
+
+        // This year - show date without year
+        if (date.getFullYear() === now.getFullYear()) {
+            const dateStr = date.toLocaleDateString([], { day: 'numeric', month: 'short' });
+            return `${dateStr}, ${time}`;
+        }
+
+        // Previous years - show full date with year
+        const dateStr = date.toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric' });
+        return `${dateStr}, ${time}`;
     };
 
     return (
