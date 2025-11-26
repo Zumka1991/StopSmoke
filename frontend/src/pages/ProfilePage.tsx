@@ -181,6 +181,13 @@ export default function ProfilePage() {
         .toISOString()
         .slice(0, 16);
 
+    // Минимальная дата: 30 лет назад
+    const thirtyYearsAgo = new Date();
+    thirtyYearsAgo.setFullYear(thirtyYearsAgo.getFullYear() - 30);
+    const minDate = new Date(thirtyYearsAgo.getTime() - thirtyYearsAgo.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16);
+
     return (
         <>
             <Navbar onLogout={handleLogout} />
@@ -269,9 +276,21 @@ export default function ProfilePage() {
                                 {...register('quitDate', {
                                     validate: (value) => {
                                         if (!value) return true;
-                                        return new Date(value) <= new Date() || t('profile.futureDateError');
+                                        const selectedDate = new Date(value);
+                                        const now = new Date();
+                                        const thirtyYearsAgo = new Date();
+                                        thirtyYearsAgo.setFullYear(thirtyYearsAgo.getFullYear() - 30);
+
+                                        if (selectedDate > now) {
+                                            return t('profile.futureDateError');
+                                        }
+                                        if (selectedDate < thirtyYearsAgo) {
+                                            return t('profile.tooOldDateError');
+                                        }
+                                        return true;
                                     }
                                 })}
+                                min={minDate}
                                 max={maxDate}
                                 type="datetime-local"
                                 className="form-input"

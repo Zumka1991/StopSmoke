@@ -55,6 +55,7 @@
         "quitDateHelper": "Или выберите другую дату",
         "namePlaceholder": "Ваше имя",
         "futureDateError": "Дата не может быть в будущем",
+        "tooOldDateError": "Дата не может быть больше 30 лет назад",
         "showInLeaderboard": "Показывать в таблице лидеров",
         "showInLeaderboardHint": "Позволить другим видеть ваш прогресс в таблице лидеров"
     },

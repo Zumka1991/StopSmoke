@@ -61,6 +61,7 @@
         "quitDateHelper": "Or choose a custom date",
         "namePlaceholder": "Your name",
         "futureDateError": "Date cannot be in the future",
+        "tooOldDateError": "Date cannot be more than 30 years ago",
         "showInLeaderboard": "Show in Leaderboard",
         "showInLeaderboardHint": "Allow others to see your progress in the leaderboard"
     },

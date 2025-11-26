@@ -69,6 +69,22 @@ public class ProfileController : ControllerBase
         {
             user.Name = model.Name;
         }
+
+        // Валидация даты: не в будущем и не более 30 лет назад
+        if (model.QuitDate.HasValue)
+        {
+            if (model.QuitDate.Value > DateTime.UtcNow)
+            {
+                return BadRequest(new { message = "Quit date cannot be in the future" });
+            }
+
+            var thirtyYearsAgo = DateTime.UtcNow.AddYears(-30);
+            if (model.QuitDate.Value < thirtyYearsAgo)
+            {
+                return BadRequest(new { message = "Quit date cannot be more than 30 years ago" });
+            }
+        }
+
         user.QuitDate = model.QuitDate;
         user.CigarettesPerDay = model.CigarettesPerDay;
         user.PricePerPack = model.PricePerPack;
