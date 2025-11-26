@@ -128,7 +128,7 @@ export default function RegisterPage() {
                             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
                                 <ReCAPTCHA
                                     ref={recaptchaRef}
-                                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LdC5BgsAAAAADfzFZs2oQwCYzXen9QJwwiqfq-E"}
                                     onChange={() => setRecaptchaError('')}
                                     theme="dark"
                                 />
