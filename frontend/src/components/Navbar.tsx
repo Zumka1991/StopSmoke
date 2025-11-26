@@ -37,6 +37,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                 { path: '/leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
                 { path: '/marathons', label: t('marathon.title'), icon: '🏃' },
                 { path: '/messages', label: t('messages.title'), icon: '💬' },
+                { path: '/articles', label: t('articles.title'), icon: '📰' },
             ]
         },
         { path: '/profile', label: t('nav.profile'), icon: '👤' },

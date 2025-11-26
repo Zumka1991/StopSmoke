@@ -122,7 +122,7 @@ export default function RegisterPage() {
                             </div>
                             {recaptchaError && <p className="error-msg text-center">{recaptchaError}</p>}
 
-                            <button type="submit" className="btn btn-primary">{t('auth.register.submit')}</button>
+                            <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>{t('auth.register.submit')}</button>
                         </form>
 
                         <p className="text-center" style={{ marginTop: '1.5rem', color: 'var(--text-secondary)' }}>

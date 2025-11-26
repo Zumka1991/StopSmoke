@@ -8,6 +8,9 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import MarathonPage from './pages/MarathonPage';
 import MessagesPage from './pages/MessagesPage';
 import SecretAdminPage from './pages/SecretAdminPage';
+import ArticlesPage from './pages/ArticlesPage';
+import ArticleDetailPage from './pages/ArticleDetailPage';
+import AdminArticlesPage from './pages/AdminArticlesPage';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { GlobalNotificationListener } from './components/GlobalNotificationListener';
 import './i18n';
@@ -66,6 +69,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <SecretAdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/articles"
+            element={
+              <ProtectedRoute>
+                <ArticlesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/articles/:id"
+            element={
+              <ProtectedRoute>
+                <ArticleDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/articles"
+            element={
+              <ProtectedRoute>
+                <AdminArticlesPage />
               </ProtectedRoute>
             }
           />

@@ -293,5 +293,37 @@
         "cannotSendMessage": "Вы не можете отправлять сообщения этому пользователю",
         "noMessages": "Нет сообщений",
         "yesterday": "Вчера"
+    },
+    "articles": {
+        "title": "Статьи",
+        "noArticles": "Статей пока нет",
+        "errorLoading": "Ошибка загрузки статей",
+        "errorLoadingArticle": "Ошибка загрузки статьи",
+        "backToList": "Назад к списку",
+        "updated": "Обновлено",
+        "adminTitle": "Управление статьями",
+        "createNew": "Создать статью",
+        "createArticle": "Создать статью",
+        "editArticle": "Редактировать статью",
+        "titleLabel": "Заголовок",
+        "summaryLabel": "Краткое описание",
+        "summaryPlaceholder": "Краткое описание статьи (необязательно)",
+        "contentLabel": "Содержание",
+        "publishLabel": "Опубликовать статью",
+        "save": "Сохранить",
+        "cancel": "Отмена",
+        "edit": "Редактировать",
+        "delete": "Удалить",
+        "confirmDelete": "Вы уверены, что хотите удалить эту статью?",
+        "errorSaving": "Ошибка при сохранении статьи",
+        "errorDeleting": "Ошибка при удалении статьи",
+        "published": "Опубликовано",
+        "draft": "Черновик",
+        "noAdminAccess": "У вас нет прав администратора"
+    },
+    "admin": {
+        "panel": "Панель администратора",
+        "manageContent": "Управление контентом сайта",
+        "manageArticles": "Управление статьями"
     }
 }

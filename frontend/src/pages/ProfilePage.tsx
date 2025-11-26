@@ -423,6 +423,7 @@ export default function ProfilePage() {
                             className="btn btn-primary"
                             disabled={saving}
                             style={{
+                                width: '100%',
                                 opacity: saving ? 0.7 : 1,
                                 cursor: saving ? 'not-allowed' : 'pointer',
                                 display: 'flex',

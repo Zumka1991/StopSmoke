@@ -78,7 +78,7 @@ export default function LoginPage() {
 
                             {serverError && <p className="error-msg text-center">{serverError}</p>}
 
-                            <button type="submit" className="btn btn-primary">{t('auth.login.submit')}</button>
+                            <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>{t('auth.login.submit')}</button>
                         </form>
 
                         <p className="text-center" style={{ marginTop: '1.5rem', color: 'var(--text-secondary)' }}>

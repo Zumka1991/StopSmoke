@@ -13,6 +13,7 @@ interface ProfileData {
     pricePerPack: number;
     currency: string;
     completedMarathonsCount: number;
+    isAdmin: boolean;
 }
 
 export default function DashboardPage() {
@@ -86,6 +87,39 @@ export default function DashboardPage() {
         <>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{ marginTop: '2rem', maxWidth: '1200px' }}>
+                {profile?.isAdmin && (
+                    <div style={{
+                        marginBottom: '2rem',
+                        padding: '1rem',
+                        background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(147, 51, 234, 0.1))',
+                        border: '2px solid rgba(168, 85, 247, 0.4)',
+                        borderRadius: '1rem',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <div>
+                            <h3 style={{ margin: 0, color: '#a855f7', fontSize: '1.1rem' }}>
+                                🛡️ {t('admin.panel')}
+                            </h3>
+                            <p style={{ margin: '0.25rem 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                                {t('admin.manageContent')}
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => navigate('/admin/articles')}
+                            className="btn"
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(147, 51, 234, 0.2))',
+                                border: '2px solid rgba(168, 85, 247, 0.5)',
+                                color: '#a855f7',
+                                fontWeight: '600'
+                            }}
+                        >
+                            {t('admin.manageArticles')}
+                        </button>
+                    </div>
+                )}
 
                 {!profile.quitDate ? (
                     <div className="card text-center" style={{

@@ -12,6 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Conversation> Conversations { get; set; }
     public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Article> Articles { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -56,5 +57,15 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
         modelBuilder.Entity<Message>()
             .HasIndex(m => m.ConversationId);
+
+        // Configure Article relationships
+        modelBuilder.Entity<Article>()
+            .HasOne(a => a.Author)
+            .WithMany()
+            .HasForeignKey(a => a.AuthorId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Article>()
+            .HasIndex(a => a.IsPublished);
     }
 }

@@ -293,5 +293,37 @@
         "cannotSendMessage": "You cannot send messages to this user",
         "noMessages": "No messages",
         "yesterday": "Yesterday"
+    },
+    "articles": {
+        "title": "Articles",
+        "noArticles": "No articles yet",
+        "errorLoading": "Error loading articles",
+        "errorLoadingArticle": "Error loading article",
+        "backToList": "Back to list",
+        "updated": "Updated",
+        "adminTitle": "Manage Articles",
+        "createNew": "Create Article",
+        "createArticle": "Create Article",
+        "editArticle": "Edit Article",
+        "titleLabel": "Title",
+        "summaryLabel": "Summary",
+        "summaryPlaceholder": "Brief article summary (optional)",
+        "contentLabel": "Content",
+        "publishLabel": "Publish article",
+        "save": "Save",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "delete": "Delete",
+        "confirmDelete": "Are you sure you want to delete this article?",
+        "errorSaving": "Error saving article",
+        "errorDeleting": "Error deleting article",
+        "published": "Published",
+        "draft": "Draft",
+        "noAdminAccess": "You don't have admin access"
+    },
+    "admin": {
+        "panel": "Admin Panel",
+        "manageContent": "Manage site content",
+        "manageArticles": "Manage Articles"
     }
 }
