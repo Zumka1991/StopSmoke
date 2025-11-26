@@ -744,6 +744,31 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   overflow-y: auto;
   z-index: 10;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: rgba(59, 130, 246, 0.5) rgba(59, 130, 246, 0.1);
+  /* Firefox */
+}
+
+/* Custom Scrollbar for User Search Results */
+.user-search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.user-search-results::-webkit-scrollbar-track {
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 10px;
+}
+
+.user-search-results::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.7));
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.user-search-results::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.7), rgba(37, 99, 235, 0.9));
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
 }
 
 .user-search-result-item {
@@ -805,6 +830,31 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 .chat-list {
   flex: 1;
   overflow-y: auto;
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: rgba(59, 130, 246, 0.5) rgba(59, 130, 246, 0.1);
+  /* Firefox */
+}
+
+/* Custom Scrollbar for Chat List */
+.chat-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-list::-webkit-scrollbar-track {
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 10px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.7));
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.chat-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.7), rgba(37, 99, 235, 0.9));
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
 }
 
 .chat-list-empty {
@@ -1006,6 +1056,34 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   gap: 1rem;
   min-height: 0;
   /* Important for flex scrolling */
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: rgba(59, 130, 246, 0.5) rgba(59, 130, 246, 0.1);
+  /* Firefox */
+}
+
+/* Custom Scrollbar for Chat Messages (Webkit browsers) */
+.chat-window-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-window-messages::-webkit-scrollbar-track {
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 10px;
+  margin: 0.5rem 0;
+}
+
+.chat-window-messages::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.6), rgba(37, 99, 235, 0.8));
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.3s ease;
+}
+
+.chat-window-messages::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.8), rgba(37, 99, 235, 1));
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
 }
 
 .message {
