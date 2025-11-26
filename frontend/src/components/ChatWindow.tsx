@@ -48,6 +48,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const menuRef = useRef<HTMLDivElement>(null);
     const previousMessageCountRef = useRef<number>(0);
     const isLoadingOlderRef = useRef<boolean>(false);
+    const lastMessageTimeRef = useRef<number>(0);
+    const [canSendMessage, setCanSendMessage] = useState(true);
+    const [cooldownRemaining, setCooldownRemaining] = useState(0);
+    const cooldownIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -79,7 +83,24 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         // Reset message count to allow initial scroll to bottom
         previousMessageCountRef.current = 0;
         isLoadingOlderRef.current = false;
+        // Reset cooldown
+        lastMessageTimeRef.current = 0;
+        setCanSendMessage(true);
+        setCooldownRemaining(0);
+        if (cooldownIntervalRef.current) {
+            clearInterval(cooldownIntervalRef.current);
+            cooldownIntervalRef.current = null;
+        }
     }, [conversationId, isBlocked, isBlockedByOther]);
+
+    // Cleanup interval on unmount
+    useEffect(() => {
+        return () => {
+            if (cooldownIntervalRef.current) {
+                clearInterval(cooldownIntervalRef.current);
+            }
+        };
+    }, []);
 
     // Close menu when clicking outside
     useEffect(() => {
@@ -126,12 +147,53 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         }
     };
 
+    const startCooldown = () => {
+        const COOLDOWN_MS = 2000; // 2 seconds between messages
+
+        // Clear any existing interval
+        if (cooldownIntervalRef.current) {
+            clearInterval(cooldownIntervalRef.current);
+        }
+
+        setCanSendMessage(false);
+        setCooldownRemaining(Math.ceil(COOLDOWN_MS / 1000));
+
+        cooldownIntervalRef.current = setInterval(() => {
+            const timeLeft = Math.ceil((COOLDOWN_MS - (Date.now() - lastMessageTimeRef.current)) / 1000);
+            if (timeLeft <= 0) {
+                setCooldownRemaining(0);
+                setCanSendMessage(true);
+                if (cooldownIntervalRef.current) {
+                    clearInterval(cooldownIntervalRef.current);
+                    cooldownIntervalRef.current = null;
+                }
+            } else {
+                setCooldownRemaining(timeLeft);
+            }
+        }, 100);
+    };
+
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault();
-        if (messageInput.trim()) {
-            onSendMessage(messageInput.trim());
-            setMessageInput('');
+
+        if (!messageInput.trim() || !canSendMessage) return;
+
+        const now = Date.now();
+        const timeSinceLastMessage = now - lastMessageTimeRef.current;
+        const COOLDOWN_MS = 2000; // 2 seconds between messages
+
+        if (timeSinceLastMessage < COOLDOWN_MS && lastMessageTimeRef.current > 0) {
+            // Still in cooldown - just show the remaining time
+            return;
         }
+
+        // Send message
+        onSendMessage(messageInput.trim());
+        setMessageInput('');
+        lastMessageTimeRef.current = now;
+
+        // Start cooldown
+        startCooldown();
     };
 
     const formatMessageTime = (dateString: string) => {
@@ -385,8 +447,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         placeholder={t('messages.typeMessage')}
                         maxLength={2000}
                     />
-                    <button type="submit" disabled={!messageInput.trim()}>
-                        <Send size={20} />
+                    <button
+                        type="submit"
+                        disabled={!messageInput.trim() || !canSendMessage}
+                        style={{
+                            position: 'relative',
+                            opacity: !canSendMessage ? 0.6 : 1
+                        }}
+                    >
+                        {cooldownRemaining > 0 ? (
+                            <span style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>{cooldownRemaining}</span>
+                        ) : (
+                            <Send size={20} />
+                        )}
                     </button>
                 </form>
             )}
