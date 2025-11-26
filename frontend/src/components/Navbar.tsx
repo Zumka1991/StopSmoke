@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 import SOSModal from './SOSModal';
 import { useNotifications } from '../contexts/NotificationContext';
+import Logo from './Logo';
 
 interface NavbarProps {
     onLogout: () => void;
@@ -70,21 +71,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     height: '70px'
                 }}>
                     {/* Logo */}
-                    <div style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        background: 'linear-gradient(135deg, var(--accent-color), var(--success-color))',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem'
-                    }}
-                        onClick={() => navigate('/dashboard')}
-                    >
-                        🚭 StopSmoke
-                    </div>
+                    <Logo size={35} showText={true} onClick={() => navigate('/dashboard')} />
 
                     {/* Desktop Menu */}
                     <div style={{

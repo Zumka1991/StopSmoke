@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import ReCAPTCHA from 'react-google-recaptcha';
 import api from '../api/axios';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import Logo from '../components/Logo';
 
 export default function RegisterPage() {
     const { t } = useTranslation();
@@ -48,22 +49,8 @@ export default function RegisterPage() {
             <div className="auth-container">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', width: '100%', maxWidth: '400px' }}>
                     <div className="text-center">
-                        <div style={{
-                            width: '80px',
-                            height: '80px',
-                            background: 'linear-gradient(135deg, var(--accent-color), #2563eb)',
-                            borderRadius: '50%',
-                            margin: '0 auto 1rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)',
-                            animation: 'pulse 2s infinite'
-                        }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                <path d="m9 12 2 2 4-4" />
-                            </svg>
+                        <div style={{ margin: '0 auto 1rem', display: 'flex', justifyContent: 'center' }}>
+                            <Logo size={80} showText={false} />
                         </div>
                         <h1 style={{
                             fontSize: '2.5rem',
