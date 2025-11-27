@@ -4,12 +4,20 @@ import Logo from '../components/Logo';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import Button from '../components/Button';
 import SOSModal from '../components/SOSModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function LandingPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [sosOpen, setSosOpen] = useState(false);
+
+    // Redirect authenticated users to dashboard
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [navigate]);
 
     const features = [
         {
