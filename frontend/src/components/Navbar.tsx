@@ -407,7 +407,6 @@ export default function Navbar({ onLogout }: NavbarProps) {
                             overflow: 'hidden',
                             width: '48px',
                             height: '48px',
-                            display: 'none',
                             alignItems: 'center',
                             justifyContent: 'center'
                         }}
