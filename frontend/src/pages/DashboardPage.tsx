@@ -24,6 +24,7 @@ export default function DashboardPage() {
     const [preciseDays, setPreciseDays] = useState(0);
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
+    const [seconds, setSeconds] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -54,6 +55,7 @@ export default function DashboardPage() {
                 setDaysClean(0);
                 setHours(0);
                 setMinutes(0);
+                setSeconds(0);
                 return;
             }
 
@@ -61,15 +63,17 @@ export default function DashboardPage() {
             const precise = diff / (1000 * 60 * 60 * 24);
             const hoursLeft = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutesLeft = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secondsLeft = Math.floor((diff % (1000 * 60)) / 1000);
 
             setDaysClean(days);
             setPreciseDays(precise);
             setHours(hoursLeft);
             setMinutes(minutesLeft);
+            setSeconds(secondsLeft);
         };
 
         calculateTime();
-        const interval = setInterval(calculateTime, 60000);
+        const interval = setInterval(calculateTime, 1000);
 
         return () => clearInterval(interval);
     }, [profile]);
@@ -221,6 +225,31 @@ export default function DashboardPage() {
                                     fontWeight: '500'
                                 }}>
                                     {t('tracker.minutesTitle')}
+                                </div>
+                            </div>
+
+                            <div className="slide-up animate-delay-4 stat-card glow-primary" style={{
+                                background: 'rgba(59, 130, 246, 0.1)',
+                                borderRadius: '1rem',
+                                padding: '2.5rem',
+                                border: '2px solid var(--accent-color)',
+                                textAlign: 'center'
+                            }}>
+                                <div className="counter-number number-glow" style={{
+                                    fontSize: '3.5rem',
+                                    fontWeight: 'bold',
+                                    color: 'var(--accent-color)',
+                                    lineHeight: 1
+                                }}>
+                                    {seconds}
+                                </div>
+                                <div style={{
+                                    fontSize: '1rem',
+                                    marginTop: '0.75rem',
+                                    color: 'var(--text-secondary)',
+                                    fontWeight: '500'
+                                }}>
+                                    {t('tracker.secondsTitle')}
                                 </div>
                             </div>
                         </div>

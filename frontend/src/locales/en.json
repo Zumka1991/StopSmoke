@@ -70,6 +70,7 @@
         "daysTitle": "Days Without Smoking",
         "hoursTitle": "Hours",
         "minutesTitle": "Minutes",
+        "secondsTitle": "Seconds",
         "congratulations": "Congratulations!",
         "notStarted": "Set your quit date in profile to start tracking",
         "goToProfile": "Go to Profile",

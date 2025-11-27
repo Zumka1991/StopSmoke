@@ -64,6 +64,7 @@
         "daysTitle": "Дней без курения",
         "hoursTitle": "Часов",
         "minutesTitle": "Минут",
+        "secondsTitle": "Секунд",
         "congratulations": "Поздравляем!",
         "notStarted": "Установите дату отказа в профиле, чтобы начать отслеживание",
         "goToProfile": "Перейти в профиль",
