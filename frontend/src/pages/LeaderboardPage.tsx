@@ -20,6 +20,7 @@ export default function LeaderboardPage() {
     const [menuOpen, setMenuOpen] = useState<number | null>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+    const isAuthenticated = !!localStorage.getItem('token');
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -41,7 +42,7 @@ export default function LeaderboardPage() {
     };
 
     const handleEntryClick = (entry: LeaderboardEntry, e: React.MouseEvent) => {
-        if (!entry.isCurrentUser) {
+        if (!entry.isCurrentUser && isAuthenticated) {
             e.stopPropagation();
             setMenuOpen(menuOpen === entry.rank ? null : entry.rank);
         }
@@ -126,17 +127,17 @@ export default function LeaderboardPage() {
                                     alignItems: 'center',
                                     gap: '1rem',
                                     transition: 'all 0.2s',
-                                    cursor: entry.isCurrentUser ? 'default' : 'pointer',
+                                    cursor: (entry.isCurrentUser || !isAuthenticated) ? 'default' : 'pointer',
                                     zIndex: menuOpen === entry.rank ? 100 : 1
                                 }}
                                 onMouseEnter={(e) => {
-                                    if (!entry.isCurrentUser) {
+                                    if (!entry.isCurrentUser && isAuthenticated) {
                                         e.currentTarget.style.transform = 'translateY(-2px)';
                                         e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
                                     }
                                 }}
                                 onMouseLeave={(e) => {
-                                    if (!entry.isCurrentUser) {
+                                    if (!entry.isCurrentUser && isAuthenticated) {
                                         e.currentTarget.style.transform = 'translateY(0)';
                                         e.currentTarget.style.boxShadow = 'none';
                                     }

@@ -11,6 +11,7 @@ import SecretAdminPage from './pages/SecretAdminPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import AdminArticlesPage from './pages/AdminArticlesPage';
+import LandingPage from './pages/LandingPage';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { GlobalNotificationListener } from './components/GlobalNotificationListener';
 import './i18n';
@@ -22,8 +23,16 @@ function App() {
       <GlobalNotificationListener />
       <Router>
         <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/articles" element={<ArticlesPage />} />
+          <Route path="/articles/:id" element={<ArticleDetailPage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/marathons" element={<MarathonPage />} />
+
+          {/* Protected routes */}
           <Route
             path="/profile"
             element={
@@ -37,22 +46,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/leaderboard"
-            element={
-              <ProtectedRoute>
-                <LeaderboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/marathons"
-            element={
-              <ProtectedRoute>
-                <MarathonPage />
               </ProtectedRoute>
             }
           />
@@ -73,37 +66,11 @@ function App() {
             }
           />
           <Route
-            path="/articles"
-            element={
-              <ProtectedRoute>
-                <ArticlesPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/articles/:id"
-            element={
-              <ProtectedRoute>
-                <ArticleDetailPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/admin/articles"
             element={
               <ProtectedRoute>
                 <AdminArticlesPage />
               </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/"
-            element={
-              localStorage.getItem('token') ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <Navigate to="/login" replace />
-              )
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />

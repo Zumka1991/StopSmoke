@@ -8,7 +8,6 @@ namespace StopSmoke.Backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class LeaderboardController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
@@ -25,7 +24,7 @@ public class LeaderboardController : ControllerBase
             .Where(u => u.QuitDate != null && !string.IsNullOrWhiteSpace(u.Name) && u.ShowInLeaderboard)
             .ToListAsync();
 
-        var currentUserEmail = User.Identity!.Name;
+        var currentUserEmail = User.Identity?.Name;
 
         var leaderboard = users
             .Select(u => new

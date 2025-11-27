@@ -15,6 +15,7 @@ export default function MarathonPage() {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<User | null>(null);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+    const isAuthenticated = !!localStorage.getItem('token');
 
     // Create Modal State
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -37,12 +38,17 @@ export default function MarathonPage() {
 
     const fetchData = async () => {
         try {
-            const [marathonsRes, profileRes] = await Promise.all([
-                api.get('/marathon'),
-                api.get('/profile')
-            ]);
-            setMarathons(marathonsRes.data);
-            setUser(profileRes.data);
+            if (isAuthenticated) {
+                const [marathonsRes, profileRes] = await Promise.all([
+                    api.get('/marathon'),
+                    api.get('/profile')
+                ]);
+                setMarathons(marathonsRes.data);
+                setUser(profileRes.data);
+            } else {
+                const marathonsRes = await api.get('/marathon');
+                setMarathons(marathonsRes.data);
+            }
         } catch (err) {
             console.error('Failed to fetch data', err);
             setToast({ message: 'Failed to load data', type: 'error' });
@@ -181,13 +187,22 @@ export default function MarathonPage() {
                                 </div>
                             </div>
 
-                            {!marathon.isJoined && new Date(marathon.startDate) > new Date() && (
+                            {isAuthenticated && !marathon.isJoined && new Date(marathon.startDate) > new Date() && (
                                 <Button
                                     variant="primary"
                                     onClick={() => handleJoin(marathon.id)}
                                     className="marathon-join-btn"
                                 >
                                     {t('marathon.join')}
+                                </Button>
+                            )}
+                            {!isAuthenticated && new Date(marathon.startDate) > new Date() && (
+                                <Button
+                                    variant="outline"
+                                    onClick={() => navigate('/login')}
+                                    className="marathon-join-btn"
+                                >
+                                    {t('landing.hero.login')} {t('marathon.join').toLowerCase()}
                                 </Button>
                             )}
                         </div>

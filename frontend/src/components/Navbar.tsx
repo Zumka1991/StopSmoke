@@ -7,7 +7,7 @@ import { useNotifications } from '../contexts/NotificationContext';
 import Logo from './Logo';
 
 interface NavbarProps {
-    onLogout: () => void;
+    onLogout?: () => void;
 }
 
 export default function Navbar({ onLogout }: NavbarProps) {
@@ -18,6 +18,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
     const [communityOpen, setCommunityOpen] = useState(false);
     const [sosOpen, setSosOpen] = useState(false);
     const { unreadCount } = useNotifications();
+    const isAuthenticated = !!localStorage.getItem('token');
 
     interface NavItem {
         path?: string;
@@ -27,7 +28,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
         children?: { path: string; label: string; icon: string; }[];
     }
 
-    const navItems: NavItem[] = [
+    const authenticatedNavItems: NavItem[] = [
         { path: '/dashboard', label: t('nav.dashboard'), icon: '🏠' },
         {
             id: 'community',
@@ -42,6 +43,14 @@ export default function Navbar({ onLogout }: NavbarProps) {
         },
         { path: '/profile', label: t('nav.profile'), icon: '👤' },
     ];
+
+    const guestNavItems: NavItem[] = [
+        { path: '/articles', label: t('articles.title'), icon: '📰' },
+        { path: '/leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
+        { path: '/marathons', label: t('marathon.title'), icon: '🏃' },
+    ];
+
+    const navItems = isAuthenticated ? authenticatedNavItems : guestNavItems;
 
     const isActive = (path?: string) => path ? location.pathname === path : false;
     const isChildActive = (children: { path: string }[]) => children.some(child => isActive(child.path));
@@ -84,7 +93,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     height: '70px'
                 }}>
                     {/* Logo */}
-                    <Logo size={35} showText={true} onClick={() => navigate('/dashboard')} />
+                    <Logo size={35} showText={true} onClick={() => navigate(isAuthenticated ? '/dashboard' : '/')} />
 
                     {/* Desktop Menu */}
                     <div style={{
@@ -288,34 +297,65 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
                         <LanguageSwitcher />
 
-                        <button
-                            onClick={onLogout}
-                            style={{
-                                padding: '0.5rem 1rem',
-                                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))',
-                                border: '2px solid rgba(239, 68, 68, 0.4)',
-                                borderRadius: '0.75rem',
-                                color: '#ef4444',
-                                fontSize: '0.9rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.4rem'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.25))';
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))';
-                                e.currentTarget.style.transform = 'translateY(0)';
-                            }}
-                        >
-                            <span>🚪</span>
-                            {t('common.logout')}
-                        </button>
+                        {isAuthenticated ? (
+                            <button
+                                onClick={onLogout}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))',
+                                    border: '2px solid rgba(239, 68, 68, 0.4)',
+                                    borderRadius: '0.75rem',
+                                    color: '#ef4444',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.4rem'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.25))';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
+                            >
+                                <span>🚪</span>
+                                {t('common.logout')}
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => navigate('/login')}
+                                style={{
+                                    padding: '0.5rem 1rem',
+                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))',
+                                    border: '2px solid rgba(59, 130, 246, 0.5)',
+                                    borderRadius: '0.75rem',
+                                    color: 'var(--accent-color)',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.4rem'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(99, 102, 241, 0.3))';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
+                            >
+                                <span>🔐</span>
+                                {t('landing.hero.login')}
+                            </button>
+                        )}
                     </div>
 
                     {/* Mobile Hamburger */}
@@ -481,28 +521,55 @@ export default function Navbar({ onLogout }: NavbarProps) {
                             <LanguageSwitcher />
                         </div>
 
-                        <button
-                            onClick={() => {
-                                onLogout();
-                                setMobileMenuOpen(false);
-                            }}
-                            style={{
-                                padding: '1rem',
-                                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))',
-                                border: '2px solid rgba(239, 68, 68, 0.4)',
-                                borderRadius: '0.75rem',
-                                color: '#ef4444',
-                                fontSize: '1rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.75rem'
-                            }}
-                        >
-                            <span style={{ fontSize: '1.5rem' }}>🚪</span>
-                            {t('common.logout')}
-                        </button>
+                        {isAuthenticated ? (
+                            <button
+                                onClick={() => {
+                                    onLogout?.();
+                                    setMobileMenuOpen(false);
+                                }}
+                                style={{
+                                    padding: '1rem',
+                                    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))',
+                                    border: '2px solid rgba(239, 68, 68, 0.4)',
+                                    borderRadius: '0.75rem',
+                                    color: '#ef4444',
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.75rem',
+                                    width: '100%'
+                                }}
+                            >
+                                <span style={{ fontSize: '1.5rem' }}>🚪</span>
+                                {t('common.logout')}
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => {
+                                    navigate('/login');
+                                    setMobileMenuOpen(false);
+                                }}
+                                style={{
+                                    padding: '1rem',
+                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))',
+                                    border: '2px solid rgba(59, 130, 246, 0.5)',
+                                    borderRadius: '0.75rem',
+                                    color: 'var(--accent-color)',
+                                    fontSize: '1rem',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.75rem',
+                                    width: '100%'
+                                }}
+                            >
+                                <span style={{ fontSize: '1.5rem' }}>🔐</span>
+                                {t('landing.hero.login')}
+                            </button>
+                        )}
                     </div>
                 </div>
 

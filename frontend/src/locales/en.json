@@ -325,5 +325,37 @@
         "panel": "Admin Panel",
         "manageContent": "Manage site content",
         "manageArticles": "Manage Articles"
+    },
+    "landing": {
+        "hero": {
+            "subtitle": "Your journey to a smoke-free life starts here",
+            "getStarted": "Get Started",
+            "login": "Log In",
+            "emergency": "I Want to Smoke!",
+            "emergencyHint": "Click if you feel a strong urge to smoke"
+        },
+        "features": {
+            "tracking": {
+                "title": "Progress Tracking",
+                "description": "Track your smoke-free days, money saved, and cigarettes not smoked"
+            },
+            "motivation": {
+                "title": "Motivation & Achievements",
+                "description": "Earn achievements for your successes and track your health recovery"
+            },
+            "community": {
+                "title": "Community Support",
+                "description": "Connect with others, participate in marathons, and share experiences"
+            },
+            "articles": {
+                "title": "Helpful Articles",
+                "description": "Read motivational content and tips for quitting smoking"
+            }
+        },
+        "explore": {
+            "articles": "Articles",
+            "leaderboard": "Leaderboard",
+            "marathons": "Marathons"
+        }
     }
 }

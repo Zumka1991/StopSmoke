@@ -10,7 +10,6 @@ using System.Security.Claims;
 
 namespace StopSmoke.Backend.Controllers;
 
-[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class MarathonController : ControllerBase
@@ -20,7 +19,7 @@ public class MarathonController : ControllerBase
     private readonly MarathonCompletionService _completionService;
 
     public MarathonController(
-        ApplicationDbContext context, 
+        ApplicationDbContext context,
         UserManager<User> userManager,
         MarathonCompletionService completionService)
     {
@@ -59,6 +58,7 @@ public class MarathonController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<Marathon>> CreateMarathon(CreateMarathonDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -84,6 +84,7 @@ public class MarathonController : ControllerBase
     }
 
     [HttpPost("{id}/join")]
+    [Authorize]
     public async Task<IActionResult> JoinMarathon(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -126,6 +127,7 @@ public class MarathonController : ControllerBase
     }
 
     [HttpPost("complete-ended")]
+    [Authorize]
     public async Task<IActionResult> CompleteEndedMarathons()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
