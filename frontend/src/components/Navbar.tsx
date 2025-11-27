@@ -71,6 +71,26 @@ export default function Navbar({ onLogout }: NavbarProps) {
         <>
             <SOSModal isOpen={sosOpen} onClose={() => setSosOpen(false)} />
 
+            {/* Mobile Menu Backdrop Overlay */}
+            <div
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0, 0, 0, 0.6)',
+                    backdropFilter: 'blur(8px)',
+                    zIndex: 998,
+                    opacity: mobileMenuOpen ? 1 : 0,
+                    visibility: mobileMenuOpen ? 'visible' : 'hidden',
+                    transition: 'all 0.3s ease',
+                    display: 'none'
+                }}
+                className="mobile-backdrop"
+            />
+
             <nav style={{
                 background: 'rgba(30, 41, 59, 0.95)',
                 backdropFilter: 'blur(10px)',
@@ -145,13 +165,15 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                             opacity: communityOpen ? 1 : 0,
                                             visibility: communityOpen ? 'visible' : 'hidden',
                                             background: 'rgba(30, 41, 59, 0.98)',
-                                            backdropFilter: 'blur(10px)',
-                                            border: '1px solid rgba(59, 130, 246, 0.2)',
+                                            backdropFilter: 'blur(16px)',
+                                            border: '1px solid rgba(59, 130, 246, 0.3)',
                                             borderRadius: '0.75rem',
                                             padding: '0.5rem',
-                                            minWidth: '200px',
-                                            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
-                                            transition: 'all 0.2s ease',
+                                            minWidth: '220px',
+                                            boxShadow: communityOpen
+                                                ? '0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                                                : '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+                                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                             zIndex: 1001,
                                             marginTop: '0.5rem'
                                         }}>
@@ -198,14 +220,16 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                                     {child.path === '/messages' && unreadCount > 0 && (
                                                         <span style={{
                                                             marginLeft: 'auto',
-                                                            background: 'var(--error-color)',
+                                                            background: 'linear-gradient(135deg, #ef4444, #dc2626)',
                                                             color: 'white',
                                                             fontSize: '0.75rem',
                                                             fontWeight: '600',
                                                             padding: '0.125rem 0.5rem',
                                                             borderRadius: '1rem',
                                                             minWidth: '20px',
-                                                            textAlign: 'center'
+                                                            textAlign: 'center',
+                                                            animation: 'badge-pulse 2s ease-in-out infinite',
+                                                            boxShadow: '0 0 10px rgba(239, 68, 68, 0.5)'
                                                         }}>
                                                             {unreadCount > 99 ? '99+' : unreadCount}
                                                         </span>
@@ -464,10 +488,14 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         background: 'rgba(30, 41, 59, 0.98)',
                         backdropFilter: 'blur(10px)',
                         borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
+                        borderRight: '1px solid rgba(59, 130, 246, 0.1)',
                         padding: '1rem',
                         transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-                        transition: 'transform 0.3s ease',
-                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
+                        opacity: mobileMenuOpen ? 1 : 0,
+                        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+                        boxShadow: mobileMenuOpen
+                            ? '0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.1)'
+                            : '0 4px 6px rgba(0, 0, 0, 0.2)',
                         overflowY: 'auto',
                         overflowX: 'hidden',
                         WebkitOverflowScrolling: 'touch',
@@ -542,14 +570,16 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                                 {child.path === '/messages' && unreadCount > 0 && (
                                                     <span style={{
                                                         marginLeft: 'auto',
-                                                        background: 'var(--error-color)',
+                                                        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
                                                         color: 'white',
                                                         fontSize: '0.75rem',
                                                         fontWeight: '600',
                                                         padding: '0.125rem 0.5rem',
                                                         borderRadius: '1rem',
                                                         minWidth: '20px',
-                                                        textAlign: 'center'
+                                                        textAlign: 'center',
+                                                        animation: 'badge-pulse 2s ease-in-out infinite',
+                                                        boxShadow: '0 0 10px rgba(239, 68, 68, 0.5)'
                                                     }}>
                                                         {unreadCount > 99 ? '99+' : unreadCount}
                                                     </span>
@@ -560,6 +590,14 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                 )}
                             </div>
                         ))}
+
+                        {/* Navigation Separator */}
+                        <div style={{
+                            height: '1px',
+                            background: 'linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent)',
+                            margin: '0.5rem 0',
+                            boxShadow: '0 0 10px rgba(59, 130, 246, 0.2)'
+                        }}></div>
 
                         <button
                             onClick={() => {
@@ -589,7 +627,13 @@ export default function Navbar({ onLogout }: NavbarProps) {
                             {t('sos.button')}
                         </button>
 
-                        <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '0.5rem 0' }}></div>
+                        {/* Settings Separator */}
+                        <div style={{
+                            height: '1px',
+                            background: 'linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent)',
+                            margin: '0.5rem 0',
+                            boxShadow: '0 0 10px rgba(59, 130, 246, 0.2)'
+                        }}></div>
 
                         <div style={{ padding: '0.5rem 0' }}>
                             <LanguageSwitcher />
@@ -657,14 +701,61 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         }
                     }
 
+                    @keyframes badge-pulse {
+                        0%, 100% {
+                            transform: scale(1);
+                            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+                        }
+                        50% {
+                            transform: scale(1.1);
+                            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);
+                        }
+                    }
+
+                    @keyframes slideInDown {
+                        from {
+                            opacity: 0;
+                            transform: translateX(-50%) translateY(-20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateX(-50%) translateY(0);
+                        }
+                    }
+
+                    /* Active menu indicator */
+                    .desktop-nav button {
+                        position: relative;
+                    }
+
+                    .desktop-nav button::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -2px;
+                        left: 50%;
+                        transform: translateX(-50%) scaleX(0);
+                        width: 80%;
+                        height: 3px;
+                        background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+                        border-radius: 2px;
+                        transition: transform 0.3s ease;
+                    }
+
+                    .desktop-nav button:hover::after {
+                        transform: translateX(-50%) scaleX(0.7);
+                    }
+
                     @media (max-width: 1150px) {
                         .desktop-nav {
                             display: none !important;
                         }
                         .mobile-hamburger {
-                            display: block !important;
+                            display: flex !important;
                         }
                         .mobile-nav {
+                            display: block !important;
+                        }
+                        .mobile-backdrop {
                             display: block !important;
                         }
                     }
