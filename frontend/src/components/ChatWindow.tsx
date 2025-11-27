@@ -61,8 +61,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
     const cooldownIntervalRef = useRef<number | null>(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+        messagesEndRef.current?.scrollIntoView({ behavior });
     };
 
     useEffect(() => {
@@ -73,8 +73,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         const previousCount = previousMessageCountRef.current;
 
         if (currentCount > previousCount && !isLoadingOlderRef.current) {
-            // New message added at the end, scroll to bottom
-            scrollToBottom();
+            // Use instant scroll for initial load, smooth for new messages
+            const isInitialLoad = previousCount === 0 && currentCount > 0;
+            scrollToBottom(isInitialLoad ? 'auto' : 'smooth');
         }
 
         previousMessageCountRef.current = currentCount;
@@ -153,7 +154,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 }
 
                 setIsLoadingOlder(false);
-                isLoadingOlderRef.current = false;
+
+                // Reset the ref after another frame to ensure useEffect has processed
+                requestAnimationFrame(() => {
+                    isLoadingOlderRef.current = false;
+                });
             });
         }
     };
