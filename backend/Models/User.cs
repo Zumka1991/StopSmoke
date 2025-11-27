@@ -14,4 +14,5 @@ public class User : IdentityUser
     public string Currency { get; set; } = "USD";
     public bool IsAdmin { get; set; } = false;
     public bool ShowInLeaderboard { get; set; } = true;
+    public DateTime? LastSeen { get; set; }
 }

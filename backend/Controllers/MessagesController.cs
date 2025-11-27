@@ -74,6 +74,7 @@ public class MessagesController : ControllerBase
                 LastMessageAt = lastMessage?.SentAt,
                 UnreadCount = unreadCount,
                 IsOtherUserOnline = ChatHub.IsUserOnline(otherParticipant.UserId),
+                OtherUserLastSeen = otherParticipant.User.LastSeen,
                 IsBlocked = userParticipant.IsBlocked
             });
         }

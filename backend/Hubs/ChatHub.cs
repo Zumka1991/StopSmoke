@@ -62,6 +62,15 @@ public class ChatHub : Hub
                 if (connections.Count == 0)
                 {
                     _onlineUsers.TryRemove(userId, out _);
+
+                    // Update LastSeen time
+                    var user = await _context.Users.FindAsync(userId);
+                    if (user != null)
+                    {
+                        user.LastSeen = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
+                    }
+
                     await Clients.All.SendAsync("UserOffline", userId);
                 }
             }

@@ -57,7 +57,7 @@ const ChatList: React.FC<ChatListProps> = ({
                                     )}
                                 </span>
                                 <span className="chat-list-item-time">
-                                    {formatTime(conv.lastMessageAt)}
+                                    {conv.isOtherUserOnline ? 'Online' : formatTime(conv.otherUserLastSeen)}
                                 </span>
                             </div>
                             <div className="chat-list-item-message">

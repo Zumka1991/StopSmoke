@@ -46,6 +46,7 @@ public class ConversationListItemResponse
     public DateTime? LastMessageAt { get; set; }
     public int UnreadCount { get; set; }
     public bool IsOtherUserOnline { get; set; }
+    public DateTime? OtherUserLastSeen { get; set; }
     public bool IsBlocked { get; set; }
 }
 

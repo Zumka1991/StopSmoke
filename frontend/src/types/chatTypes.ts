@@ -28,6 +28,7 @@ export interface ConversationListItem {
     lastMessageAt?: string;
     unreadCount: number;
     isOtherUserOnline: boolean;
+    otherUserLastSeen?: string;
     isBlocked: boolean;
 }
 
