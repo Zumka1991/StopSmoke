@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Comments from '../components/Comments';
 
 interface Article {
     id: number;
@@ -142,6 +143,9 @@ export default function ArticleDetailPage() {
                         </div>
                     </div>
                 )}
+
+                {/* Comments Section */}
+                {article && <Comments articleId={article.id} />}
             </div>
         </>
     );

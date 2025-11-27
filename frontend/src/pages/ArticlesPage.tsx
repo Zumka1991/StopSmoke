@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Pagination from '../components/Pagination';
 
 interface Article {
     id: number;
@@ -16,28 +17,47 @@ interface Article {
     authorName?: string;
 }
 
+interface PaginatedResponse {
+    items: Article[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+}
+
 export default function ArticlesPage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const pageSize = 10;
 
     useEffect(() => {
-        fetchArticles();
-    }, []);
+        fetchArticles(currentPage);
+    }, [currentPage]);
 
-    const fetchArticles = async () => {
+    const fetchArticles = async (page: number) => {
         try {
             setLoading(true);
-            const response = await api.get('/articles');
-            setArticles(response.data);
+            const response = await api.get<PaginatedResponse>(`/articles?page=${page}&pageSize=${pageSize}`);
+            setArticles(response.data.items);
+            setTotalPages(response.data.totalPages);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err: any) {
             setError(t('articles.errorLoading'));
             console.error('Failed to load articles', err);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
     };
 
     const handleLogout = () => {
@@ -157,6 +177,15 @@ export default function ArticlesPage() {
                         </div>
                     ))}
                 </div>
+
+                {/* Pagination */}
+                {!loading && articles.length > 0 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
+                )}
             </div>
         </>
     );

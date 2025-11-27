@@ -13,6 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Article> Articles { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -67,5 +68,24 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
         modelBuilder.Entity<Article>()
             .HasIndex(a => a.IsPublished);
+
+        // Configure Comment relationships
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Article)
+            .WithMany()
+            .HasForeignKey(c => c.ArticleId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.User)
+            .WithMany()
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Comment>()
+            .HasIndex(c => c.ArticleId);
+
+        modelBuilder.Entity<Comment>()
+            .HasIndex(c => c.CreatedAt);
     }
 }

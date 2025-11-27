@@ -22,14 +22,24 @@ public class ArticlesController : ControllerBase
         _userManager = userManager;
     }
 
-    // GET: api/articles - Public endpoint for published articles
+    // GET: api/articles - Public endpoint for published articles with pagination
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ArticleDto>>> GetPublishedArticles()
+    public async Task<ActionResult<PaginatedResult<ArticleDto>>> GetPublishedArticles([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var articles = await _context.Articles
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+        if (pageSize > 50) pageSize = 50; // Max 50 items per page
+
+        var query = _context.Articles
             .Where(a => a.IsPublished)
             .Include(a => a.Author)
-            .OrderByDescending(a => a.CreatedAt)
+            .OrderByDescending(a => a.CreatedAt);
+
+        var totalCount = await query.CountAsync();
+
+        var articles = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(a => new ArticleDto
             {
                 Id = a.Id,
@@ -43,7 +53,15 @@ public class ArticlesController : ControllerBase
             })
             .ToListAsync();
 
-        return Ok(articles);
+        var result = new PaginatedResult<ArticleDto>
+        {
+            Items = articles,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
+
+        return Ok(result);
     }
 
     // GET: api/articles/{id} - Public endpoint for single published article
