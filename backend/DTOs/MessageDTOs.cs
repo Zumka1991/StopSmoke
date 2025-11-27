@@ -22,6 +22,7 @@ public class MessageResponse
     public string Content { get; set; } = null!;
     public DateTime SentAt { get; set; }
     public bool IsRead { get; set; }
+    public bool IsDeleted { get; set; }
 }
 
 public class ConversationResponse

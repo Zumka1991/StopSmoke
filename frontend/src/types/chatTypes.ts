@@ -6,6 +6,7 @@ export interface Message {
     content: string;
     sentAt: string;
     isRead: boolean;
+    isDeleted: boolean;
 }
 
 export interface Conversation {

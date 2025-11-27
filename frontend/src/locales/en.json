@@ -1,377 +1,381 @@
 {
-    "app": {
-        "slogan": "Let's quit smoking together!"
+  "app": {
+    "slogan": "Let's quit smoking together!"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "error": "Invalid email or password"
     },
-    "auth": {
-        "login": {
-            "title": "Welcome Back",
-            "email": "Email",
-            "password": "Password",
-            "submit": "Sign In",
-            "noAccount": "Don't have an account?",
-            "signUp": "Sign Up",
-            "error": "Invalid email or password"
-        },
-        "register": {
-            "title": "Create Account",
-            "name": "Name",
-            "email": "Email",
-            "password": "Password",
-            "submit": "Sign Up",
-            "hasAccount": "Already have an account?",
-            "signIn": "Sign In",
-            "error": "Registration failed",
-            "nameRequired": "Name is required",
-            "emailRequired": "Email is required",
-            "passwordRequired": "Password is required",
-            "nameMinLength": "Min 3 chars",
-            "passwordMinLength": "Min 6 chars",
-            "namePlaceholder": "Your name",
-            "recaptchaRequired": "Please complete the reCAPTCHA"
-        }
-    },
-    "home": {
-        "title": "Welcome to StopSmoke",
-        "subtitle": "Your journey to a smoke-free life starts here.",
-        "getStarted": "Get Started"
-    },
-    "common": {
-        "language": "Language",
-        "logout": "Logout",
-        "profile": "Profile",
-        "save": "Save"
-    },
-    "nav": {
-        "dashboard": "Dashboard",
-        "leaderboard": "Leaderboard",
-        "profile": "Profile",
-        "community": "Community"
-    },
-    "profile": {
-        "title": "My Profile",
-        "name": "Name",
-        "quitDate": "Quit Date",
-        "cigarettesPerDay": "Cigarettes per day",
-        "pricePerPack": "Price per pack",
-        "currency": "Currency",
-        "updateSuccess": "Profile updated successfully",
-        "updateError": "Failed to update profile",
-        "notSet": "Not set yet",
-        "startNow": "Start Quitting Now",
-        "quitDateHelper": "Or choose a custom date",
-        "namePlaceholder": "Your name",
-        "futureDateError": "Date cannot be in the future",
-        "tooOldDateError": "Date cannot be more than 30 years ago",
-        "showInLeaderboard": "Show in Leaderboard",
-        "showInLeaderboardHint": "Allow others to see your progress in the leaderboard"
-    },
-    "tracker": {
-        "title": "Smoke-Free Journey",
-        "daysTitle": "Days Without Smoking",
-        "hoursTitle": "Hours",
-        "minutesTitle": "Minutes",
-        "secondsTitle": "Seconds",
-        "congratulations": "Congratulations!",
-        "notStarted": "Set your quit date in profile to start tracking",
-        "goToProfile": "Go to Profile",
-        "moneySaved": "Money Saved",
-        "cigarettesNotSmoked": "Cigarettes Not Smoked",
-        "packsNotSmoked": "Packs Not Smoked"
-    },
-    "leaderboard": {
-        "title": "Leaderboard",
-        "loading": "Loading...",
-        "empty": "No users yet. Be the first!",
-        "you": "You",
-        "days": "days",
-        "sendMessage": "Send Message"
-    },
-    "health": {
-        "title": "Health Recovery",
-        "milestones": {
-            "m20": {
-                "title": "20 Minutes",
-                "desc": "Your heart rate and blood pressure drop."
-            },
-            "h8": {
-                "title": "8 Hours",
-                "desc": "Carbon monoxide levels in your blood drop to normal."
-            },
-            "h24": {
-                "title": "24 Hours",
-                "desc": "Your risk of heart attack begins to decrease."
-            },
-            "h48": {
-                "title": "48 Hours",
-                "desc": "Your sense of smell and taste begin to improve."
-            },
-            "h72": {
-                "title": "72 Hours",
-                "desc": "Breathing becomes easier as bronchial tubes relax."
-            },
-            "w2": {
-                "title": "2 Weeks",
-                "desc": "Your circulation improves and lung function increases."
-            },
-            "m1": {
-                "title": "1 Month",
-                "desc": "Coughing and shortness of breath decrease."
-            },
-            "m3": {
-                "title": "3 Months",
-                "desc": "Lung function has increased by up to 30%."
-            },
-            "y1": {
-                "title": "1 Year",
-                "desc": "Risk of coronary heart disease is half that of a smoker."
-            },
-            "y5": {
-                "title": "5 Years",
-                "desc": "Stroke risk is reduced to that of a non-smoker."
-            },
-            "y10": {
-                "title": "10 Years",
-                "desc": "Lung cancer death risk is about half that of a smoker."
-            },
-            "y15": {
-                "title": "15 Years",
-                "desc": "Risk of coronary heart disease is that of a non-smoker."
-            }
-        },
-        "completed": "Completed",
-        "inProgress": "In Progress",
-        "locked": "Locked"
-    },
-    "achievements": {
-        "title": "Achievements",
-        "list": {
-            "time_24h": {
-                "title": "First Day",
-                "desc": "24 hours smoke-free"
-            },
-            "time_3d": {
-                "title": "Getting Serious",
-                "desc": "3 days smoke-free"
-            },
-            "time_1w": {
-                "title": "One Week",
-                "desc": "7 days smoke-free"
-            },
-            "time_1m": {
-                "title": "One Month",
-                "desc": "30 days smoke-free"
-            },
-            "time_3m": {
-                "title": "Quarter Year",
-                "desc": "90 days smoke-free"
-            },
-            "time_6m": {
-                "title": "Half Year",
-                "desc": "180 days smoke-free"
-            },
-            "time_1y": {
-                "title": "One Year",
-                "desc": "365 days smoke-free"
-            },
-            "cigs_100": {
-                "title": "Fresh Air",
-                "desc": "100 cigarettes not smoked"
-            },
-            "cigs_1000": {
-                "title": "Deep Breath",
-                "desc": "1,000 cigarettes not smoked"
-            },
-            "cigs_5000": {
-                "title": "Clean Lungs",
-                "desc": "5,000 cigarettes not smoked"
-            },
-            "money_1000": {
-                "title": "Piggy Bank",
-                "desc": "Saved 1,000"
-            },
-            "money_5000": {
-                "title": "Investor",
-                "desc": "Saved 5,000"
-            },
-            "money_10000": {
-                "title": "Tycoon",
-                "desc": "Saved 10,000"
-            },
-            "marathon_1": {
-                "title": "First Marathon",
-                "desc": "Completed 1 marathon"
-            },
-            "marathon_3": {
-                "title": "Marathon Veteran",
-                "desc": "Completed 3 marathons"
-            },
-            "marathon_5": {
-                "title": "Marathon Champion",
-                "desc": "Completed 5 marathons"
-            }
-        }
-    },
-    "sos": {
-        "button": "SOS",
-        "title": "Emergency Help",
-        "breatheIn": "Breathe In...",
-        "hold": "Hold...",
-        "breatheOut": "Breathe Out...",
-        "feelingBetter": "I'm feeling better",
-        "timer": "Craving usually lasts 3 minutes",
-        "quotes": [
-            "This craving will pass whether you smoke or not.",
-            "You are stronger than your addiction.",
-            "Take a deep breath. You can do this.",
-            "Think about how far you've come.",
-            "Don't trade your future for a moment of relief."
-        ]
-    },
-    "relapse": {
-        "title": "Relapse Management",
-        "description": "If a relapse occurred, record it here. This helps track progress and analyze reasons.",
-        "iRelapsed": "I Relapsed",
-        "history": "Relapse History",
-        "modalTitle": "Record Relapse",
-        "reasonLabel": "What happened?",
-        "reasonPlaceholder": "Describe the reason (optional)",
-        "submit": "Record",
-        "cancel": "Cancel",
-        "historyTitle": "Relapse History",
-        "emptyHistory": "No relapses yet. Keep it up! 💪",
-        "date": "Date",
-        "reason": "Reason",
-        "close": "Close",
-        "success": "Relapse recorded",
-        "error": "Failed to record relapse"
-    },
-    "marathon": {
-        "title": "Smoke-Free Marathons",
-        "create": "Create Marathon",
-        "join": "Join",
-        "joined": "Joined",
-        "startsIn": "Starts in",
-        "started": "Started",
-        "participants": "Participants",
-        "disqualified": "Disqualified",
-        "completed": "Completed",
-        "createTitle": "Create Marathon",
-        "formTitle": "Title",
-        "formDesc": "Description",
-        "formStart": "Start Date",
-        "formEnd": "End Date",
-        "createBtn": "Create",
-        "cancelBtn": "Cancel",
-        "days": "d",
-        "hours": "h",
-        "minutes": "m",
-        "daysSmokeFreeSingular": "day smoke-free",
-        "daysSmokeFreePlural": "days smoke-free",
-        "noParticipants": "No participants yet",
-        "closeBtn": "Close",
-        "statusActive": "Active",
-        "statusCompleted": "Completed",
-        "statusDisqualified": "Disqualified"
-    },
-    "messages": {
-        "title": "Messages",
-        "online": "Online",
-        "offline": "Offline",
-        "typeMessage": "Type a message...",
-        "searchUsers": "Search by name or email...",
-        "searching": "Searching...",
-        "selectConversation": "Select a conversation",
-        "selectConversationHint": "Choose a chat from the list or search for a user to start messaging",
-        "errorCreatingConversation": "Failed to create conversation. Please try again.",
-        "loadingOlder": "Loading older messages",
-        "block": "Block User",
-        "unblock": "Unblock User",
-        "clearHistory": "Clear History",
-        "deleteConversation": "Delete Conversation",
-        "confirmClearHistory": "Are you sure you want to clear chat history? This cannot be undone.",
-        "confirmDeleteConversation": "Are you sure you want to delete this conversation? It will be removed from your list.",
-        "unblockUser": "Unblock User",
-        "cannotSendMessage": "You cannot send messages to this user",
-        "noMessages": "No messages",
-        "yesterday": "Yesterday"
-    },
-    "articles": {
-        "title": "Articles",
-        "noArticles": "No articles yet",
-        "errorLoading": "Error loading articles",
-        "errorLoadingArticle": "Error loading article",
-        "backToList": "Back to list",
-        "updated": "Updated",
-        "adminTitle": "Manage Articles",
-        "createNew": "Create Article",
-        "createArticle": "Create Article",
-        "editArticle": "Edit Article",
-        "titleLabel": "Title",
-        "summaryLabel": "Summary",
-        "summaryPlaceholder": "Brief article summary (optional)",
-        "contentLabel": "Content",
-        "publishLabel": "Publish article",
-        "save": "Save",
-        "cancel": "Cancel",
-        "edit": "Edit",
-        "delete": "Delete",
-        "confirmDelete": "Are you sure you want to delete this article?",
-        "errorSaving": "Error saving article",
-        "errorDeleting": "Error deleting article",
-        "published": "Published",
-        "draft": "Draft",
-        "noAdminAccess": "You don't have admin access"
-    },
-    "admin": {
-        "panel": "Admin Panel",
-        "manageContent": "Manage site content",
-        "manageArticles": "Manage Articles"
-    },
-    "landing": {
-        "hero": {
-            "subtitle": "Your journey to a smoke-free life starts here",
-            "getStarted": "Get Started",
-            "login": "Log In",
-            "emergency": "I Want to Smoke!",
-            "emergencyHint": "Click if you feel a strong urge to smoke"
-        },
-        "features": {
-            "tracking": {
-                "title": "Progress Tracking",
-                "description": "Track your smoke-free days, money saved, and cigarettes not smoked"
-            },
-            "motivation": {
-                "title": "Motivation & Achievements",
-                "description": "Earn achievements for your successes and track your health recovery"
-            },
-            "community": {
-                "title": "Community Support",
-                "description": "Connect with others, participate in marathons, and share experiences"
-            },
-            "articles": {
-                "title": "Helpful Articles",
-                "description": "Read motivational content and tips for quitting smoking"
-            }
-        },
-        "explore": {
-            "articles": "Articles",
-            "leaderboard": "Leaderboard",
-            "marathons": "Marathons"
-        }
-    },
-    "comments": {
-        "title": "Comments",
-        "placeholder": "Write a comment...",
-        "submit": "Submit",
-        "loginRequired": "Log in to leave a comment",
-        "empty": "No comments yet. Be the first!",
-        "you": "You",
-        "delete": "Delete",
-        "confirmDelete": "Are you sure you want to delete this comment?",
-        "errorSubmit": "Failed to submit comment. Please try again."
-    },
-    "pagination": {
-        "previous": "Previous",
-        "next": "Next"
+    "register": {
+      "title": "Create Account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "error": "Registration failed",
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required",
+      "nameMinLength": "Min 3 chars",
+      "passwordMinLength": "Min 6 chars",
+      "namePlaceholder": "Your name",
+      "recaptchaRequired": "Please complete the reCAPTCHA"
     }
+  },
+  "home": {
+    "title": "Welcome to StopSmoke",
+    "subtitle": "Your journey to a smoke-free life starts here.",
+    "getStarted": "Get Started"
+  },
+  "common": {
+    "language": "Language",
+    "logout": "Logout",
+    "profile": "Profile",
+    "save": "Save"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile",
+    "community": "Community"
+  },
+  "profile": {
+    "title": "My Profile",
+    "name": "Name",
+    "quitDate": "Quit Date",
+    "cigarettesPerDay": "Cigarettes per day",
+    "pricePerPack": "Price per pack",
+    "currency": "Currency",
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Failed to update profile",
+    "notSet": "Not set yet",
+    "startNow": "Start Quitting Now",
+    "quitDateHelper": "Or choose a custom date",
+    "namePlaceholder": "Your name",
+    "futureDateError": "Date cannot be in the future",
+    "tooOldDateError": "Date cannot be more than 30 years ago",
+    "showInLeaderboard": "Show in Leaderboard",
+    "showInLeaderboardHint": "Allow others to see your progress in the leaderboard"
+  },
+  "tracker": {
+    "title": "Smoke-Free Journey",
+    "daysTitle": "Days Without Smoking",
+    "hoursTitle": "Hours",
+    "minutesTitle": "Minutes",
+    "secondsTitle": "Seconds",
+    "congratulations": "Congratulations!",
+    "notStarted": "Set your quit date in profile to start tracking",
+    "goToProfile": "Go to Profile",
+    "moneySaved": "Money Saved",
+    "cigarettesNotSmoked": "Cigarettes Not Smoked",
+    "packsNotSmoked": "Packs Not Smoked"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "loading": "Loading...",
+    "empty": "No users yet. Be the first!",
+    "you": "You",
+    "days": "days",
+    "sendMessage": "Send Message"
+  },
+  "health": {
+    "title": "Health Recovery",
+    "milestones": {
+      "m20": {
+        "title": "20 Minutes",
+        "desc": "Your heart rate and blood pressure drop."
+      },
+      "h8": {
+        "title": "8 Hours",
+        "desc": "Carbon monoxide levels in your blood drop to normal."
+      },
+      "h24": {
+        "title": "24 Hours",
+        "desc": "Your risk of heart attack begins to decrease."
+      },
+      "h48": {
+        "title": "48 Hours",
+        "desc": "Your sense of smell and taste begin to improve."
+      },
+      "h72": {
+        "title": "72 Hours",
+        "desc": "Breathing becomes easier as bronchial tubes relax."
+      },
+      "w2": {
+        "title": "2 Weeks",
+        "desc": "Your circulation improves and lung function increases."
+      },
+      "m1": {
+        "title": "1 Month",
+        "desc": "Coughing and shortness of breath decrease."
+      },
+      "m3": {
+        "title": "3 Months",
+        "desc": "Lung function has increased by up to 30%."
+      },
+      "y1": {
+        "title": "1 Year",
+        "desc": "Risk of coronary heart disease is half that of a smoker."
+      },
+      "y5": {
+        "title": "5 Years",
+        "desc": "Stroke risk is reduced to that of a non-smoker."
+      },
+      "y10": {
+        "title": "10 Years",
+        "desc": "Lung cancer death risk is about half that of a smoker."
+      },
+      "y15": {
+        "title": "15 Years",
+        "desc": "Risk of coronary heart disease is that of a non-smoker."
+      }
+    },
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "locked": "Locked"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "list": {
+      "time_24h": {
+        "title": "First Day",
+        "desc": "24 hours smoke-free"
+      },
+      "time_3d": {
+        "title": "Getting Serious",
+        "desc": "3 days smoke-free"
+      },
+      "time_1w": {
+        "title": "One Week",
+        "desc": "7 days smoke-free"
+      },
+      "time_1m": {
+        "title": "One Month",
+        "desc": "30 days smoke-free"
+      },
+      "time_3m": {
+        "title": "Quarter Year",
+        "desc": "90 days smoke-free"
+      },
+      "time_6m": {
+        "title": "Half Year",
+        "desc": "180 days smoke-free"
+      },
+      "time_1y": {
+        "title": "One Year",
+        "desc": "365 days smoke-free"
+      },
+      "cigs_100": {
+        "title": "Fresh Air",
+        "desc": "100 cigarettes not smoked"
+      },
+      "cigs_1000": {
+        "title": "Deep Breath",
+        "desc": "1,000 cigarettes not smoked"
+      },
+      "cigs_5000": {
+        "title": "Clean Lungs",
+        "desc": "5,000 cigarettes not smoked"
+      },
+      "money_1000": {
+        "title": "Piggy Bank",
+        "desc": "Saved 1,000"
+      },
+      "money_5000": {
+        "title": "Investor",
+        "desc": "Saved 5,000"
+      },
+      "money_10000": {
+        "title": "Tycoon",
+        "desc": "Saved 10,000"
+      },
+      "marathon_1": {
+        "title": "First Marathon",
+        "desc": "Completed 1 marathon"
+      },
+      "marathon_3": {
+        "title": "Marathon Veteran",
+        "desc": "Completed 3 marathons"
+      },
+      "marathon_5": {
+        "title": "Marathon Champion",
+        "desc": "Completed 5 marathons"
+      }
+    }
+  },
+  "sos": {
+    "button": "SOS",
+    "title": "Emergency Help",
+    "breatheIn": "Breathe In...",
+    "hold": "Hold...",
+    "breatheOut": "Breathe Out...",
+    "feelingBetter": "I'm feeling better",
+    "timer": "Craving usually lasts 3 minutes",
+    "quotes": [
+      "This craving will pass whether you smoke or not.",
+      "You are stronger than your addiction.",
+      "Take a deep breath. You can do this.",
+      "Think about how far you've come.",
+      "Don't trade your future for a moment of relief."
+    ]
+  },
+  "relapse": {
+    "title": "Relapse Management",
+    "description": "If a relapse occurred, record it here. This helps track progress and analyze reasons.",
+    "iRelapsed": "I Relapsed",
+    "history": "Relapse History",
+    "modalTitle": "Record Relapse",
+    "reasonLabel": "What happened?",
+    "reasonPlaceholder": "Describe the reason (optional)",
+    "submit": "Record",
+    "cancel": "Cancel",
+    "historyTitle": "Relapse History",
+    "emptyHistory": "No relapses yet. Keep it up! 💪",
+    "date": "Date",
+    "reason": "Reason",
+    "close": "Close",
+    "success": "Relapse recorded",
+    "error": "Failed to record relapse"
+  },
+  "marathon": {
+    "title": "Smoke-Free Marathons",
+    "create": "Create Marathon",
+    "join": "Join",
+    "joined": "Joined",
+    "startsIn": "Starts in",
+    "started": "Started",
+    "participants": "Participants",
+    "disqualified": "Disqualified",
+    "completed": "Completed",
+    "createTitle": "Create Marathon",
+    "formTitle": "Title",
+    "formDesc": "Description",
+    "formStart": "Start Date",
+    "formEnd": "End Date",
+    "createBtn": "Create",
+    "cancelBtn": "Cancel",
+    "days": "d",
+    "hours": "h",
+    "minutes": "m",
+    "daysSmokeFreeSingular": "day smoke-free",
+    "daysSmokeFreePlural": "days smoke-free",
+    "noParticipants": "No participants yet",
+    "closeBtn": "Close",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "statusDisqualified": "Disqualified"
+  },
+  "messages": {
+    "title": "Messages",
+    "online": "Online",
+    "offline": "Offline",
+    "typeMessage": "Type a message...",
+    "searchUsers": "Search by name or email...",
+    "searching": "Searching...",
+    "selectConversation": "Select a conversation",
+    "selectConversationHint": "Choose a chat from the list or search for a user to start messaging",
+    "errorCreatingConversation": "Failed to create conversation. Please try again.",
+    "loadingOlder": "Loading older messages",
+    "block": "Block User",
+    "unblock": "Unblock User",
+    "clearHistory": "Clear History",
+    "deleteConversation": "Delete Conversation",
+    "confirmClearHistory": "Are you sure you want to clear chat history? This cannot be undone.",
+    "confirmDeleteConversation": "Are you sure you want to delete this conversation? It will be removed from your list.",
+    "unblockUser": "Unblock User",
+    "cannotSendMessage": "You cannot send messages to this user",
+    "noMessages": "No messages",
+    "yesterday": "Yesterday",
+    "deleteMessage": "Delete Message",
+    "confirmDeleteMessage": "Are you sure you want to delete this message? This cannot be undone.",
+    "deletedMessage": "Message deleted",
+    "errorDeletingMessage": "Failed to delete message. Please try again."
+  },
+  "articles": {
+    "title": "Articles",
+    "noArticles": "No articles yet",
+    "errorLoading": "Error loading articles",
+    "errorLoadingArticle": "Error loading article",
+    "backToList": "Back to list",
+    "updated": "Updated",
+    "adminTitle": "Manage Articles",
+    "createNew": "Create Article",
+    "createArticle": "Create Article",
+    "editArticle": "Edit Article",
+    "titleLabel": "Title",
+    "summaryLabel": "Summary",
+    "summaryPlaceholder": "Brief article summary (optional)",
+    "contentLabel": "Content",
+    "publishLabel": "Publish article",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this article?",
+    "errorSaving": "Error saving article",
+    "errorDeleting": "Error deleting article",
+    "published": "Published",
+    "draft": "Draft",
+    "noAdminAccess": "You don't have admin access"
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "manageContent": "Manage site content",
+    "manageArticles": "Manage Articles"
+  },
+  "landing": {
+    "hero": {
+      "subtitle": "Your journey to a smoke-free life starts here",
+      "getStarted": "Get Started",
+      "login": "Log In",
+      "emergency": "I Want to Smoke!",
+      "emergencyHint": "Click if you feel a strong urge to smoke"
+    },
+    "features": {
+      "tracking": {
+        "title": "Progress Tracking",
+        "description": "Track your smoke-free days, money saved, and cigarettes not smoked"
+      },
+      "motivation": {
+        "title": "Motivation & Achievements",
+        "description": "Earn achievements for your successes and track your health recovery"
+      },
+      "community": {
+        "title": "Community Support",
+        "description": "Connect with others, participate in marathons, and share experiences"
+      },
+      "articles": {
+        "title": "Helpful Articles",
+        "description": "Read motivational content and tips for quitting smoking"
+      }
+    },
+    "explore": {
+      "articles": "Articles",
+      "leaderboard": "Leaderboard",
+      "marathons": "Marathons"
+    }
+  },
+  "comments": {
+    "title": "Comments",
+    "placeholder": "Write a comment...",
+    "submit": "Submit",
+    "loginRequired": "Log in to leave a comment",
+    "empty": "No comments yet. Be the first!",
+    "you": "You",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this comment?",
+    "errorSubmit": "Failed to submit comment. Please try again."
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  }
 }

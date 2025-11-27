@@ -140,7 +140,8 @@ public class MessagesController : ControllerBase
                     SenderName = m.Sender.Name ?? m.Sender.Email ?? "Unknown",
                     Content = m.Content,
                     SentAt = m.SentAt,
-                    IsRead = m.IsRead
+                    IsRead = m.IsRead,
+                    IsDeleted = m.IsDeleted
                 }).ToList()
         };
 
@@ -201,7 +202,8 @@ public class MessagesController : ControllerBase
                 SenderName = m.Sender.Name ?? m.Sender.Email ?? "Unknown",
                 Content = m.Content,
                 SentAt = m.SentAt,
-                IsRead = m.IsRead
+                IsRead = m.IsRead,
+                IsDeleted = m.IsDeleted
             })
             .ToListAsync();
 
@@ -409,5 +411,39 @@ public class MessagesController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "Conversation deleted" });
+    }
+
+    // DELETE: api/messages/{messageId}
+    [HttpDelete("{messageId}")]
+    public async Task<IActionResult> DeleteMessage(int messageId)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return Unauthorized();
+
+        var message = await _context.Messages
+            .Include(m => m.Conversation)
+                .ThenInclude(c => c.Participants)
+            .FirstOrDefaultAsync(m => m.Id == messageId);
+
+        if (message == null) return NotFound();
+
+        // Check if user is the sender of the message
+        if (message.SenderId != userId)
+        {
+            return Forbid();
+        }
+
+        // Check if message is already deleted
+        if (message.IsDeleted)
+        {
+            return BadRequest(new { message = "Message is already deleted" });
+        }
+
+        // Mark message as deleted
+        message.IsDeleted = true;
+        message.Content = ""; // Clear content for privacy
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Message deleted" });
     }
 }

@@ -309,6 +309,28 @@ const MessagesPage: React.FC = () => {
         }
     };
 
+    const handleDeleteMessage = async (messageId: number) => {
+        try {
+            await api.delete(`/messages/${messageId}`);
+            // Update the message in the current conversation
+            if (currentConversation) {
+                setCurrentConversation({
+                    ...currentConversation,
+                    messages: currentConversation.messages.map(msg =>
+                        msg.id === messageId
+                            ? { ...msg, isDeleted: true, content: '' }
+                            : msg
+                    )
+                });
+            }
+            // Reload conversations to update last message if needed
+            loadConversations();
+        } catch (error) {
+            console.error('Error deleting message:', error);
+            alert(t('messages.errorDeletingMessage'));
+        }
+    };
+
     if (isLoading) {
         return (
             <>
@@ -360,6 +382,7 @@ const MessagesPage: React.FC = () => {
                                     onUnblock={handleUnblockUser}
                                     onClearHistory={handleClearHistory}
                                     onDeleteConversation={handleDeleteConversation}
+                                    onDeleteMessage={handleDeleteMessage}
                                 />
                             ) : (
                                 <div className="messages-empty">

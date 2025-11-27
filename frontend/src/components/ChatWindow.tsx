@@ -18,6 +18,7 @@ interface ChatWindowProps {
     onUnblock: () => void;
     onClearHistory: () => void;
     onDeleteConversation: () => void;
+    onDeleteMessage: (messageId: number) => void;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
@@ -35,17 +36,24 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     onUnblock,
     onClearHistory,
     onDeleteConversation,
+    onDeleteMessage,
 }) => {
     const { t } = useTranslation();
     const [messageInput, setMessageInput] = useState('');
     const [isLoadingOlder, setIsLoadingOlder] = useState(false);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [showMenu, setShowMenu] = useState(false);
+    const [messageContextMenu, setMessageContextMenu] = useState<{
+        messageId: number;
+        x: number;
+        y: number;
+    } | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
     const previousScrollHeightRef = useRef<number>(0);
     const inputRef = useRef<HTMLInputElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+    const messageMenuRef = useRef<HTMLDivElement>(null);
     const previousMessageCountRef = useRef<number>(0);
     const isLoadingOlderRef = useRef<boolean>(false);
     const lastMessageTimeRef = useRef<number>(0);
@@ -107,6 +115,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
                 setShowMenu(false);
+            }
+            if (messageMenuRef.current && !messageMenuRef.current.contains(event.target as Node)) {
+                setMessageContextMenu(null);
             }
         };
 
@@ -225,6 +236,27 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         // Previous years - show full date with year
         const dateStr = date.toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric' });
         return `${dateStr}, ${time}`;
+    };
+
+    const handleMessageContextMenu = (e: React.MouseEvent, messageId: number, senderId: string) => {
+        // Only show context menu for own messages
+        if (senderId !== currentUserId) return;
+
+        e.preventDefault();
+        setMessageContextMenu({
+            messageId,
+            x: e.clientX,
+            y: e.clientY
+        });
+    };
+
+    const handleDeleteMessage = () => {
+        if (messageContextMenu) {
+            if (window.confirm(t('messages.confirmDeleteMessage'))) {
+                onDeleteMessage(messageContextMenu.messageId);
+                setMessageContextMenu(null);
+            }
+        }
     };
 
     return (
@@ -399,9 +431,21 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                             key={message.id}
                             className={`message ${message.senderId === currentUserId ? 'message-sent' : 'message-received'
                                 }`}
+                            onContextMenu={(e) => handleMessageContextMenu(e, message.id, message.senderId)}
+                            style={{ cursor: message.senderId === currentUserId && !message.isDeleted ? 'context-menu' : 'default' }}
                         >
                             <div className="message-content">
-                                <p>{message.content}</p>
+                                {message.isDeleted ? (
+                                    <p style={{
+                                        fontStyle: 'italic',
+                                        opacity: 0.9,
+                                        color: 'rgba(255, 255, 255, 0.8)'
+                                    }}>
+                                        {t('messages.deletedMessage')}
+                                    </p>
+                                ) : (
+                                    <p>{message.content}</p>
+                                )}
                                 <span className="message-time">{formatMessageTime(message.sentAt)}</span>
                             </div>
                         </div>
@@ -409,6 +453,49 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 )}
                 <div ref={messagesEndRef} />
             </div>
+
+            {/* Message Context Menu */}
+            {messageContextMenu && (
+                <div
+                    ref={messageMenuRef}
+                    style={{
+                        position: 'fixed',
+                        top: messageContextMenu.y,
+                        left: messageContextMenu.x,
+                        background: 'var(--card-bg)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '0.5rem',
+                        padding: '0.5rem',
+                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.5)',
+                        zIndex: 1000,
+                        minWidth: '180px'
+                    }}
+                >
+                    <button
+                        onClick={handleDeleteMessage}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            width: '100%',
+                            padding: '0.75rem',
+                            background: 'transparent',
+                            border: 'none',
+                            color: 'var(--error-color)',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            fontSize: '0.9rem',
+                            borderRadius: '0.25rem',
+                            transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                        <Trash2 size={18} />
+                        {t('messages.deleteMessage')}
+                    </button>
+                </div>
+            )}
 
             {isBlocked ? (
                 <div className="chat-window-input" style={{ justifyContent: 'center' }}>
