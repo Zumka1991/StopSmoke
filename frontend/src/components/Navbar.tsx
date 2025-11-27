@@ -364,16 +364,90 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         style={{
                             display: 'none',
-                            background: 'rgba(59, 130, 246, 0.2)',
-                            border: '2px solid rgba(59, 130, 246, 0.4)',
-                            borderRadius: '0.5rem',
-                            padding: '0.5rem',
+                            background: mobileMenuOpen
+                                ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.25))'
+                                : 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))',
+                            border: mobileMenuOpen
+                                ? '2px solid rgba(239, 68, 68, 0.5)'
+                                : '2px solid rgba(59, 130, 246, 0.5)',
+                            borderRadius: '0.75rem',
+                            padding: '0.65rem',
                             cursor: 'pointer',
-                            color: 'var(--accent-color)',
-                            fontSize: '1.5rem'
+                            color: mobileMenuOpen ? '#ef4444' : 'var(--accent-color)',
+                            fontSize: '1.5rem',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            boxShadow: mobileMenuOpen
+                                ? '0 4px 14px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                                : '0 4px 14px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            width: '48px',
+                            height: '48px',
+                            display: 'none',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                            e.currentTarget.style.boxShadow = mobileMenuOpen
+                                ? '0 6px 20px rgba(239, 68, 68, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+                                : '0 6px 20px rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                            e.currentTarget.style.boxShadow = mobileMenuOpen
+                                ? '0 4px 14px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                                : '0 4px 14px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
+                        }}
+                        onMouseDown={(e) => {
+                            e.currentTarget.style.transform = 'scale(0.95)';
+                        }}
+                        onMouseUp={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
                         }}
                     >
-                        {mobileMenuOpen ? '✕' : '☰'}
+                        <span style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '4px',
+                            width: '22px',
+                            height: '18px',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            position: 'relative',
+                            transition: 'all 0.3s ease'
+                        }}>
+                            <span style={{
+                                position: mobileMenuOpen ? 'absolute' : 'relative',
+                                width: '100%',
+                                height: '2.5px',
+                                background: 'currentColor',
+                                borderRadius: '2px',
+                                transition: 'all 0.3s ease',
+                                transform: mobileMenuOpen ? 'rotate(45deg)' : 'rotate(0)',
+                                boxShadow: '0 0 8px currentColor'
+                            }}></span>
+                            <span style={{
+                                position: mobileMenuOpen ? 'absolute' : 'relative',
+                                width: '100%',
+                                height: '2.5px',
+                                background: 'currentColor',
+                                borderRadius: '2px',
+                                transition: 'all 0.3s ease',
+                                opacity: mobileMenuOpen ? 0 : 1,
+                                boxShadow: '0 0 8px currentColor'
+                            }}></span>
+                            <span style={{
+                                position: mobileMenuOpen ? 'absolute' : 'relative',
+                                width: '100%',
+                                height: '2.5px',
+                                background: 'currentColor',
+                                borderRadius: '2px',
+                                transition: 'all 0.3s ease',
+                                transform: mobileMenuOpen ? 'rotate(-45deg)' : 'rotate(0)',
+                                boxShadow: '0 0 8px currentColor'
+                            }}></span>
+                        </span>
                     </button>
                 </div>
 
