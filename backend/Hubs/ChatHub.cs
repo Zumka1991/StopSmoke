@@ -95,6 +95,13 @@ public class ChatHub : Hub
             throw new HubException("User is not a participant of this conversation");
         }
 
+        // Get conversation to check if it's global
+        var conversation = await _context.Conversations.FindAsync(conversationId);
+        if (conversation == null)
+        {
+            throw new HubException("Conversation not found");
+        }
+
         // Create message
         var message = new Models.Message
         {
@@ -108,11 +115,7 @@ public class ChatHub : Hub
         _context.Messages.Add(message);
 
         // Update conversation last message time
-        var conversation = await _context.Conversations.FindAsync(conversationId);
-        if (conversation != null)
-        {
-            conversation.LastMessageAt = DateTime.UtcNow;
-        }
+        conversation.LastMessageAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
 
@@ -130,13 +133,21 @@ public class ChatHub : Hub
             IsRead = message.IsRead
         };
 
-        // Send to all participants
-        var participantIds = await _context.ConversationParticipants
-            .Where(p => p.ConversationId == conversationId)
-            .Select(p => p.UserId)
-            .ToListAsync();
+        if (conversation.IsGlobal)
+        {
+            // For global chat, broadcast to all connected users
+            await Clients.All.SendAsync("ReceiveMessage", messageResponse);
+        }
+        else
+        {
+            // For private chat, send only to participants
+            var participantIds = await _context.ConversationParticipants
+                .Where(p => p.ConversationId == conversationId)
+                .Select(p => p.UserId)
+                .ToListAsync();
 
-        await Clients.Users(participantIds).SendAsync("ReceiveMessage", messageResponse);
+            await Clients.Users(participantIds).SendAsync("ReceiveMessage", messageResponse);
+        }
     }
 
     public async Task JoinConversation(int conversationId)
@@ -175,5 +186,10 @@ public class ChatHub : Hub
     public static bool IsUserOnline(string userId)
     {
         return _onlineUsers.ContainsKey(userId);
+    }
+
+    public static int GetOnlineUsersCount()
+    {
+        return _onlineUsers.Count;
     }
 }

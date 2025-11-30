@@ -234,17 +234,28 @@ const MessagesPage: React.FC = () => {
     };
 
     const getOtherUserInfo = () => {
-        if (!currentConversation || !currentUserId) return { name: '', isOnline: false };
+        if (!currentConversation || !currentUserId) return { name: '', isOnline: false, isGlobal: false, onlineCount: 0 };
+
+        const conv = conversations.find((c) => c.id === selectedConversationId);
+
+        if (currentConversation.isGlobal) {
+            return {
+                name: 'Global Chat',
+                isOnline: true,
+                isGlobal: true,
+                onlineCount: conv?.onlineCount || 0,
+            };
+        }
 
         const otherParticipant = currentConversation.participants.find(
             (p) => p.userId !== currentUserId
         );
 
-        const conv = conversations.find((c) => c.id === selectedConversationId);
-
         return {
             name: otherParticipant?.userName || 'Unknown',
             isOnline: conv?.isOtherUserOnline || false,
+            isGlobal: false,
+            onlineCount: 0,
         };
     };
 
@@ -375,6 +386,8 @@ const MessagesPage: React.FC = () => {
                                     currentUserId={currentUserId}
                                     isBlocked={currentConversation.isBlocked}
                                     isBlockedByOther={currentConversation.isBlockedByOther}
+                                    isGlobal={otherUserInfo.isGlobal}
+                                    onlineCount={otherUserInfo.onlineCount}
                                     onSendMessage={handleSendMessage}
                                     onBack={handleBackToList}
                                     onLoadOlderMessages={loadOlderMessages}

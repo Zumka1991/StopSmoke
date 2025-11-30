@@ -11,6 +11,9 @@ public class Conversation
 
     public DateTime? LastMessageAt { get; set; }
 
+    // Global chat flag - only one global conversation should exist
+    public bool IsGlobal { get; set; } = false;
+
     // Navigation properties
     public ICollection<ConversationParticipant> Participants { get; set; } = new List<ConversationParticipant>();
     public ICollection<Message> Messages { get; set; } = new List<Message>();

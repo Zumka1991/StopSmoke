@@ -33,6 +33,9 @@ public class MessagesController : ControllerBase
             return Unauthorized();
         }
 
+        // Ensure user is a participant of the global chat
+        await EnsureGlobalChatParticipant(userId);
+
         var userParticipants = await _context.ConversationParticipants
             .Where(p => p.UserId == userId && !p.IsDeleted)
             .Include(p => p.Conversation)
@@ -47,8 +50,6 @@ public class MessagesController : ControllerBase
         foreach (var userParticipant in userParticipants)
         {
             var conv = userParticipant.Conversation;
-            var otherParticipant = conv.Participants.FirstOrDefault(p => p.UserId != userId);
-            if (otherParticipant == null) continue;
 
             // Filter messages based on ClearedHistoryAt
             var visibleMessages = conv.Messages
@@ -56,30 +57,101 @@ public class MessagesController : ControllerBase
                 .ToList();
 
             var lastMessage = visibleMessages.OrderByDescending(m => m.SentAt).FirstOrDefault();
-            
-            // If history is cleared and no new messages, and it's not a new empty conversation, maybe we shouldn't show it?
-            // But usually we show it if it's not deleted.
 
-            var unreadCount = visibleMessages.Count(m => 
-                m.SenderId != userId && 
+            var unreadCount = visibleMessages.Count(m =>
+                m.SenderId != userId &&
                 (userParticipant.LastReadAt == null || m.SentAt > userParticipant.LastReadAt));
 
-            result.Add(new ConversationListItemResponse
+            if (conv.IsGlobal)
             {
-                Id = conv.Id,
-                OtherUserId = otherParticipant.UserId,
-                OtherUserName = otherParticipant.User.Name ?? otherParticipant.User.Email ?? "Unknown",
-                OtherUserEmail = otherParticipant.User.Email ?? "",
-                LastMessage = lastMessage?.Content,
-                LastMessageAt = lastMessage?.SentAt,
-                UnreadCount = unreadCount,
-                IsOtherUserOnline = ChatHub.IsUserOnline(otherParticipant.UserId),
-                OtherUserLastSeen = otherParticipant.User.LastSeen,
-                IsBlocked = userParticipant.IsBlocked
-            });
+                // Global chat - special handling
+                result.Add(new ConversationListItemResponse
+                {
+                    Id = conv.Id,
+                    OtherUserId = "global",
+                    OtherUserName = "Global Chat",
+                    OtherUserEmail = "",
+                    LastMessage = lastMessage?.Content,
+                    LastMessageAt = lastMessage?.SentAt,
+                    UnreadCount = unreadCount,
+                    IsOtherUserOnline = true,
+                    OtherUserLastSeen = null,
+                    IsBlocked = false,
+                    IsGlobal = true,
+                    OnlineCount = ChatHub.GetOnlineUsersCount()
+                });
+            }
+            else
+            {
+                // Regular private chat
+                var otherParticipant = conv.Participants.FirstOrDefault(p => p.UserId != userId);
+                if (otherParticipant == null) continue;
+
+                result.Add(new ConversationListItemResponse
+                {
+                    Id = conv.Id,
+                    OtherUserId = otherParticipant.UserId,
+                    OtherUserName = otherParticipant.User.Name ?? otherParticipant.User.Email ?? "Unknown",
+                    OtherUserEmail = otherParticipant.User.Email ?? "",
+                    LastMessage = lastMessage?.Content,
+                    LastMessageAt = lastMessage?.SentAt,
+                    UnreadCount = unreadCount,
+                    IsOtherUserOnline = ChatHub.IsUserOnline(otherParticipant.UserId),
+                    OtherUserLastSeen = otherParticipant.User.LastSeen,
+                    IsBlocked = userParticipant.IsBlocked,
+                    IsGlobal = false,
+                    OnlineCount = 0
+                });
+            }
         }
 
-        return Ok(result.OrderByDescending(c => c.LastMessageAt?.Ticks ?? 0).ToList());
+        // Sort: Global chat first, then by last message time
+        return Ok(result
+            .OrderByDescending(c => c.IsGlobal)
+            .ThenByDescending(c => c.LastMessageAt?.Ticks ?? 0)
+            .ToList());
+    }
+
+    // Helper method to ensure global chat exists and user is a participant
+    private async Task EnsureGlobalChatParticipant(string userId)
+    {
+        // Find or create global conversation
+        var globalConversation = await _context.Conversations
+            .FirstOrDefaultAsync(c => c.IsGlobal);
+
+        if (globalConversation == null)
+        {
+            // Create global conversation
+            globalConversation = new Conversation
+            {
+                CreatedAt = DateTime.UtcNow,
+                IsGlobal = true
+            };
+            _context.Conversations.Add(globalConversation);
+            await _context.SaveChangesAsync();
+        }
+
+        // Check if user is already a participant
+        var existingParticipant = await _context.ConversationParticipants
+            .FirstOrDefaultAsync(p => p.ConversationId == globalConversation.Id && p.UserId == userId);
+
+        if (existingParticipant == null)
+        {
+            // Add user as participant
+            _context.ConversationParticipants.Add(new ConversationParticipant
+            {
+                ConversationId = globalConversation.Id,
+                UserId = userId,
+                JoinedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
+        }
+        else if (existingParticipant.IsDeleted)
+        {
+            // Restore participation if it was deleted
+            existingParticipant.IsDeleted = false;
+            await _context.SaveChangesAsync();
+        }
     }
 
     // GET: api/messages/conversations/{id}
@@ -111,7 +183,11 @@ public class MessagesController : ControllerBase
         }
 
         var userParticipant = conversation.Participants.First(p => p.UserId == userId);
-        var otherParticipant = conversation.Participants.FirstOrDefault(p => p.UserId != userId);
+
+        // For global chat, there's no "other" participant concept
+        var otherParticipant = conversation.IsGlobal
+            ? null
+            : conversation.Participants.FirstOrDefault(p => p.UserId != userId);
 
         var response = new ConversationResponse
         {
@@ -120,6 +196,7 @@ public class MessagesController : ControllerBase
             LastMessageAt = conversation.LastMessageAt,
             IsBlocked = userParticipant.IsBlocked,
             IsBlockedByOther = otherParticipant?.IsBlocked ?? false,
+            IsGlobal = conversation.IsGlobal,
             Participants = conversation.Participants.Select(p => new ParticipantResponse
             {
                 UserId = p.UserId,

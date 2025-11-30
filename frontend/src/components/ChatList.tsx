@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ConversationListItem } from '../types/chatTypes';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ChatListProps {
     conversations: ConversationListItem[];
@@ -13,6 +14,8 @@ const ChatList: React.FC<ChatListProps> = ({
     selectedConversationId,
     onSelectConversation,
 }) => {
+    const { t } = useTranslation();
+
     const formatTime = (dateString?: string) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -42,22 +45,30 @@ const ChatList: React.FC<ChatListProps> = ({
                     <div
                         key={conv.id}
                         className={`chat-list-item ${selectedConversationId === conv.id ? 'active' : ''} ${conv.unreadCount > 0 && selectedConversationId !== conv.id ? 'has-unread' : ''
-                            }`}
+                            } ${conv.isGlobal ? 'global-chat' : ''}`}
                         onClick={() => onSelectConversation(conv.id)}
                     >
-                        <div className="chat-list-item-avatar">
-                            {conv.otherUserName.charAt(0).toUpperCase()}
+                        <div className={`chat-list-item-avatar ${conv.isGlobal ? 'global' : ''}`}>
+                            {conv.isGlobal ? (
+                                <Globe size={20} />
+                            ) : (
+                                conv.otherUserName.charAt(0).toUpperCase()
+                            )}
                         </div>
                         <div className="chat-list-item-content">
                             <div className="chat-list-item-header">
                                 <span className="chat-list-item-name">
-                                    {conv.otherUserName}
-                                    {conv.isOtherUserOnline && (
+                                    {conv.isGlobal ? t('messages.globalChat') : conv.otherUserName}
+                                    {!conv.isGlobal && conv.isOtherUserOnline && (
                                         <span className="online-indicator"></span>
                                     )}
                                 </span>
                                 <span className="chat-list-item-time">
-                                    {conv.isOtherUserOnline ? 'Online' : formatTime(conv.otherUserLastSeen)}
+                                    {conv.isGlobal
+                                        ? `${conv.onlineCount} ${t('messages.online').toLowerCase()}`
+                                        : conv.isOtherUserOnline
+                                            ? 'Online'
+                                            : formatTime(conv.otherUserLastSeen)}
                                 </span>
                             </div>
                             <div className="chat-list-item-message">

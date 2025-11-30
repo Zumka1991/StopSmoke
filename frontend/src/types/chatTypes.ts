@@ -17,6 +17,7 @@ export interface Conversation {
     messages: Message[];
     isBlocked: boolean;
     isBlockedByOther: boolean;
+    isGlobal: boolean;
 }
 
 export interface ConversationListItem {
@@ -30,6 +31,8 @@ export interface ConversationListItem {
     isOtherUserOnline: boolean;
     otherUserLastSeen?: string;
     isBlocked: boolean;
+    isGlobal: boolean;
+    onlineCount: number;
 }
 
 export interface Participant {

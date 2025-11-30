@@ -967,6 +967,17 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   flex-shrink: 0;
 }
 
+/* Global chat avatar styles */
+.chat-list-item-avatar.global,
+.chat-window-avatar.global {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Global chat item highlight */
+.chat-list-item.global-chat {
+  border-left: 3px solid #10b981;
+}
+
 .chat-list-item-content {
   flex: 1;
   min-width: 0;
@@ -1174,6 +1185,15 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 .message-content p {
   margin: 0 0 0.5rem 0;
   word-wrap: break-word;
+}
+
+/* Sender name for global chat messages */
+.message-sender-name {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #10b981;
+  margin-bottom: 0.25rem;
 }
 
 .message-time {

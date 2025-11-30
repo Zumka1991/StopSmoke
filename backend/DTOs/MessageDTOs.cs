@@ -34,6 +34,7 @@ public class ConversationResponse
     public List<MessageResponse> Messages { get; set; } = new();
     public bool IsBlocked { get; set; }
     public bool IsBlockedByOther { get; set; }
+    public bool IsGlobal { get; set; }
 }
 
 public class ConversationListItemResponse
@@ -48,6 +49,8 @@ public class ConversationListItemResponse
     public bool IsOtherUserOnline { get; set; }
     public DateTime? OtherUserLastSeen { get; set; }
     public bool IsBlocked { get; set; }
+    public bool IsGlobal { get; set; }
+    public int OnlineCount { get; set; }  // For global chat - number of online users
 }
 
 public class ParticipantResponse

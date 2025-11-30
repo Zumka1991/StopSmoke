@@ -275,6 +275,7 @@
   },
   "messages": {
     "title": "Messages",
+    "globalChat": "Global Chat",
     "online": "Online",
     "offline": "Offline",
     "typeMessage": "Type a message...",

@@ -275,6 +275,7 @@
   },
   "messages": {
     "title": "Сообщения",
+    "globalChat": "Общий чат",
     "online": "Онлайн",
     "offline": "Оффлайн",
     "typeMessage": "Введите сообщение...",
