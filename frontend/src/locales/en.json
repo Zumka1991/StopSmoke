@@ -378,5 +378,8 @@
   "pagination": {
     "previous": "Previous",
     "next": "Next"
+  },
+  "footer": {
+    "rights": "All rights reserved"
   }
 }

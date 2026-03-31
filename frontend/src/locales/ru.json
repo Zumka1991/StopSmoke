@@ -378,5 +378,8 @@
   "pagination": {
     "previous": "Назад",
     "next": "Вперед"
+  },
+  "footer": {
+    "rights": "Все права защищены"
   }
 }

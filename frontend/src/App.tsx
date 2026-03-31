@@ -14,6 +14,7 @@ import AdminArticlesPage from './pages/AdminArticlesPage';
 import LandingPage from './pages/LandingPage';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { GlobalNotificationListener } from './components/GlobalNotificationListener';
+import Footer from './components/Footer';
 import './i18n';
 
 function App() {
@@ -22,59 +23,64 @@ function App() {
     <NotificationProvider>
       <GlobalNotificationListener />
       <Router>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/articles" element={<ArticlesPage />} />
-          <Route path="/articles/:id" element={<ArticleDetailPage />} />
-          <Route path="/leaderboard" element={<LeaderboardPage />} />
-          <Route path="/marathons" element={<MarathonPage />} />
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <div style={{ flex: 1 }}>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/articles" element={<ArticlesPage />} />
+              <Route path="/articles/:id" element={<ArticleDetailPage />} />
+              <Route path="/leaderboard" element={<LeaderboardPage />} />
+              <Route path="/marathons" element={<MarathonPage />} />
 
-          {/* Protected routes */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/messages"
-            element={
-              <ProtectedRoute>
-                <MessagesPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/secret-admin-access"
-            element={
-              <ProtectedRoute>
-                <SecretAdminPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/articles"
-            element={
-              <ProtectedRoute>
-                <AdminArticlesPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+              {/* Protected routes */}
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/messages"
+                element={
+                  <ProtectedRoute>
+                    <MessagesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/secret-admin-access"
+                element={
+                  <ProtectedRoute>
+                    <SecretAdminPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/articles"
+                element={
+                  <ProtectedRoute>
+                    <AdminArticlesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
+          <Footer />
+        </div>
       </Router>
     </NotificationProvider>
   );
