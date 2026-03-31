@@ -36,7 +36,6 @@ export default function HealthTimeline({ quitDate }: HealthTimelineProps) {
 
     // Find current progress
     const nextMilestoneIndex = milestones.findIndex(m => m.minutes > minutesPassed);
-    const currentMilestoneIndex = nextMilestoneIndex === -1 ? milestones.length - 1 : nextMilestoneIndex - 1;
 
     // If all completed
     if (nextMilestoneIndex === -1) {
@@ -58,12 +57,9 @@ export default function HealthTimeline({ quitDate }: HealthTimelineProps) {
     }
 
     const nextMilestone = milestones[nextMilestoneIndex];
-    const prevMilestoneMinutes = currentMilestoneIndex >= 0 ? milestones[currentMilestoneIndex].minutes : 0;
 
-    // Calculate percentage for current milestone
-    const totalDuration = nextMilestone.minutes - prevMilestoneMinutes;
-    const currentDuration = minutesPassed - prevMilestoneMinutes;
-    const percentage = Math.min(100, Math.max(0, (currentDuration / totalDuration) * 100));
+    // Calculate percentage relative to the next milestone total duration
+    const percentage = Math.min(100, Math.max(0, (minutesPassed / nextMilestone.minutes) * 100));
 
     return (
         <div className="card" style={{ marginTop: '2rem', maxWidth: '100%' }}>
