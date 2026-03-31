@@ -310,12 +310,12 @@ public class MessagesController : ControllerBase
             return BadRequest(new { message = "Cannot create conversation with yourself" });
         }
 
-        // Check if conversation already exists
+        // Check if private conversation already exists
         var existingParticipant = await _context.ConversationParticipants
             .Where(p => p.UserId == userId)
             .Include(p => p.Conversation)
                 .ThenInclude(c => c.Participants)
-            .FirstOrDefaultAsync(p => p.Conversation.Participants.Any(cp => cp.UserId == otherUser.Id));
+            .FirstOrDefaultAsync(p => !p.Conversation.IsGlobal && p.Conversation.Participants.Any(cp => cp.UserId == otherUser.Id));
 
         if (existingParticipant != null)
         {
