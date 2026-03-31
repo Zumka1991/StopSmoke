@@ -1,8 +1,15 @@
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 
 export default function Footer() {
     const { t } = useTranslation();
+    const location = useLocation();
     const currentYear = new Date().getFullYear();
+
+    // Hide footer on messages page to avoid overlapping chat layout
+    if (location.pathname === '/messages') {
+        return null;
+    }
 
     return (
         <footer style={{
