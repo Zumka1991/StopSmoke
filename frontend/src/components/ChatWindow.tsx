@@ -581,61 +581,72 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                             onTouchMove={handleLongPressEnd}
                             style={{ cursor: message.senderId === currentUserId && !message.isDeleted ? 'context-menu' : 'default' }}
                         >
-                            <div className="message-content">
-                                {/* Reply quote */}
-                                {message.replyToId && !message.isDeleted && (
-                                    <div
-                                        onClick={() => message.replyToId && scrollToMessage(message.replyToId)}
-                                        style={{
-                                            borderLeft: '3px solid rgba(255,255,255,0.5)',
-                                            paddingLeft: '0.5rem',
-                                            marginBottom: '0.4rem',
-                                            opacity: 0.75,
-                                            fontSize: '0.8rem',
-                                            overflow: 'hidden',
-                                            whiteSpace: 'nowrap',
-                                            textOverflow: 'ellipsis',
-                                            maxWidth: '280px',
-                                            cursor: 'pointer',
-                                            borderRadius: '0 4px 4px 0',
-                                            padding: '0.2rem 0.5rem',
-                                            transition: 'background 0.2s'
-                                        }}
-                                        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
-                                        onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                                    >
-                                        <span style={{ fontWeight: 'bold', display: 'block' }}>
-                                            {message.replyToSenderName}
-                                        </span>
-                                        <span style={{ opacity: 0.85 }}>
-                                            {message.replyToContent
-                                                ? (message.replyToContent.startsWith('[APP_META:QUIT_SHARE]')
-                                                    ? '🏆 ' + (t('profile.sharedDuration') || 'Поделился сроком отказа')
-                                                    : message.replyToContent.slice(0, 80))
-                                                : t('messages.deletedMessage')}
-                                        </span>
+                                {isGlobal && message.senderId !== currentUserId && (
+                                    <div className="message-avatar-container">
+                                        {(message.senderAvatarThumbnailUrl || message.senderAvatarUrl) ? (
+                                            <img 
+                                                src={message.senderAvatarThumbnailUrl || message.senderAvatarUrl} 
+                                                className="message-avatar"
+                                                alt={message.senderName}
+                                                onClick={() => navigate(`/profile/${message.senderId}`)}
+                                                title={t('profile.viewProfile') || 'View Profile'}
+                                            />
+                                        ) : (
+                                            <div 
+                                                className="message-avatar-placeholder"
+                                                onClick={() => navigate(`/profile/${message.senderId}`)}
+                                                title={t('profile.viewProfile') || 'View Profile'}
+                                            >
+                                                {message.senderName.charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
-                                {isGlobal && message.senderId !== currentUserId && (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.15rem' }}>
-                                        {(message.senderAvatarThumbnailUrl || message.senderAvatarUrl) && (
-                                            <div style={{
-                                                width: '16px',
-                                                height: '16px',
-                                                borderRadius: '50%',
-                                                background: `url(${message.senderAvatarThumbnailUrl || message.senderAvatarUrl}) center/cover`
-                                            }} />
-                                        )}
+                                <div className="message-content">
+                                    {/* Reply quote */}
+                                    {message.replyToId && !message.isDeleted && (
+                                        <div
+                                            onClick={() => message.replyToId && scrollToMessage(message.replyToId)}
+                                            style={{
+                                                borderLeft: '3px solid rgba(255,255,255,0.5)',
+                                                paddingLeft: '0.5rem',
+                                                marginBottom: '0.4rem',
+                                                opacity: 0.75,
+                                                fontSize: '0.8rem',
+                                                overflow: 'hidden',
+                                                whiteSpace: 'nowrap',
+                                                textOverflow: 'ellipsis',
+                                                maxWidth: '280px',
+                                                cursor: 'pointer',
+                                                borderRadius: '0 4px 4px 0',
+                                                padding: '0.2rem 0.5rem',
+                                                transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+                                            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                                        >
+                                            <span style={{ fontWeight: 'bold', display: 'block' }}>
+                                                {message.replyToSenderName}
+                                            </span>
+                                            <span style={{ opacity: 0.85 }}>
+                                                {message.replyToContent
+                                                    ? (message.replyToContent.startsWith('[APP_META:QUIT_SHARE]')
+                                                        ? '🏆 ' + (t('profile.sharedDuration') || 'Поделился сроком отказа')
+                                                        : message.replyToContent.slice(0, 80))
+                                                    : t('messages.deletedMessage')}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {isGlobal && message.senderId !== currentUserId && (
                                         <span 
                                             className="message-sender-name"
                                             onClick={() => navigate(`/profile/${message.senderId}`)}
-                                            style={{ cursor: 'pointer', margin: 0 }}
+                                            style={{ cursor: 'pointer', margin: '0 0 0.25rem 0' }}
                                             title={t('profile.viewProfile') || 'View Profile'}
                                         >
                                             {message.senderName}
                                         </span>
-                                    </div>
-                                )}
+                                    )}
                                 {message.isDeleted ? (
                                     <p style={{
                                         fontStyle: 'italic',
