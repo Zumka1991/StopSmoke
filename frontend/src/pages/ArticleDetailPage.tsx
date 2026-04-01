@@ -102,14 +102,9 @@ export default function ArticleDetailPage() {
                 )}
 
                 {article && (
-                    <div className="card" style={{ maxWidth: 'none', padding: 0, overflow: 'hidden' }}>
+                    <div className="card article-detail-card" style={{ maxWidth: 'none', padding: 0, overflow: 'hidden' }}>
                         {article.imageUrl && (
-                            <div style={{
-                                width: '100%',
-                                height: '400px',
-                                overflow: 'hidden',
-                                position: 'relative'
-                            }}>
+                            <div className="article-detail-image-wrapper">
                                 <img 
                                     src={`${apiBaseUrl}${article.imageUrl}`} 
                                     alt={article.title}
@@ -119,26 +114,11 @@ export default function ArticleDetailPage() {
                                         objectFit: 'cover'
                                     }}
                                 />
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    height: '50%',
-                                    background: 'linear-gradient(to top, rgba(30, 41, 59, 0.9), transparent)'
-                                }}></div>
                             </div>
                         )}
                         
-                        <div style={{ padding: '2.5rem' }}>
-                            <h1 style={{
-                                fontSize: '2.5rem',
-                                marginBottom: '1.5rem',
-                                color: 'var(--text-primary)',
-                                lineHeight: 1.2,
-                                fontWeight: 800,
-                                letterSpacing: '-0.02em'
-                            }}>
+                        <div className="article-detail-content">
+                            <h1 className="article-detail-title">
                                 {article.title}
                             </h1>
 

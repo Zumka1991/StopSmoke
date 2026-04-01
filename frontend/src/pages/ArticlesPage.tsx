@@ -207,13 +207,15 @@ export default function ArticlesPage() {
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
+                                    flexWrap: 'wrap',
+                                    gap: '1rem',
                                     marginTop: 'auto',
                                     paddingTop: '1.5rem',
                                     borderTop: '1px solid rgba(255, 255, 255, 0.05)',
                                     fontSize: '0.875rem',
                                     color: 'var(--text-secondary)'
                                 }}>
-                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                                         <span>{formatDate(article.createdAt)}</span>
                                         {article.authorName && (
                                             <>
