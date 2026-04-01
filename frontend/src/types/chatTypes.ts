@@ -68,3 +68,12 @@ export interface SendMessageRequest {
 export interface CreateConversationRequest {
     participantEmail: string;
 }
+export interface UserSummary {
+    id: string;
+    name: string;
+    email: string;
+    avatarUrl?: string;
+    avatarThumbnailUrl?: string;
+    quitDate?: string;
+    lastSeen?: string;
+}

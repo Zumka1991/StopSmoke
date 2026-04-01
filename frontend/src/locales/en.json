@@ -314,6 +314,8 @@
     "confirmDeleteMessage": "Are you sure you want to delete this message? This cannot be undone.",
     "deletedMessage": "Message deleted",
     "replyMessage": "Reply",
+    "onlineUsers": "Online Users",
+    "searchOnlineUsers": "Search by name...",
     "errorDeletingMessage": "Failed to delete message. Please try again."
   },
   "articles": {

@@ -4,6 +4,9 @@ import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trop
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import OnlineUsersModal from './OnlineUsersModal';
+import { signalRService } from '../api/signalrService';
+import type { UserSummary } from '../types/chatTypes';
 
 interface ChatWindowProps {
     conversationId: number;
@@ -75,6 +78,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
     const [isSharingDuration, setIsSharingDuration] = useState(false);
     const [replyingToMessage, setReplyingToMessage] = useState<Message | null>(null);
+    const [isOnlineUsersModalOpen, setIsOnlineUsersModalOpen] = useState(false);
+    const [onlineUsersList, setOnlineUsersList] = useState<UserSummary[]>([]);
+    const [isLoadingOnlineUsers, setIsLoadingOnlineUsers] = useState(false);
     const cooldownIntervalRef = useRef<number | null>(null);
     const longPressTimerRef = useRef<number | null>(null);
     const longPressTargetRef = useRef<{ messageId: number; senderId: string; x: number; y: number } | null>(null);
@@ -313,6 +319,21 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         setTimeout(() => el.classList.remove('message-highlight'), 1500);
     };
 
+    const handleOpenOnlineUsers = async () => {
+        if (!isGlobal || isLoadingOnlineUsers) return;
+        
+        setIsLoadingOnlineUsers(true);
+        try {
+            const users = await signalRService.getOnlineUsersDetails();
+            setOnlineUsersList(users);
+            setIsOnlineUsersModalOpen(true);
+        } catch (error) {
+            console.error('Error fetching online users:', error);
+        } finally {
+            setIsLoadingOnlineUsers(false);
+        }
+    };
+
     const handleMessageContextMenu = (e: React.MouseEvent, messageId: number, senderId: string) => {
         e.preventDefault();
         setMessageContextMenu({
@@ -385,7 +406,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         >
                             {isGlobal ? t('messages.globalChat') : otherUserName}
                         </h3>
-                        <span className={`status ${isGlobal || isOtherUserOnline ? 'online' : 'offline'}`}>
+                        <span 
+                            className={`status ${isGlobal || isOtherUserOnline ? 'online' : 'offline'}`}
+                            onClick={handleOpenOnlineUsers}
+                            style={{ cursor: isGlobal ? 'pointer' : 'default' }}
+                        >
                             {isGlobal
                                 ? `${onlineCount} ${t('messages.online').toLowerCase()}`
                                 : isOtherUserOnline
@@ -836,6 +861,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     </button>
                 </form>
             )}
+
+            <OnlineUsersModal 
+                isOpen={isOnlineUsersModalOpen} 
+                onClose={() => setIsOnlineUsersModalOpen(false)} 
+                users={onlineUsersList} 
+            />
         </div>
     );
 };

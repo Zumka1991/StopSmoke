@@ -207,4 +207,28 @@ public class ChatHub : Hub
     {
         return _onlineUsers.Count;
     }
+
+    public async Task<List<PublicProfileDto>> GetOnlineUsersDetails()
+    {
+        var onlineUserIds = _onlineUsers.Keys.ToList();
+        
+        var users = await _context.Users
+            .Where(u => onlineUserIds.Contains(u.Id))
+            .OrderBy(u => u.Name)
+            .Take(200)
+            .Select(u => new PublicProfileDto
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Email = u.Email,
+                AvatarUrl = u.AvatarUrl,
+                AvatarThumbnailUrl = u.AvatarThumbnailUrl,
+                QuitDate = u.QuitDate,
+                LastSeen = u.LastSeen
+                // We don't need all fields but PublicProfileDto is reusable
+            })
+            .ToListAsync();
+
+        return users;
+    }
 }

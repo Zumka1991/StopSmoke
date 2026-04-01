@@ -314,6 +314,8 @@
     "confirmDeleteMessage": "Вы уверены, что хотите удалить это сообщение? Это действие нельзя отменить.",
     "deletedMessage": "Сообщение удалено",
     "replyMessage": "Ответить",
+    "onlineUsers": "Пользователи в сети",
+    "searchOnlineUsers": "Поиск по имени...",
     "errorDeletingMessage": "Не удалось удалить сообщение. Попробуйте снова."
   },
   "articles": {

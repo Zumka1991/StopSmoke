@@ -1,5 +1,5 @@
 import * as signalR from '@microsoft/signalr';
-import type { Message } from '../types/chatTypes';
+import type { Message, UserSummary } from '../types/chatTypes';
 
 class SignalRService {
     private connection: signalR.HubConnection | null = null;
@@ -108,6 +108,19 @@ class SignalRService {
             return await this.connection.invoke('GetOnlineUsers');
         } catch (err) {
             console.error('Error getting online users: ', err);
+            throw err;
+        }
+    }
+
+    async getOnlineUsersDetails(): Promise<UserSummary[]> {
+        if (!this.connection) {
+            throw new Error('SignalR connection not established');
+        }
+
+        try {
+            return await this.connection.invoke('GetOnlineUsersDetails');
+        } catch (err) {
+            console.error('Error getting online users details: ', err);
             throw err;
         }
     }
