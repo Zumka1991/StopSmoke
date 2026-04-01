@@ -313,6 +313,7 @@
     "deleteMessage": "Удалить сообщение",
     "confirmDeleteMessage": "Вы уверены, что хотите удалить это сообщение? Это действие нельзя отменить.",
     "deletedMessage": "Сообщение удалено",
+    "replyMessage": "Ответить",
     "errorDeletingMessage": "Не удалось удалить сообщение. Попробуйте снова."
   },
   "articles": {

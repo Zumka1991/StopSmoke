@@ -5,6 +5,7 @@ public class SendMessageRequest
 {
     public int ConversationId { get; set; }
     public string Content { get; set; } = null!;
+    public int? ReplyToId { get; set; }
 }
 
 public class CreateConversationRequest
@@ -25,6 +26,9 @@ public class MessageResponse
     public bool IsDeleted { get; set; }
     public string? SenderAvatarUrl { get; set; }
     public string? SenderAvatarThumbnailUrl { get; set; }
+    public int? ReplyToId { get; set; }
+    public string? ReplyToSenderName { get; set; }
+    public string? ReplyToContent { get; set; }
 }
 
 public class ConversationResponse

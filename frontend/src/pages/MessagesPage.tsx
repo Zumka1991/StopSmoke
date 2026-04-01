@@ -193,15 +193,14 @@ const MessagesPage: React.FC = () => {
         }
     };
 
-    const handleSendMessage = async (content: string) => {
+    const handleSendMessage = async (content: string, replyToId?: number) => {
         if (!selectedConversationId) return;
 
         try {
             console.log('Sending message:', content);
-            await signalRService.sendMessage(selectedConversationId, content);
+            await signalRService.sendMessage(selectedConversationId, content, replyToId);
         } catch (error) {
             console.error('Error sending message:', error);
-            // Show a less intrusive error - could be replaced with a toast notification
             console.warn('Message may not have been delivered. Check your connection.');
         }
     };

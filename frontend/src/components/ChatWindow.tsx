@@ -18,7 +18,7 @@ interface ChatWindowProps {
     isBlockedByOther: boolean;
     isGlobal: boolean;
     onlineCount?: number;
-    onSendMessage: (content: string) => void;
+    onSendMessage: (content: string, replyToId?: number) => void;
     onBack?: () => void;
     onLoadOlderMessages?: () => Promise<boolean | void>;
     onBlock: () => void;
@@ -60,6 +60,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         messageId: number;
         x: number;
         y: number;
+        senderId?: string;
     } | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -73,7 +74,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const [canSendMessage, setCanSendMessage] = useState(true);
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
     const [isSharingDuration, setIsSharingDuration] = useState(false);
+    const [replyingToMessage, setReplyingToMessage] = useState<Message | null>(null);
     const cooldownIntervalRef = useRef<number | null>(null);
+    const longPressTimerRef = useRef<number | null>(null);
+    const longPressTargetRef = useRef<{ messageId: number; senderId: string; x: number; y: number } | null>(null);
 
     const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
         messagesEndRef.current?.scrollIntoView({ behavior });
@@ -240,12 +244,33 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         }
 
         // Send message
-        onSendMessage(messageInput.trim());
+        onSendMessage(messageInput.trim(), replyingToMessage?.id);
         setMessageInput('');
+        setReplyingToMessage(null);
         lastMessageTimeRef.current = now;
 
         // Start cooldown
         startCooldown();
+    };
+
+    const handleLongPressStart = (e: React.TouchEvent, messageId: number, senderId: string) => {
+        const touch = e.touches[0];
+        longPressTargetRef.current = { messageId, senderId, x: touch.clientX, y: touch.clientY };
+        longPressTimerRef.current = window.setTimeout(() => {
+            if (longPressTargetRef.current) {
+                const { messageId: mid, senderId: sid, x, y } = longPressTargetRef.current;
+                // Show context menu for own messages on delete, for all messages on reply
+                setMessageContextMenu({ messageId: mid, x, y, senderId: sid });
+            }
+        }, 500);
+    };
+
+    const handleLongPressEnd = () => {
+        if (longPressTimerRef.current) {
+            clearTimeout(longPressTimerRef.current);
+            longPressTimerRef.current = null;
+        }
+        longPressTargetRef.current = null;
     };
 
     const formatMessageTime = (dateString: string) => {
@@ -280,15 +305,24 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     };
 
     const handleMessageContextMenu = (e: React.MouseEvent, messageId: number, senderId: string) => {
-        // Only show context menu for own messages
-        if (senderId !== currentUserId) return;
-
         e.preventDefault();
         setMessageContextMenu({
             messageId,
             x: e.clientX,
-            y: e.clientY
+            y: e.clientY,
+            senderId,
         });
+    };
+
+    const handleReplyMessage = () => {
+        if (messageContextMenu) {
+            const msg = messages.find(m => m.id === messageContextMenu.messageId);
+            if (msg) {
+                setReplyingToMessage(msg);
+                inputRef.current?.focus();
+            }
+        }
+        setMessageContextMenu(null);
     };
 
     const handleDeleteMessage = () => {
@@ -507,9 +541,37 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                             className={`message ${message.senderId === currentUserId ? 'message-sent' : 'message-received'
                                 }`}
                             onContextMenu={(e) => handleMessageContextMenu(e, message.id, message.senderId)}
+                            onTouchStart={(e) => handleLongPressStart(e, message.id, message.senderId)}
+                            onTouchEnd={handleLongPressEnd}
+                            onTouchMove={handleLongPressEnd}
                             style={{ cursor: message.senderId === currentUserId && !message.isDeleted ? 'context-menu' : 'default' }}
                         >
                             <div className="message-content">
+                                {/* Reply quote */}
+                                {message.replyToId && !message.isDeleted && (
+                                    <div style={{
+                                        borderLeft: '3px solid rgba(255,255,255,0.5)',
+                                        paddingLeft: '0.5rem',
+                                        marginBottom: '0.4rem',
+                                        opacity: 0.75,
+                                        fontSize: '0.8rem',
+                                        overflow: 'hidden',
+                                        whiteSpace: 'nowrap',
+                                        textOverflow: 'ellipsis',
+                                        maxWidth: '280px'
+                                    }}>
+                                        <span style={{ fontWeight: 'bold', display: 'block' }}>
+                                            {message.replyToSenderName}
+                                        </span>
+                                        <span style={{ opacity: 0.85 }}>
+                                            {message.replyToContent
+                                                ? (message.replyToContent.startsWith('[APP_META:QUIT_SHARE]')
+                                                    ? '🏆 ' + (t('profile.sharedDuration') || 'Поделился сроком отказа')
+                                                    : message.replyToContent.slice(0, 80))
+                                                : t('messages.deletedMessage')}
+                                        </span>
+                                    </div>
+                                )}
                                 {isGlobal && message.senderId !== currentUserId && (
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.15rem' }}>
                                         {(message.senderAvatarThumbnailUrl || message.senderAvatarUrl) && (
@@ -601,8 +663,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         minWidth: '180px'
                     }}
                 >
+                    {/* Reply button - always visible */}
                     <button
-                        onClick={handleDeleteMessage}
+                        onClick={handleReplyMessage}
                         style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -611,19 +674,73 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                             padding: '0.75rem',
                             background: 'transparent',
                             border: 'none',
-                            color: 'var(--error-color)',
+                            color: 'var(--text-primary)',
                             cursor: 'pointer',
                             textAlign: 'left',
                             fontSize: '0.9rem',
                             borderRadius: '0.25rem',
                             transition: 'background 0.2s'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                        <Trash2 size={18} />
-                        {t('messages.deleteMessage')}
+                        ↩️ {t('messages.replyMessage') || 'Ответить'}
                     </button>
+                    {/* Delete button - only own messages */}
+                    {messageContextMenu?.senderId === currentUserId && (
+                        <button
+                            onClick={handleDeleteMessage}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                width: '100%',
+                                padding: '0.75rem',
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--error-color)',
+                                cursor: 'pointer',
+                                textAlign: 'left',
+                                fontSize: '0.9rem',
+                                borderRadius: '0.25rem',
+                                transition: 'background 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                        >
+                            <Trash2 size={18} />
+                            {t('messages.deleteMessage')}
+                        </button>
+                    )}
+                </div>
+            )}
+
+            {/* Reply preview bar */}
+            {replyingToMessage && (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1rem',
+                    background: 'rgba(255,255,255,0.05)',
+                    borderTop: '1px solid rgba(255,255,255,0.08)',
+                    borderBottom: '1px solid rgba(255,255,255,0.08)',
+                }}>
+                    <div style={{ flex: 1, overflow: 'hidden' }}>
+                        <span style={{ fontWeight: 'bold', fontSize: '0.8rem', color: 'var(--accent-color)' }}>
+                            ↩️ {replyingToMessage.senderName}
+                        </span>
+                        <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                            {replyingToMessage.content.startsWith('[APP_META:QUIT_SHARE]')
+                                ? '🏆 ' + (t('profile.sharedDuration') || 'Поделился сроком отказа')
+                                : replyingToMessage.content.slice(0, 100)}
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => setReplyingToMessage(null)}
+                        style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}
+                        title="Отменить ответ"
+                    >✕</button>
                 </div>
             )}
 

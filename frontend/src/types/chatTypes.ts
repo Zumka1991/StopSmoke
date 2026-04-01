@@ -9,6 +9,9 @@ export interface Message {
     isDeleted: boolean;
     senderAvatarUrl?: string;
     senderAvatarThumbnailUrl?: string;
+    replyToId?: number;
+    replyToSenderName?: string;
+    replyToContent?: string;
 }
 
 export interface Conversation {
@@ -59,6 +62,7 @@ export interface UserSearchResult {
 export interface SendMessageRequest {
     conversationId: number;
     content: string;
+    replyToId?: number;
 }
 
 export interface CreateConversationRequest {

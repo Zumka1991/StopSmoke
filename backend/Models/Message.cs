@@ -22,4 +22,8 @@ public class Message
     public bool IsRead { get; set; } = false;
 
     public bool IsDeleted { get; set; } = false;
+
+    // Optional reply reference
+    public int? ReplyToId { get; set; }
+    public Message? ReplyTo { get; set; }
 }

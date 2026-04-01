@@ -41,7 +41,7 @@ class SignalRService {
         }
     }
 
-    async sendMessage(conversationId: number, content: string): Promise<void> {
+    async sendMessage(conversationId: number, content: string, replyToId?: number): Promise<void> {
         if (!this.connection) {
             throw new Error('SignalR connection not established');
         }
@@ -51,8 +51,8 @@ class SignalRService {
         }
 
         try {
-            console.log('Invoking SendMessage:', { conversationId, content });
-            await this.connection.invoke('SendMessage', conversationId, content);
+            console.log('Invoking SendMessage:', { conversationId, content, replyToId });
+            await this.connection.invoke('SendMessage', conversationId, content, replyToId ?? null);
             console.log('SendMessage invoked successfully');
         } catch (err) {
             console.error('Error sending message: ', err);

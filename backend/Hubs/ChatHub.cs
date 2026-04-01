@@ -78,7 +78,7 @@ public class ChatHub : Hub
         await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task SendMessage(int conversationId, string content)
+    public async Task SendMessage(int conversationId, string content, int? replyToId = null)
     {
         var userId = Context.UserIdentifier;
         if (string.IsNullOrEmpty(userId))
@@ -102,6 +102,15 @@ public class ChatHub : Hub
             throw new HubException("Conversation not found");
         }
 
+        // Load reply-to message if provided
+        Models.Message? replyToMessage = null;
+        if (replyToId.HasValue)
+        {
+            replyToMessage = await _context.Messages
+                .Include(m => m.Sender)
+                .FirstOrDefaultAsync(m => m.Id == replyToId.Value && m.ConversationId == conversationId);
+        }
+
         // Create message
         var message = new Models.Message
         {
@@ -109,7 +118,8 @@ public class ChatHub : Hub
             SenderId = userId,
             Content = content,
             SentAt = DateTime.UtcNow,
-            IsRead = false
+            IsRead = false,
+            ReplyToId = replyToMessage?.Id
         };
 
         _context.Messages.Add(message);
@@ -128,9 +138,14 @@ public class ChatHub : Hub
             ConversationId = message.ConversationId,
             SenderId = message.SenderId,
             SenderName = sender?.Name ?? sender?.Email ?? "Unknown",
+            SenderAvatarUrl = sender?.AvatarUrl,
+            SenderAvatarThumbnailUrl = sender?.AvatarThumbnailUrl,
             Content = message.Content,
             SentAt = message.SentAt,
-            IsRead = message.IsRead
+            IsRead = message.IsRead,
+            ReplyToId = replyToMessage?.Id,
+            ReplyToSenderName = replyToMessage?.Sender?.Name ?? replyToMessage?.Sender?.Email,
+            ReplyToContent = replyToMessage?.IsDeleted == true ? null : replyToMessage?.Content
         };
 
         if (conversation.IsGlobal)

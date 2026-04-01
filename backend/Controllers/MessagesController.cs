@@ -171,6 +171,9 @@ public class MessagesController : ControllerBase
                 .ThenInclude(p => p.User)
             .Include(c => c.Messages)
                 .ThenInclude(m => m.Sender)
+            .Include(c => c.Messages)
+                .ThenInclude(m => m.ReplyTo)
+                    .ThenInclude(r => r!.Sender)
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (conversation == null)
@@ -225,7 +228,10 @@ public class MessagesController : ControllerBase
                     IsRead = m.IsRead,
                     IsDeleted = m.IsDeleted,
                     SenderAvatarUrl = m.Sender.AvatarUrl,
-                    SenderAvatarThumbnailUrl = m.Sender.AvatarThumbnailUrl
+                    SenderAvatarThumbnailUrl = m.Sender.AvatarThumbnailUrl,
+                    ReplyToId = m.ReplyToId,
+                    ReplyToSenderName = m.ReplyTo != null ? (m.ReplyTo.Sender.Name ?? m.ReplyTo.Sender.Email) : null,
+                    ReplyToContent = (m.ReplyTo != null && !m.ReplyTo.IsDeleted) ? m.ReplyTo.Content : null
                 }).ToList()
         };
 
@@ -256,6 +262,7 @@ public class MessagesController : ControllerBase
 
         var query = _context.Messages
             .Include(m => m.Sender)
+            .Include(m => m.ReplyTo).ThenInclude(r => r!.Sender)
             .Where(m => m.ConversationId == id);
 
         // Filter by ClearedHistoryAt
@@ -287,7 +294,12 @@ public class MessagesController : ControllerBase
                 Content = m.Content,
                 SentAt = m.SentAt,
                 IsRead = m.IsRead,
-                IsDeleted = m.IsDeleted
+                IsDeleted = m.IsDeleted,
+                SenderAvatarUrl = m.Sender.AvatarUrl,
+                SenderAvatarThumbnailUrl = m.Sender.AvatarThumbnailUrl,
+                ReplyToId = m.ReplyToId,
+                ReplyToSenderName = m.ReplyTo != null ? (m.ReplyTo.Sender.Name ?? m.ReplyTo.Sender.Email) : null,
+                ReplyToContent = (m.ReplyTo != null && !m.ReplyTo.IsDeleted) ? m.ReplyTo.Content : null
             })
             .ToListAsync();
 

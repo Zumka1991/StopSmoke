@@ -313,6 +313,7 @@
     "deleteMessage": "Delete Message",
     "confirmDeleteMessage": "Are you sure you want to delete this message? This cannot be undone.",
     "deletedMessage": "Message deleted",
+    "replyMessage": "Reply",
     "errorDeletingMessage": "Failed to delete message. Please try again."
   },
   "articles": {
