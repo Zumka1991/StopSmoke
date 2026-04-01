@@ -803,8 +803,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     >
                         ↩️ {t('messages.replyMessage') || 'Ответить'}
                     </button>
-                    {/* Edit button - only own messages */}
-                    {messageContextMenu?.senderId === currentUserId && (
+                    {/* Edit button - only own messages and not system meta-messages */}
+                    {messageContextMenu?.senderId === currentUserId && 
+                     !messages.find(m => m.id === messageContextMenu.messageId)?.content.startsWith('[APP_META:') && (
                         <button
                             onClick={handleEditMessage}
                             style={{
