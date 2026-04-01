@@ -176,6 +176,8 @@ public class ChatHub : Hub
         var message = await _context.Messages
             .Include(m => m.Conversation)
             .Include(m => m.Sender)
+            .Include(m => m.ReplyToMessage)
+                .ThenInclude(r => r != null ? r.Sender : null)
             .FirstOrDefaultAsync(m => m.Id == messageId);
 
         if (message == null)
@@ -213,8 +215,9 @@ public class ChatHub : Hub
             IsEdited = message.IsEdited,
             EditedAt = message.EditedAt,
             IsDeleted = message.IsDeleted,
-            ReplyToId = message.ReplyToId
-            // Reply context is usually re-rendered by client
+            ReplyToId = message.ReplyToId,
+            ReplyToSenderName = message.ReplyToMessage?.Sender?.Name ?? message.ReplyToMessage?.Sender?.Email,
+            ReplyToContent = message.ReplyToMessage?.IsDeleted == true ? null : message.ReplyToMessage?.Content
         };
 
         if (message.Conversation.IsGlobal)
