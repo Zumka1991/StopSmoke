@@ -9,6 +9,8 @@ interface ChatWindowProps {
     messages: Message[];
     otherUserName: string;
     otherUserId?: string;
+    otherUserAvatarUrl?: string;
+    otherUserAvatarThumbnailUrl?: string;
     isOtherUserOnline: boolean;
     currentUserId: string;
     isBlocked: boolean;
@@ -30,6 +32,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     messages,
     otherUserName,
     otherUserId,
+    otherUserAvatarUrl,
+    otherUserAvatarThumbnailUrl,
     isOtherUserOnline,
     currentUserId,
     isBlocked,
@@ -288,14 +292,17 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                                 navigate(`/profile/${otherUserId}`);
                             }
                         }}
-                        style={{ cursor: isGlobal ? 'default' : 'pointer' }}
+                        style={{ 
+                            cursor: isGlobal ? 'default' : 'pointer',
+                            ...(!isGlobal && (otherUserAvatarThumbnailUrl || otherUserAvatarUrl) ? {
+                                background: `url(${otherUserAvatarThumbnailUrl || otherUserAvatarUrl}) center/cover`,
+                                color: 'transparent'
+                            } : {})
+                        }}
                         title={!isGlobal ? (t('profile.viewProfile') || 'View Profile') : undefined}
                     >
-                        {isGlobal ? (
-                            <Globe size={24} />
-                        ) : (
-                            otherUserName.charAt(0).toUpperCase()
-                        )}
+                        {isGlobal && <Globe size={24} />}
+                        {!isGlobal && !otherUserAvatarThumbnailUrl && !otherUserAvatarUrl && otherUserName.charAt(0).toUpperCase()}
                     </div>
                     <div className="chat-window-user-info">
                         <h3
@@ -480,14 +487,24 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         >
                             <div className="message-content">
                                 {isGlobal && message.senderId !== currentUserId && (
-                                    <span 
-                                        className="message-sender-name"
-                                        onClick={() => navigate(`/profile/${message.senderId}`)}
-                                        style={{ cursor: 'pointer' }}
-                                        title={t('profile.viewProfile') || 'View Profile'}
-                                    >
-                                        {message.senderName}
-                                    </span>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.15rem' }}>
+                                        {(message.senderAvatarThumbnailUrl || message.senderAvatarUrl) && (
+                                            <div style={{
+                                                width: '16px',
+                                                height: '16px',
+                                                borderRadius: '50%',
+                                                background: `url(${message.senderAvatarThumbnailUrl || message.senderAvatarUrl}) center/cover`
+                                            }} />
+                                        )}
+                                        <span 
+                                            className="message-sender-name"
+                                            onClick={() => navigate(`/profile/${message.senderId}`)}
+                                            style={{ cursor: 'pointer', margin: 0 }}
+                                            title={t('profile.viewProfile') || 'View Profile'}
+                                        >
+                                            {message.senderName}
+                                        </span>
+                                    </div>
                                 )}
                                 {message.isDeleted ? (
                                     <p style={{

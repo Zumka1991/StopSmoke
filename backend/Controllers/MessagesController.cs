@@ -100,7 +100,9 @@ public class MessagesController : ControllerBase
                     OtherUserLastSeen = otherParticipant.User.LastSeen,
                     IsBlocked = userParticipant.IsBlocked,
                     IsGlobal = false,
-                    OnlineCount = 0
+                    OnlineCount = 0,
+                    OtherUserAvatarUrl = otherParticipant.User.AvatarUrl,
+                    OtherUserAvatarThumbnailUrl = otherParticipant.User.AvatarThumbnailUrl
                 });
             }
         }
@@ -202,7 +204,9 @@ public class MessagesController : ControllerBase
                 UserId = p.UserId,
                 UserName = p.User.Name ?? p.User.Email ?? "Unknown",
                 Email = p.User.Email ?? "",
-                JoinedAt = p.JoinedAt
+                JoinedAt = p.JoinedAt,
+                AvatarUrl = p.User.AvatarUrl,
+                AvatarThumbnailUrl = p.User.AvatarThumbnailUrl
             }).ToList(),
             // Load only last 50 messages by default, respecting ClearedHistoryAt
             Messages = conversation.Messages
@@ -219,7 +223,9 @@ public class MessagesController : ControllerBase
                     Content = m.Content,
                     SentAt = m.SentAt,
                     IsRead = m.IsRead,
-                    IsDeleted = m.IsDeleted
+                    IsDeleted = m.IsDeleted,
+                    SenderAvatarUrl = m.Sender.AvatarUrl,
+                    SenderAvatarThumbnailUrl = m.Sender.AvatarThumbnailUrl
                 }).ToList()
         };
 
@@ -412,7 +418,9 @@ public class MessagesController : ControllerBase
             {
                 Id = u.Id,
                 Name = u.Name ?? u.Email ?? "Unknown",
-                Email = u.Email ?? ""
+                Email = u.Email ?? "",
+                AvatarUrl = u.AvatarUrl,
+                AvatarThumbnailUrl = u.AvatarThumbnailUrl
             })
             .ToListAsync();
 

@@ -42,6 +42,8 @@ services:
         condition: service_healthy
     networks:
       - stopsmoke-network
+    volumes:
+      - backend_uploads:/app/wwwroot/uploads
     restart: unless-stopped
 
   # Migration service (runs EF Core migrations once)
@@ -93,6 +95,7 @@ services:
 volumes:
   postgres_data:
     driver: local
+  backend_uploads:
   certbot-conf:
   certbot-www:
 

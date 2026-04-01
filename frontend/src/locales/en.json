@@ -69,7 +69,11 @@
     "futureDateError": "Date cannot be in the future",
     "tooOldDateError": "Date cannot be more than 30 years ago",
     "showInLeaderboard": "Show in Leaderboard",
-    "showInLeaderboardHint": "Allow others to see your progress in the leaderboard"
+    "showInLeaderboardHint": "Allow others to see your progress in the leaderboard",
+    "selectImage": "Please select an image file",
+    "avatarUploadSuccess": "Avatar updated successfully",
+    "avatarUploadError": "Avatar upload failed",
+    "changeAvatar": "Change Avatar"
   },
   "tracker": {
     "title": "Smoke-Free Journey",

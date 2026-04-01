@@ -13,6 +13,8 @@ public class UserProfileDto
     public bool IsAdmin { get; set; }
     public int CompletedMarathonsCount { get; set; }
     public bool ShowInLeaderboard { get; set; }
+    public string? AvatarUrl { get; set; }
+    public string? AvatarThumbnailUrl { get; set; }
 }
 
 public class UpdateProfileDto

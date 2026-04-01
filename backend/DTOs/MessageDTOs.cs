@@ -23,6 +23,8 @@ public class MessageResponse
     public DateTime SentAt { get; set; }
     public bool IsRead { get; set; }
     public bool IsDeleted { get; set; }
+    public string? SenderAvatarUrl { get; set; }
+    public string? SenderAvatarThumbnailUrl { get; set; }
 }
 
 public class ConversationResponse
@@ -51,6 +53,8 @@ public class ConversationListItemResponse
     public bool IsBlocked { get; set; }
     public bool IsGlobal { get; set; }
     public int OnlineCount { get; set; }  // For global chat - number of online users
+    public string? OtherUserAvatarUrl { get; set; }
+    public string? OtherUserAvatarThumbnailUrl { get; set; }
 }
 
 public class ParticipantResponse
@@ -59,6 +63,8 @@ public class ParticipantResponse
     public string UserName { get; set; } = null!;
     public string Email { get; set; } = null!;
     public DateTime JoinedAt { get; set; }
+    public string? AvatarUrl { get; set; }
+    public string? AvatarThumbnailUrl { get; set; }
 }
 
 public class UserSearchResponse
@@ -66,4 +72,6 @@ public class UserSearchResponse
     public string Id { get; set; } = null!;
     public string Name { get; set; } = null!;
     public string Email { get; set; } = null!;
+    public string? AvatarUrl { get; set; }
+    public string? AvatarThumbnailUrl { get; set; }
 }

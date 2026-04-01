@@ -48,12 +48,15 @@ const ChatList: React.FC<ChatListProps> = ({
                             } ${conv.isGlobal ? 'global-chat' : ''}`}
                         onClick={() => onSelectConversation(conv.id)}
                     >
-                        <div className={`chat-list-item-avatar ${conv.isGlobal ? 'global' : ''}`}>
-                            {conv.isGlobal ? (
-                                <Globe size={20} />
-                            ) : (
-                                conv.otherUserName.charAt(0).toUpperCase()
-                            )}
+                        <div 
+                            className={`chat-list-item-avatar ${conv.isGlobal ? 'global' : ''}`}
+                            style={(!conv.isGlobal && (conv.otherUserAvatarThumbnailUrl || conv.otherUserAvatarUrl)) ? {
+                                background: `url(${conv.otherUserAvatarThumbnailUrl || conv.otherUserAvatarUrl}) center/cover`,
+                                color: 'transparent'
+                            } : undefined}
+                        >
+                            {!conv.isGlobal && !conv.otherUserAvatarThumbnailUrl && !conv.otherUserAvatarUrl && conv.otherUserName.charAt(0).toUpperCase()}
+                            {conv.isGlobal && <Globe size={20} />}
                         </div>
                         <div className="chat-list-item-content">
                             <div className="chat-list-item-header">

@@ -15,4 +15,6 @@ public class User : IdentityUser
     public bool IsAdmin { get; set; } = false;
     public bool ShowInLeaderboard { get; set; } = true;
     public DateTime? LastSeen { get; set; }
+    public string? AvatarUrl { get; set; }
+    public string? AvatarThumbnailUrl { get; set; }
 }

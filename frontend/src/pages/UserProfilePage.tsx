@@ -5,7 +5,7 @@ import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Button from '../components/Button';
-import { Calendar, MessageCircle, Clock, Trophy } from 'lucide-react';
+import { Calendar, MessageCircle, Clock, Trophy, X } from 'lucide-react';
 import Toast from '../components/Toast';
 
 interface PublicProfile {
@@ -15,6 +15,8 @@ interface PublicProfile {
     quitDate: string | null;
     lastSeen: string | null;
     completedMarathonsCount: number;
+    avatarUrl?: string;
+    avatarThumbnailUrl?: string;
 }
 
 export default function UserProfilePage() {
@@ -25,6 +27,7 @@ export default function UserProfilePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [startingChat, setStartingChat] = useState(false);
+    const [showAvatarModal, setShowAvatarModal] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
     useEffect(() => {
@@ -132,22 +135,29 @@ export default function UserProfilePage() {
                     </Button>
                 </div>
 
-                <div className="card" style={{ textAlign: 'center', padding: '3rem 2rem', margin: '0 auto' }}>
-                    <div style={{
-                        width: '100px',
-                        height: '100px',
-                        borderRadius: '50%',
-                        background: 'linear-gradient(135deg, var(--accent-color), var(--accent-hover))',
-                        color: 'white',
-                        fontSize: '3rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        margin: '0 auto 1.5rem auto',
-                        boxShadow: '0 10px 25px rgba(59, 130, 246, 0.3)'
-                    }}>
-                        {profile.name.charAt(0).toUpperCase()}
-                    </div>
+                    <div className="card" style={{ textAlign: 'center', padding: '3rem 2rem', margin: '0 auto' }}>
+                        <div style={{
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '50%',
+                            background: profile.avatarThumbnailUrl || profile.avatarUrl ? `url(${profile.avatarThumbnailUrl || profile.avatarUrl}) center/cover` : 'linear-gradient(135deg, var(--accent-color), var(--accent-hover))',
+                            color: 'white',
+                            fontSize: (profile.avatarThumbnailUrl || profile.avatarUrl) ? '0' : '3rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: '0 auto 1.5rem auto',
+                            boxShadow: '0 10px 25px rgba(59, 130, 246, 0.3)',
+                            cursor: profile.avatarUrl ? 'pointer' : 'default',
+                            transition: 'transform 0.2s',
+                        }}
+                        onClick={() => profile.avatarUrl && setShowAvatarModal(true)}
+                        onMouseEnter={(e) => { if (profile.avatarUrl) e.currentTarget.style.transform = 'scale(1.05)' }}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                        title={profile.avatarUrl ? t('profile.viewFullAvatar') || 'View full avatar' : undefined}
+                        >
+                            {!profile.avatarThumbnailUrl && !profile.avatarUrl && profile.name.charAt(0).toUpperCase()}
+                        </div>
                     
                     <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{profile.name}</h2>
                     <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
@@ -193,6 +203,51 @@ export default function UserProfilePage() {
                     )}
                 </div>
             </div>
+
+            {/* Avatar Modal */}
+            {showAvatarModal && profile.avatarUrl && (
+                <div 
+                    onClick={() => setShowAvatarModal(false)}
+                    style={{
+                        position: 'fixed',
+                        top: 0, left: 0, right: 0, bottom: 0,
+                        backgroundColor: 'rgba(0,0,0,0.85)',
+                        zIndex: 9999,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'zoom-out',
+                        backdropFilter: 'blur(5px)'
+                    }}
+                >
+                    <button 
+                        style={{
+                            position: 'absolute', top: '1.5rem', right: '1.5rem',
+                            background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white',
+                            cursor: 'pointer', padding: '0.75rem', borderRadius: '50%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                        onClick={(e) => { e.stopPropagation(); setShowAvatarModal(false); }}
+                    >
+                        <X size={24} />
+                    </button>
+                    <img 
+                        src={profile.avatarUrl} 
+                        alt={profile.name}
+                        style={{
+                            maxWidth: '90%', maxHeight: '90%',
+                            objectFit: 'contain', borderRadius: '12px',
+                            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                            cursor: 'default'
+                        }} 
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
+            
             
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
         </>

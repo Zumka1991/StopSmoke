@@ -62,7 +62,11 @@
     "futureDateError": "Дата не может быть в будущем",
     "tooOldDateError": "Дата не может быть больше 30 лет назад",
     "showInLeaderboard": "Показывать в таблице лидеров",
-    "showInLeaderboardHint": "Позволить другим видеть ваш прогресс в таблице лидеров"
+    "showInLeaderboardHint": "Позволить другим видеть ваш прогресс в таблице лидеров",
+    "selectImage": "Пожалуйста, выберите изображение",
+    "avatarUploadSuccess": "Аватарка успешно обновлена",
+    "avatarUploadError": "Ошибка при загрузке аватарки",
+    "changeAvatar": "Изменить аватарку"
   },
   "tracker": {
     "title": "Путь к жизни без дыма",

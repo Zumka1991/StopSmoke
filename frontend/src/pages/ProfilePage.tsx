@@ -16,6 +16,8 @@ interface ProfileData {
     pricePerPack: number;
     currency: string;
     showInLeaderboard: boolean;
+    avatarUrl?: string;
+    avatarThumbnailUrl?: string;
 }
 
 interface Relapse {
@@ -41,6 +43,9 @@ export default function ProfilePage() {
     const [relapseReason, setRelapseReason] = useState('');
     const [relapses, setRelapses] = useState<Relapse[]>([]);
     const [submittingRelapse, setSubmittingRelapse] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [avatarThumbnailUrl, setAvatarThumbnailUrl] = useState<string | null>(null);
+    const [uploadingAvatar, setUploadingAvatar] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -67,6 +72,8 @@ export default function ProfilePage() {
                 setValue('pricePerPack', data.pricePerPack);
                 setValue('currency', data.currency);
                 setValue('showInLeaderboard', data.showInLeaderboard ?? true);
+                setAvatarUrl(data.avatarUrl || null);
+                setAvatarThumbnailUrl(data.avatarThumbnailUrl || null);
 
                 setLoading(false);
             } catch (err) {
@@ -129,6 +136,35 @@ export default function ProfilePage() {
         localStorage.removeItem('token');
         localStorage.removeItem('userEmail');
         navigate('/login');
+    };
+
+    const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            setToast({ message: t('profile.selectImage') || 'Please select an image file', type: 'error' });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        setUploadingAvatar(true);
+        try {
+            const response = await api.post('/profile/avatar', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            setAvatarUrl(response.data.avatarUrl);
+            setAvatarThumbnailUrl(response.data.avatarThumbnailUrl);
+            setToast({ message: t('profile.avatarUploadSuccess') || 'Avatar updated successfully', type: 'success' });
+        } catch (err: any) {
+            console.error('Avatar upload error:', err);
+            setToast({ message: err.response?.data?.message || t('profile.avatarUploadError') || 'Avatar upload failed', type: 'error' });
+        } finally {
+            setUploadingAvatar(false);
+            event.target.value = ''; // reset so same file can be chosen again
+        }
     };
 
     const fetchRelapses = async () => {
@@ -204,6 +240,57 @@ export default function ProfilePage() {
                 {/* Profile Settings Card */}
                 <div className="card">
                     <h2 style={{ marginBottom: '2rem' }}>{t('profile.title')}</h2>
+
+                    {/* Avatar Upload UI */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
+                        <div style={{
+                            width: '120px',
+                            height: '120px',
+                            borderRadius: '50%',
+                            background: (avatarThumbnailUrl || avatarUrl) ? `url(${avatarThumbnailUrl || avatarUrl}) center/cover` : 'var(--accent-color)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: (avatarThumbnailUrl || avatarUrl) ? '0' : '3rem',
+                            color: 'white',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            border: '4px solid var(--card-bg)',
+                            boxShadow: '0 0 0 2px rgba(255,255,255,0.1)',
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => document.getElementById('avatar-upload')?.click()}
+                        title={t('profile.changeAvatar') || 'Change Avatar'}
+                        >
+                            {!avatarUrl && watch('name')?.charAt(0)?.toUpperCase()}
+                            
+                            {/* Hover overlay */}
+                            <div style={{
+                                position: 'absolute',
+                                top: 0, left: 0, right: 0, bottom: 0,
+                                background: 'rgba(0,0,0,0.5)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                opacity: 0,
+                                transition: 'opacity 0.2s',
+                                fontSize: '1.5rem'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}
+                            >
+                                📷
+                            </div>
+                        </div>
+                        {uploadingAvatar && <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Uploading...</div>}
+                        <input 
+                            type="file" 
+                            id="avatar-upload"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={handleAvatarUpload}
+                        />
+                    </div>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">

@@ -257,6 +257,8 @@ const MessagesPage: React.FC = () => {
             isOnline: conv?.isOtherUserOnline || false,
             isGlobal: false,
             onlineCount: 0,
+            avatarUrl: otherParticipant?.avatarUrl,
+            avatarThumbnailUrl: otherParticipant?.avatarThumbnailUrl,
         };
     };
 
@@ -384,6 +386,8 @@ const MessagesPage: React.FC = () => {
                                     messages={currentConversation.messages}
                                     otherUserName={otherUserInfo.name}
                                     otherUserId={otherUserInfo.userId}
+                                    otherUserAvatarUrl={otherUserInfo.avatarUrl}
+                                    otherUserAvatarThumbnailUrl={otherUserInfo.avatarThumbnailUrl}
                                     isOtherUserOnline={otherUserInfo.isOnline}
                                     currentUserId={currentUserId}
                                     isBlocked={currentConversation.isBlocked}

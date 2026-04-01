@@ -7,6 +7,8 @@ export interface Message {
     sentAt: string;
     isRead: boolean;
     isDeleted: boolean;
+    senderAvatarUrl?: string;
+    senderAvatarThumbnailUrl?: string;
 }
 
 export interface Conversation {
@@ -33,6 +35,8 @@ export interface ConversationListItem {
     isBlocked: boolean;
     isGlobal: boolean;
     onlineCount: number;
+    otherUserAvatarUrl?: string;
+    otherUserAvatarThumbnailUrl?: string;
 }
 
 export interface Participant {
@@ -40,12 +44,16 @@ export interface Participant {
     userName: string;
     email: string;
     joinedAt: string;
+    avatarUrl?: string;
+    avatarThumbnailUrl?: string;
 }
 
 export interface UserSearchResult {
     id: string;
     name: string;
     email: string;
+    avatarUrl?: string;
+    avatarThumbnailUrl?: string;
 }
 
 export interface SendMessageRequest {

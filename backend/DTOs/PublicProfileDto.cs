@@ -8,4 +8,6 @@ public class PublicProfileDto
     public DateTime? QuitDate { get; set; }
     public DateTime? LastSeen { get; set; }
     public int CompletedMarathonsCount { get; set; }
+    public string? AvatarUrl { get; set; }
+    public string? AvatarThumbnailUrl { get; set; }
 }
