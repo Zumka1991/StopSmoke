@@ -165,6 +165,73 @@ public class ChatHub : Hub
         }
     }
 
+    public async Task EditMessage(int messageId, string newContent)
+    {
+        var userId = Context.UserIdentifier;
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new HubException("User not authenticated");
+        }
+
+        var message = await _context.Messages
+            .Include(m => m.Conversation)
+            .Include(m => m.Sender)
+            .FirstOrDefaultAsync(m => m.Id == messageId);
+
+        if (message == null)
+        {
+            throw new HubException("Message not found");
+        }
+
+        if (message.SenderId != userId)
+        {
+            throw new HubException("You can only edit your own messages");
+        }
+
+        if (message.IsDeleted)
+        {
+            throw new HubException("Cannot edit a deleted message");
+        }
+
+        message.Content = newContent;
+        message.IsEdited = true;
+        message.EditedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        var messageResponse = new MessageResponse
+        {
+            Id = message.Id,
+            ConversationId = message.ConversationId,
+            SenderId = message.SenderId,
+            SenderName = message.Sender.Name ?? message.Sender.Email ?? "Unknown",
+            SenderAvatarUrl = message.Sender.AvatarUrl,
+            SenderAvatarThumbnailUrl = message.Sender.AvatarThumbnailUrl,
+            Content = message.Content,
+            SentAt = message.SentAt,
+            IsRead = message.IsRead,
+            IsEdited = message.IsEdited,
+            EditedAt = message.EditedAt,
+            IsDeleted = message.IsDeleted,
+            ReplyToId = message.ReplyToId
+            // Reply context is usually re-rendered by client
+        };
+
+        if (message.Conversation.IsGlobal)
+        {
+            await Clients.All.SendAsync("MessageEdited", messageResponse);
+        }
+        else
+        {
+            var participantIds = await _context.ConversationParticipants
+                .Where(p => p.ConversationId == message.ConversationId)
+                .Select(p => p.UserId)
+                .ToListAsync();
+
+            await Clients.Users(participantIds).SendAsync("MessageEdited", messageResponse);
+        }
+    }
+
     public async Task JoinConversation(int conversationId)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, $"conversation_{conversationId}");

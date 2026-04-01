@@ -316,7 +316,12 @@
     "replyMessage": "Ответить",
     "onlineUsers": "Пользователи в сети",
     "searchOnlineUsers": "Поиск по имени...",
-    "errorDeletingMessage": "Не удалось удалить сообщение. Попробуйте снова."
+    "errorDeletingMessage": "Не удалось удалить сообщение. Попробуйте снова.",
+    "editMessage": "Редактировать",
+    "editingMessage": "Редактирование сообщения",
+    "edited": "ред.",
+    "editedAt": "Изменено",
+    "errorEditingMessage": "Не удалось отредактировать сообщение. Попробуйте снова."
   },
   "articles": {
     "title": "Статьи",

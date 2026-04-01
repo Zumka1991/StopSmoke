@@ -22,6 +22,8 @@ public class Message
     public bool IsRead { get; set; } = false;
 
     public bool IsDeleted { get; set; } = false;
+    public bool IsEdited { get; set; } = false;
+    public DateTime? EditedAt { get; set; }
 
     // Optional reply reference
     public int? ReplyToId { get; set; }

@@ -7,6 +7,8 @@ export interface Message {
     sentAt: string;
     isRead: boolean;
     isDeleted: boolean;
+    isEdited: boolean;
+    editedAt?: string;
     senderAvatarUrl?: string;
     senderAvatarThumbnailUrl?: string;
     replyToId?: number;

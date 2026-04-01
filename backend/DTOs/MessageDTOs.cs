@@ -24,6 +24,8 @@ public class MessageResponse
     public DateTime SentAt { get; set; }
     public bool IsRead { get; set; }
     public bool IsDeleted { get; set; }
+    public bool IsEdited { get; set; }
+    public DateTime? EditedAt { get; set; }
     public string? SenderAvatarUrl { get; set; }
     public string? SenderAvatarThumbnailUrl { get; set; }
     public int? ReplyToId { get; set; }

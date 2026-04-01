@@ -47,6 +47,7 @@ const MessagesPage: React.FC = () => {
 
         return () => {
             signalRService.offReceiveMessage();
+            signalRService.offMessageEdited();
             signalRService.offUserOnline();
             signalRService.offUserOffline();
             signalRService.stop();
@@ -99,6 +100,24 @@ const MessagesPage: React.FC = () => {
                 }
 
                 // Always reload conversations list to update last message
+                loadConversations();
+            });
+
+            signalRService.onMessageEdited((message: Message) => {
+                console.log('Message edited:', message);
+
+                // Update current conversation if it's the active one
+                if (selectedConversationIdRef.current === message.conversationId) {
+                    setCurrentConversation((prev) => {
+                        if (!prev) return prev;
+                        return {
+                            ...prev,
+                            messages: prev.messages.map(m => m.id === message.id ? message : m),
+                        };
+                    });
+                }
+
+                // Reload conversations list to update last message preview
                 loadConversations();
             });
 
@@ -202,6 +221,15 @@ const MessagesPage: React.FC = () => {
         } catch (error) {
             console.error('Error sending message:', error);
             console.warn('Message may not have been delivered. Check your connection.');
+        }
+    };
+
+    const handleEditMessage = async (messageId: number, content: string) => {
+        try {
+            await signalRService.editMessage(messageId, content);
+        } catch (error) {
+            console.error('Error editing message:', error);
+            alert(t('messages.errorEditingMessage'));
         }
     };
 
@@ -394,6 +422,7 @@ const MessagesPage: React.FC = () => {
                                     isGlobal={otherUserInfo.isGlobal}
                                     onlineCount={otherUserInfo.onlineCount}
                                     onSendMessage={handleSendMessage}
+                                    onEditMessage={handleEditMessage}
                                     onBack={handleBackToList}
                                     onLoadOlderMessages={loadOlderMessages}
                                     onBlock={handleBlockUser}

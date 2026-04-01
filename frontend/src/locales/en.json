@@ -316,7 +316,12 @@
     "replyMessage": "Reply",
     "onlineUsers": "Online Users",
     "searchOnlineUsers": "Search by name...",
-    "errorDeletingMessage": "Failed to delete message. Please try again."
+    "errorDeletingMessage": "Failed to delete message. Please try again.",
+    "editMessage": "Edit",
+    "editingMessage": "Edit message",
+    "edited": "edited",
+    "editedAt": "Edited at",
+    "errorEditingMessage": "Failed to edit message. Please try again."
   },
   "articles": {
     "title": "Articles",

@@ -125,12 +125,33 @@ class SignalRService {
         }
     }
 
+    async editMessage(messageId: number, newContent: string): Promise<void> {
+        if (!this.connection) {
+            throw new Error('SignalR connection not established');
+        }
+
+        try {
+            await this.connection.invoke('EditMessage', messageId, newContent);
+        } catch (err) {
+            console.error('Error editing message: ', err);
+            throw err;
+        }
+    }
+
     onReceiveMessage(callback: (message: Message) => void): void {
         if (!this.connection) {
             throw new Error('SignalR connection not established');
         }
 
         this.connection.on('ReceiveMessage', callback);
+    }
+
+    onMessageEdited(callback: (message: Message) => void): void {
+        if (!this.connection) {
+            throw new Error('SignalR connection not established');
+        }
+
+        this.connection.on('MessageEdited', callback);
     }
 
     onUserOnline(callback: (userId: string) => void): void {
@@ -152,6 +173,12 @@ class SignalRService {
     offReceiveMessage(): void {
         if (this.connection) {
             this.connection.off('ReceiveMessage');
+        }
+    }
+
+    offMessageEdited(): void {
+        if (this.connection) {
+            this.connection.off('MessageEdited');
         }
     }
 

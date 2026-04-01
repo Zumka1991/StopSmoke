@@ -29,6 +29,7 @@ interface ChatWindowProps {
     onClearHistory: () => void;
     onDeleteConversation: () => void;
     onDeleteMessage: (messageId: number) => void;
+    onEditMessage: (messageId: number, content: string) => void;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
@@ -52,6 +53,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     onClearHistory,
     onDeleteConversation,
     onDeleteMessage,
+    onEditMessage,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -79,6 +81,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const [isSharingDuration, setIsSharingDuration] = useState(false);
     const [replyingToMessage, setReplyingToMessage] = useState<Message | null>(null);
     const [isOnlineUsersModalOpen, setIsOnlineUsersModalOpen] = useState(false);
+    const [editingMessage, setEditingMessage] = useState<Message | null>(null);
     const [onlineUsersList, setOnlineUsersList] = useState<UserSummary[]>([]);
     const [isLoadingOnlineUsers, setIsLoadingOnlineUsers] = useState(false);
     const cooldownIntervalRef = useRef<number | null>(null);
@@ -249,10 +252,16 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             return;
         }
 
-        // Send message
-        onSendMessage(messageInput.trim(), replyingToMessage?.id);
+        if (editingMessage) {
+            onEditMessage(editingMessage.id, messageInput.trim());
+            setEditingMessage(null);
+        } else {
+            // Send message
+            onSendMessage(messageInput.trim(), replyingToMessage?.id);
+            setReplyingToMessage(null);
+        }
+
         setMessageInput('');
-        setReplyingToMessage(null);
         lastMessageTimeRef.current = now;
 
         // Start cooldown
@@ -379,6 +388,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             const msg = messages.find(m => m.id === messageContextMenu.messageId);
             if (msg) {
                 setReplyingToMessage(msg);
+                inputRef.current?.focus();
+            }
+        }
+        setMessageContextMenu(null);
+    };
+
+    const handleEditMessage = () => {
+        if (messageContextMenu) {
+            const msg = messages.find(m => m.id === messageContextMenu.messageId);
+            if (msg) {
+                setEditingMessage(msg);
+                setMessageInput(msg.content);
+                setReplyingToMessage(null);
                 inputRef.current?.focus();
             }
         }
@@ -721,9 +743,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                                         }
                                     })()
                                 ) : (
-                                    <p>{renderMessageContent(message.content)}</p>
+                                <p>{renderMessageContent(message.content)}</p>
                                 )}
-                                <span className="message-time">{formatMessageTime(message.sentAt)}</span>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.4rem' }}>
+                                    {message.isEdited && (
+                                        <span 
+                                            style={{ fontSize: '0.75rem', opacity: 0.6, fontStyle: 'italic' }}
+                                            title={message.editedAt ? `${t('messages.editedAt') || 'Изменено'}: ${new Date(message.editedAt).toLocaleString()}` : undefined}
+                                        >
+                                            ({t('messages.edited') || 'ред.'})
+                                        </span>
+                                    )}
+                                    <span className="message-time">{formatMessageTime(message.sentAt)}</span>
+                                </div>
                             </div>
                         </div>
                     ))
@@ -771,6 +803,31 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     >
                         ↩️ {t('messages.replyMessage') || 'Ответить'}
                     </button>
+                    {/* Edit button - only own messages */}
+                    {messageContextMenu?.senderId === currentUserId && (
+                        <button
+                            onClick={handleEditMessage}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                width: '100%',
+                                padding: '0.75rem',
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--text-primary)',
+                                cursor: 'pointer',
+                                textAlign: 'left',
+                                fontSize: '0.9rem',
+                                borderRadius: '0.25rem',
+                                transition: 'background 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                        >
+                            ✏️ {t('messages.editMessage') || 'Редактировать'}
+                        </button>
+                    )}
                     {/* Delete button - only own messages */}
                     {messageContextMenu?.senderId === currentUserId && (
                         <button
@@ -825,6 +882,38 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         onClick={() => setReplyingToMessage(null)}
                         style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}
                         title="Отменить ответ"
+                    >✕</button>
+                </div>
+            )}
+
+            {/* Editing preview bar */}
+            {editingMessage && (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1rem',
+                    background: 'rgba(59, 130, 246, 0.1)',
+                    borderTop: '1px solid rgba(59, 130, 246, 0.2)',
+                    borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
+                }}>
+                    <div style={{ flex: 1, overflow: 'hidden' }}>
+                        <span style={{ fontWeight: 'bold', fontSize: '0.8rem', color: 'var(--accent-color)' }}>
+                            ✏️ {t('messages.editingMessage') || 'Редактирование сообщения'}
+                        </span>
+                        <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                            {editingMessage.content.startsWith('[APP_META:QUIT_SHARE]')
+                                ? '🏆 ' + (t('profile.sharedDuration') || 'Поделился сроком отказа')
+                                : editingMessage.content.slice(0, 100)}
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => {
+                            setEditingMessage(null);
+                            setMessageInput('');
+                        }}
+                        style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1 }}
+                        title="Отменить редактирование"
                     >✕</button>
                 </div>
             )}
