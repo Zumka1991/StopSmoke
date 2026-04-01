@@ -176,7 +176,7 @@ public class ChatHub : Hub
         var message = await _context.Messages
             .Include(m => m.Conversation)
             .Include(m => m.Sender)
-            .Include(m => m.ReplyToMessage)
+            .Include(m => m.ReplyTo)
                 .ThenInclude(r => r != null ? r.Sender : null)
             .FirstOrDefaultAsync(m => m.Id == messageId);
 
@@ -216,8 +216,8 @@ public class ChatHub : Hub
             EditedAt = message.EditedAt,
             IsDeleted = message.IsDeleted,
             ReplyToId = message.ReplyToId,
-            ReplyToSenderName = message.ReplyToMessage?.Sender?.Name ?? message.ReplyToMessage?.Sender?.Email,
-            ReplyToContent = message.ReplyToMessage?.IsDeleted == true ? null : message.ReplyToMessage?.Content
+            ReplyToSenderName = message.ReplyTo?.Sender?.Name ?? message.ReplyTo?.Sender?.Email,
+            ReplyToContent = message.ReplyTo?.IsDeleted == true ? null : message.ReplyTo?.Content
         };
 
         if (message.Conversation.IsGlobal)
@@ -289,8 +289,8 @@ public class ChatHub : Hub
             .Select(u => new PublicProfileDto
             {
                 Id = u.Id,
-                Name = u.Name,
-                Email = u.Email,
+                Name = u.Name ?? "Unknown",
+                Email = u.Email ?? "",
                 AvatarUrl = u.AvatarUrl,
                 AvatarThumbnailUrl = u.AvatarThumbnailUrl,
                 QuitDate = u.QuitDate,
