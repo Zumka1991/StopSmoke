@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Message } from '../types/chatTypes';
 import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatWindowProps {
     conversationId: number;
     messages: Message[];
     otherUserName: string;
+    otherUserId?: string;
     isOtherUserOnline: boolean;
     currentUserId: string;
     isBlocked: boolean;
@@ -27,6 +29,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     conversationId,
     messages,
     otherUserName,
+    otherUserId,
     isOtherUserOnline,
     currentUserId,
     isBlocked,
@@ -43,6 +46,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     onDeleteMessage,
 }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [messageInput, setMessageInput] = useState('');
     const [isLoadingOlder, setIsLoadingOlder] = useState(false);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
@@ -277,7 +281,16 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     </button>
                 )}
                 <div className="chat-window-user">
-                    <div className={`chat-window-avatar ${isGlobal ? 'global' : ''}`}>
+                    <div 
+                        className={`chat-window-avatar ${isGlobal ? 'global' : ''}`}
+                        onClick={() => {
+                            if (!isGlobal && otherUserId) {
+                                navigate(`/profile/${otherUserId}`);
+                            }
+                        }}
+                        style={{ cursor: isGlobal ? 'default' : 'pointer' }}
+                        title={!isGlobal ? (t('profile.viewProfile') || 'View Profile') : undefined}
+                    >
                         {isGlobal ? (
                             <Globe size={24} />
                         ) : (
@@ -285,7 +298,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         )}
                     </div>
                     <div className="chat-window-user-info">
-                        <h3>{isGlobal ? t('messages.globalChat') : otherUserName}</h3>
+                        <h3
+                            onClick={() => {
+                                if (!isGlobal && otherUserId) {
+                                    navigate(`/profile/${otherUserId}`);
+                                }
+                            }}
+                            style={{ 
+                                cursor: isGlobal ? 'default' : 'pointer'
+                            }}
+                            title={!isGlobal ? (t('profile.viewProfile') || 'View Profile') : undefined}
+                        >
+                            {isGlobal ? t('messages.globalChat') : otherUserName}
+                        </h3>
                         <span className={`status ${isGlobal || isOtherUserOnline ? 'online' : 'offline'}`}>
                             {isGlobal
                                 ? `${onlineCount} ${t('messages.online').toLowerCase()}`
@@ -455,7 +480,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         >
                             <div className="message-content">
                                 {isGlobal && message.senderId !== currentUserId && (
-                                    <span className="message-sender-name">{message.senderName}</span>
+                                    <span 
+                                        className="message-sender-name"
+                                        onClick={() => navigate(`/profile/${message.senderId}`)}
+                                        style={{ cursor: 'pointer' }}
+                                        title={t('profile.viewProfile') || 'View Profile'}
+                                    >
+                                        {message.senderName}
+                                    </span>
                                 )}
                                 {message.isDeleted ? (
                                     <p style={{

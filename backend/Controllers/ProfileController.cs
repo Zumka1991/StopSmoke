@@ -97,4 +97,28 @@ public class ProfileController : ControllerBase
 
         return Ok(new { Message = "Profile updated successfully" });
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPublicProfile(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
+        var completedMarathonsCount = await _context.MarathonParticipants
+            .Where(p => p.UserId == id && p.Status == MarathonStatus.Completed)
+            .CountAsync();
+
+        var publicProfile = new PublicProfileDto
+        {
+            Id = user.Id,
+            Name = user.Name ?? user.Email ?? "Unknown",
+            Email = user.Email ?? "",
+            QuitDate = user.QuitDate,
+            LastSeen = user.LastSeen,
+            CompletedMarathonsCount = completedMarathonsCount
+        };
+
+        return Ok(publicProfile);
+    }
 }

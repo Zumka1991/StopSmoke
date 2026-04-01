@@ -253,6 +253,7 @@ const MessagesPage: React.FC = () => {
 
         return {
             name: otherParticipant?.userName || 'Unknown',
+            userId: otherParticipant?.userId,
             isOnline: conv?.isOtherUserOnline || false,
             isGlobal: false,
             onlineCount: 0,
@@ -382,6 +383,7 @@ const MessagesPage: React.FC = () => {
                                     conversationId={currentConversation.id}
                                     messages={currentConversation.messages}
                                     otherUserName={otherUserInfo.name}
+                                    otherUserId={otherUserInfo.userId}
                                     isOtherUserOnline={otherUserInfo.isOnline}
                                     currentUserId={currentUserId}
                                     isBlocked={currentConversation.isBlocked}

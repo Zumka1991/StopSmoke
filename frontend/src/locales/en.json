@@ -36,6 +36,7 @@
     "getStarted": "Get Started"
   },
   "common": {
+    "back": "Back",
     "language": "Language",
     "logout": "Logout",
     "profile": "Profile",
@@ -48,6 +49,11 @@
     "community": "Community"
   },
   "profile": {
+    "viewProfile": "View Profile",
+    "daysSmokeFree": "Days smoke-free",
+    "completedMarathons": "Completed marathons",
+    "sendMessage": "Send Message",
+    "loadError": "Profile load error",
     "title": "My Profile",
     "name": "Name",
     "quitDate": "Quit Date",

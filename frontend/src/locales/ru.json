@@ -42,6 +42,11 @@
     "community": "Сообщество"
   },
   "profile": {
+    "viewProfile": "Посмотреть профиль",
+    "daysSmokeFree": "Дней без курения",
+    "completedMarathons": "Пройдено марафонов",
+    "sendMessage": "Написать сообщение",
+    "loadError": "Ошибка загрузки профиля",
     "title": "Мой профиль",
     "name": "Имя",
     "quitDate": "Дата отказа от курения",
@@ -268,6 +273,7 @@
     "statusDisqualified": "Выбыл"
   },
   "common": {
+    "back": "Назад",
     "logout": "Выйти",
     "language": "Язык",
     "profile": "Профиль",

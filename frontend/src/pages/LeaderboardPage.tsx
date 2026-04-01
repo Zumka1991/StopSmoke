@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, User } from 'lucide-react';
 
 interface LeaderboardEntry {
     rank: number;
+    userId: string;
     name: string;
     email: string;
     daysClean: number;
@@ -219,6 +220,36 @@ export default function LeaderboardPage() {
                                             minWidth: '200px'
                                         }}
                                     >
+                                        <button
+                                            onClick={() => {
+                                                navigate(`/profile/${entry.userId}`);
+                                                setMenuOpen(null);
+                                            }}
+                                            style={{
+                                                width: '100%',
+                                                padding: '0.75rem 1rem',
+                                                background: 'transparent',
+                                                border: 'none',
+                                                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                                color: 'var(--text-primary)',
+                                                textAlign: 'left',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.75rem',
+                                                fontSize: '1rem',
+                                                transition: 'background 0.2s'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.background = 'transparent';
+                                            }}
+                                        >
+                                            <User size={18} />
+                                            {t('profile.viewProfile') || 'View Profile'}
+                                        </button>
                                         <button
                                             onClick={() => handleMessageUser(entry.email)}
                                             style={{

@@ -12,6 +12,7 @@ import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import AdminArticlesPage from './pages/AdminArticlesPage';
 import LandingPage from './pages/LandingPage';
+import UserProfilePage from './pages/UserProfilePage';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { GlobalNotificationListener } from './components/GlobalNotificationListener';
 import Footer from './components/Footer';
@@ -41,6 +42,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile/:id"
+                element={
+                  <ProtectedRoute>
+                    <UserProfilePage />
                   </ProtectedRoute>
                 }
               />

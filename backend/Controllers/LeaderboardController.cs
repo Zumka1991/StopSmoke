@@ -29,6 +29,7 @@ public class LeaderboardController : ControllerBase
         var leaderboard = users
             .Select(u => new
             {
+                u.Id,
                 u.Name,
                 u.Email,
                 QuitDate = u.QuitDate!.Value,
@@ -39,6 +40,7 @@ public class LeaderboardController : ControllerBase
             .Select((u, index) => new
             {
                 Rank = index + 1,
+                UserId = u.Id,
                 u.Name,
                 u.Email,
                 u.DaysClean,
