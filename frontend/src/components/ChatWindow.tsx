@@ -796,8 +796,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         type="button"
                         onClick={handleShareDuration}
                         disabled={!canSendMessage || isSharingDuration}
+                        className="chat-share-btn"
                         style={{
-                            padding: '0.75rem',
                             background: 'transparent',
                             color: '#fbbf24',
                             border: 'none',
@@ -810,7 +810,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         }}
                         title={t('profile.shareDuration') || 'Поделиться сроком'}
                     >
-                        <Trophy size={24} />
+                        <Trophy size={20} />
                     </button>
                     <input
                         ref={inputRef}
