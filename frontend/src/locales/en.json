@@ -73,7 +73,12 @@
     "selectImage": "Please select an image file",
     "avatarUploadSuccess": "Avatar updated successfully",
     "avatarUploadError": "Avatar upload failed",
-    "changeAvatar": "Change Avatar"
+    "changeAvatar": "Change Avatar",
+    "myProgress": "My Progress",
+    "smokeFree": "Smoke-free for",
+    "days": "days",
+    "sharedDuration": "Shared quit duration",
+    "shareDuration": "Share duration"
   },
   "tracker": {
     "title": "Smoke-Free Journey",

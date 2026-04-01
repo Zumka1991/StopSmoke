@@ -66,7 +66,12 @@
     "selectImage": "Пожалуйста, выберите изображение",
     "avatarUploadSuccess": "Аватарка успешно обновлена",
     "avatarUploadError": "Ошибка при загрузке аватарки",
-    "changeAvatar": "Изменить аватарку"
+    "changeAvatar": "Изменить аватарку",
+    "myProgress": "Мой прогресс",
+    "smokeFree": "Не курю",
+    "days": "дней",
+    "sharedDuration": "Поделился сроком отказа",
+    "shareDuration": "Поделиться прогрессом"
   },
   "tracker": {
     "title": "Путь к жизни без дыма",

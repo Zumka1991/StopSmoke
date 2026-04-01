@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Message } from '../types/chatTypes';
-import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe } from 'lucide-react';
+import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axios';
 
 interface ChatWindowProps {
     conversationId: number;
@@ -71,6 +72,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const lastMessageTimeRef = useRef<number>(0);
     const [canSendMessage, setCanSendMessage] = useState(true);
     const [cooldownRemaining, setCooldownRemaining] = useState(0);
+    const [isSharingDuration, setIsSharingDuration] = useState(false);
     const cooldownIntervalRef = useRef<number | null>(null);
 
     const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
@@ -176,29 +178,51 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     };
 
     const startCooldown = () => {
-        const COOLDOWN_MS = 2000; // 2 seconds between messages
-
-        // Clear any existing interval
         if (cooldownIntervalRef.current) {
             clearInterval(cooldownIntervalRef.current);
         }
-
+        
         setCanSendMessage(false);
-        setCooldownRemaining(Math.ceil(COOLDOWN_MS / 1000));
+        setCooldownRemaining(3);
 
-        cooldownIntervalRef.current = setInterval(() => {
-            const timeLeft = Math.ceil((COOLDOWN_MS - (Date.now() - lastMessageTimeRef.current)) / 1000);
-            if (timeLeft <= 0) {
-                setCooldownRemaining(0);
-                setCanSendMessage(true);
-                if (cooldownIntervalRef.current) {
-                    clearInterval(cooldownIntervalRef.current);
-                    cooldownIntervalRef.current = null;
+        cooldownIntervalRef.current = window.setInterval(() => {
+            setCooldownRemaining((prev) => {
+                if (prev <= 1) {
+                    if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
+                    setCanSendMessage(true);
+                    return 0;
                 }
-            } else {
-                setCooldownRemaining(timeLeft);
+                return prev - 1;
+            });
+        }, 1000);
+    };
+
+    const handleShareDuration = async () => {
+        setIsSharingDuration(true);
+        try {
+            const response = await api.get('/profile');
+            const data = response.data;
+            
+            let days = 0;
+            if (data.quitDate) {
+                const quit = new Date(data.quitDate).getTime();
+                const now = new Date().getTime();
+                days = Math.floor(Math.max(0, now - quit) / (1000 * 60 * 60 * 24));
             }
-        }, 100);
+
+            const payload = JSON.stringify({
+                days,
+                marathons: data.completedMarathonsCount || 0
+            });
+            
+            onSendMessage(`[APP_META:QUIT_SHARE]${payload}`);
+            startCooldown();
+            scrollToBottom();
+        } catch (err) {
+            console.error('Failed to share duration', err);
+        } finally {
+            setIsSharingDuration(false);
+        }
     };
 
     const handleSendMessage = (e: React.FormEvent) => {
@@ -514,6 +538,41 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                                     }}>
                                         {t('messages.deletedMessage')}
                                     </p>
+                                ) : message.content.startsWith('[APP_META:QUIT_SHARE]') ? (
+                                    (() => {
+                                        try {
+                                            const data = JSON.parse(message.content.replace('[APP_META:QUIT_SHARE]', ''));
+                                            return (
+                                                <div style={{
+                                                    background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.2))',
+                                                    padding: '1rem',
+                                                    borderRadius: '12px',
+                                                    border: '1px solid rgba(251, 191, 36, 0.3)',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    gap: '0.5rem',
+                                                    minWidth: '220px',
+                                                    marginTop: '0.25rem',
+                                                    color: 'white'
+                                                }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', color: '#fbbf24' }}>
+                                                        <Trophy size={18} />
+                                                        {t('profile.myProgress') || 'Мой прогресс'}
+                                                    </div>
+                                                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                                                        {t('profile.smokeFree') || 'Не курю'} {data.days} {t('profile.days') || 'дней'}!
+                                                    </div>
+                                                    {data.marathons > 0 && (
+                                                        <div style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)' }}>
+                                                            {t('profile.completedMarathons') || 'Пройдено марафонов'}: {data.marathons}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        } catch {
+                                            return <p>{message.content}</p>;
+                                        }
+                                    })()
                                 ) : (
                                     <p>{message.content}</p>
                                 )}
@@ -597,6 +656,26 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 </div>
             ) : (
                 <form className="chat-window-input" onSubmit={handleSendMessage}>
+                    <button
+                        type="button"
+                        onClick={handleShareDuration}
+                        disabled={!canSendMessage || isSharingDuration}
+                        style={{
+                            padding: '0.75rem',
+                            background: 'transparent',
+                            color: '#fbbf24',
+                            border: 'none',
+                            cursor: canSendMessage && !isSharingDuration ? 'pointer' : 'default',
+                            opacity: !canSendMessage || isSharingDuration ? 0.5 : 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'transform 0.2s',
+                        }}
+                        title={t('profile.shareDuration') || 'Поделиться сроком'}
+                    >
+                        <Trophy size={24} />
+                    </button>
                     <input
                         ref={inputRef}
                         type="text"

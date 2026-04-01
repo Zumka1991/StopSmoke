@@ -76,7 +76,13 @@ const ChatList: React.FC<ChatListProps> = ({
                             </div>
                             <div className="chat-list-item-message">
                                 <span className="chat-list-item-preview">
-                                    {conv.lastMessage || 'No messages yet'}
+                                    {conv.lastMessage?.startsWith('[APP_META:QUIT_SHARE]') ? (
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#fbbf24', fontWeight: '500' }}>
+                                            🏆 {t('profile.sharedDuration') || 'Поделился сроком отказа'}
+                                        </span>
+                                    ) : (
+                                        conv.lastMessage || 'No messages yet'
+                                    )}
                                 </span>
                                 {conv.unreadCount > 0 && (
                                     <span className="chat-list-item-badge">{conv.unreadCount}</span>
