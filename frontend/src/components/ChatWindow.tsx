@@ -304,6 +304,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         return `${dateStr}, ${time}`;
     };
 
+    const scrollToMessage = (messageId: number) => {
+        const el = messagesContainerRef.current?.querySelector<HTMLElement>(`[data-message-id="${messageId}"]`);
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Flash highlight
+        el.classList.add('message-highlight');
+        setTimeout(() => el.classList.remove('message-highlight'), 1500);
+    };
+
     const handleMessageContextMenu = (e: React.MouseEvent, messageId: number, senderId: string) => {
         e.preventDefault();
         setMessageContextMenu({
@@ -538,6 +547,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     messages.map((message) => (
                         <div
                             key={message.id}
+                            data-message-id={message.id}
                             className={`message ${message.senderId === currentUserId ? 'message-sent' : 'message-received'
                                 }`}
                             onContextMenu={(e) => handleMessageContextMenu(e, message.id, message.senderId)}
@@ -549,17 +559,26 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                             <div className="message-content">
                                 {/* Reply quote */}
                                 {message.replyToId && !message.isDeleted && (
-                                    <div style={{
-                                        borderLeft: '3px solid rgba(255,255,255,0.5)',
-                                        paddingLeft: '0.5rem',
-                                        marginBottom: '0.4rem',
-                                        opacity: 0.75,
-                                        fontSize: '0.8rem',
-                                        overflow: 'hidden',
-                                        whiteSpace: 'nowrap',
-                                        textOverflow: 'ellipsis',
-                                        maxWidth: '280px'
-                                    }}>
+                                    <div
+                                        onClick={() => message.replyToId && scrollToMessage(message.replyToId)}
+                                        style={{
+                                            borderLeft: '3px solid rgba(255,255,255,0.5)',
+                                            paddingLeft: '0.5rem',
+                                            marginBottom: '0.4rem',
+                                            opacity: 0.75,
+                                            fontSize: '0.8rem',
+                                            overflow: 'hidden',
+                                            whiteSpace: 'nowrap',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '280px',
+                                            cursor: 'pointer',
+                                            borderRadius: '0 4px 4px 0',
+                                            padding: '0.2rem 0.5rem',
+                                            transition: 'background 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+                                        onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                                    >
                                         <span style={{ fontWeight: 'bold', display: 'block' }}>
                                             {message.replyToSenderName}
                                         </span>
