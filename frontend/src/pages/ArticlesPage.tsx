@@ -11,6 +11,7 @@ interface Article {
     title: string;
     content: string;
     summary?: string;
+    imageUrl?: string;
     createdAt: string;
     updatedAt?: string;
     isPublished: boolean;
@@ -75,15 +76,19 @@ export default function ArticlesPage() {
         });
     };
 
+    const apiBaseUrl = import.meta.env.VITE_API_URL || '';
+
     return (
         <>
             <Navbar onLogout={handleLogout} />
-            <div style={{ marginTop: '2rem', maxWidth: '1400px', margin: '2rem auto', padding: '0 2rem' }}>
+            <div style={{ marginTop: '2rem', maxWidth: '1200px', margin: '2rem auto', padding: '0 2rem' }}>
                 <h1 style={{
-                    fontSize: '2rem',
-                    marginBottom: '2rem',
+                    fontSize: '2.5rem',
+                    marginBottom: '3rem',
                     textAlign: 'center',
-                    color: 'var(--text-primary)'
+                    color: 'var(--text-primary)',
+                    fontWeight: 800,
+                    letterSpacing: '-0.025em'
                 }}>
                     {t('articles.title')}
                 </h1>
@@ -115,64 +120,110 @@ export default function ArticlesPage() {
                     </div>
                 )}
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem', width: '100%' }}>
                     {articles.map((article) => (
                         <div
                             key={article.id}
-                            className="card"
+                            className="card article-card"
                             style={{
                                 cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                border: '2px solid rgba(59, 130, 246, 0.2)',
+                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
                                 width: '100%',
-                                maxWidth: 'none'
+                                maxWidth: 'none',
+                                padding: 0,
+                                overflow: 'hidden',
+                                background: 'rgba(30, 41, 59, 0.7)',
+                                backdropFilter: 'blur(10px)'
                             }}
                             onClick={() => navigate(`/articles/${article.id}`)}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
-                                e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)';
+                                e.currentTarget.style.transform = 'translateY(-4px)';
+                                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)';
+                                e.currentTarget.style.borderColor = 'var(--accent-color)';
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.transform = 'translateY(0)';
                                 e.currentTarget.style.boxShadow = '';
-                                e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.2)';
+                                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
                             }}
                         >
-                            <h2 style={{
-                                fontSize: '1.5rem',
-                                marginBottom: '0.75rem',
-                                color: 'var(--accent-color)'
-                            }}>
-                                {article.title}
-                            </h2>
-
-                            {article.summary && (
-                                <p style={{
-                                    color: 'var(--text-secondary)',
-                                    marginBottom: '1rem',
-                                    lineHeight: 1.6
-                                }}>
-                                    {article.summary}
-                                </p>
-                            )}
-
-                            <div style={{
-                                display: 'flex',
-                                gap: '1rem',
-                                fontSize: '0.875rem',
-                                color: 'var(--text-secondary)',
-                                marginTop: '1rem',
-                                paddingTop: '1rem',
-                                borderTop: '1px solid rgba(255, 255, 255, 0.1)'
-                            }}>
-                                <span>{formatDate(article.createdAt)}</span>
-                                {article.authorName && (
-                                    <>
-                                        <span>•</span>
-                                        <span>{article.authorName}</span>
-                                    </>
+                            {/* Article Image Preview */}
+                            <div className="article-card-image-wrapper">
+                                {article.imageUrl ? (
+                                    <img 
+                                        src={`${apiBaseUrl}${article.imageUrl}`} 
+                                        alt={article.title}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            transition: 'transform 0.5s'
+                                        }}
+                                        className="article-image-hover"
+                                    />
+                                ) : (
+                                    <div style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'rgba(255,255,255,0.2)',
+                                        fontSize: '4rem'
+                                    }}>
+                                        📄
+                                    </div>
                                 )}
+                            </div>
+
+                            <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                <h2 style={{
+                                    fontSize: '1.75rem',
+                                    marginBottom: '1rem',
+                                    color: 'var(--text-primary)',
+                                    fontWeight: 700,
+                                    lineHeight: 1.2
+                                }}>
+                                    {article.title}
+                                </h2>
+
+                                {article.summary && (
+                                    <p style={{
+                                        color: 'var(--text-secondary)',
+                                        marginBottom: '1.5rem',
+                                        lineHeight: 1.6,
+                                        fontSize: '1.05rem',
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 3,
+                                        WebkitBoxOrient: 'vertical',
+                                        overflow: 'hidden'
+                                    }}>
+                                        {article.summary}
+                                    </p>
+                                )}
+
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    marginTop: 'auto',
+                                    paddingTop: '1.5rem',
+                                    borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+                                    fontSize: '0.875rem',
+                                    color: 'var(--text-secondary)'
+                                }}>
+                                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                        <span>{formatDate(article.createdAt)}</span>
+                                        {article.authorName && (
+                                            <>
+                                                <span style={{ opacity: 0.3 }}>|</span>
+                                                <span style={{ color: 'var(--accent-color)', fontWeight: 600 }}>{article.authorName}</span>
+                                            </>
+                                        )}
+                                    </div>
+                                    <span style={{ color: 'var(--accent-color)', fontWeight: 600 }}>{t('articles.readMore') || 'Read More →'}</span>
+                                </div>
                             </div>
                         </div>
                     ))}

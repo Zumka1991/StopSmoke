@@ -19,6 +19,9 @@ public class Article
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 
+    [StringLength(500)]
+    public string? ImageUrl { get; set; }
+
     public bool IsPublished { get; set; } = false;
 
     // Author info

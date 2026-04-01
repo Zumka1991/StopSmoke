@@ -343,7 +343,12 @@
     "errorDeleting": "Error deleting article",
     "published": "Published",
     "draft": "Draft",
-    "noAdminAccess": "You don't have admin access"
+    "noAdminAccess": "You don't have admin access",
+    "imageLabel": "Image",
+    "chooseImage": "Choose Image",
+    "uploading": "Uploading...",
+    "errorUploadingImage": "Error uploading image",
+    "readMore": "Read More →"
   },
   "admin": {
     "panel": "Admin Panel",

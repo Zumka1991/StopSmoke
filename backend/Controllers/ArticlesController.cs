@@ -49,7 +49,8 @@ public class ArticlesController : ControllerBase
                 CreatedAt = a.CreatedAt,
                 UpdatedAt = a.UpdatedAt,
                 IsPublished = a.IsPublished,
-                AuthorName = a.Author != null ? a.Author.Name ?? a.Author.UserName : "Unknown"
+                AuthorName = a.Author != null ? a.Author.Name ?? a.Author.UserName : "Unknown",
+                ImageUrl = a.ImageUrl
             })
             .ToListAsync();
 
@@ -97,7 +98,8 @@ public class ArticlesController : ControllerBase
             CreatedAt = article.CreatedAt,
             UpdatedAt = article.UpdatedAt,
             IsPublished = article.IsPublished,
-            AuthorName = article.Author != null ? article.Author.Name ?? article.Author.UserName : "Unknown"
+            AuthorName = article.Author != null ? article.Author.Name ?? article.Author.UserName : "Unknown",
+            ImageUrl = article.ImageUrl
         };
 
         return Ok(articleDto);
@@ -121,7 +123,8 @@ public class ArticlesController : ControllerBase
                 CreatedAt = a.CreatedAt,
                 UpdatedAt = a.UpdatedAt,
                 IsPublished = a.IsPublished,
-                AuthorName = a.Author != null ? a.Author.Name ?? a.Author.UserName : "Unknown"
+                AuthorName = a.Author != null ? a.Author.Name ?? a.Author.UserName : "Unknown",
+                ImageUrl = a.ImageUrl
             })
             .ToListAsync();
 
@@ -143,6 +146,7 @@ public class ArticlesController : ControllerBase
             Title = createDto.Title,
             Content = createDto.Content,
             Summary = createDto.Summary,
+            ImageUrl = createDto.ImageUrl,
             IsPublished = createDto.IsPublished,
             AuthorId = userId,
             CreatedAt = DateTime.UtcNow
@@ -163,7 +167,8 @@ public class ArticlesController : ControllerBase
             CreatedAt = article.CreatedAt,
             UpdatedAt = article.UpdatedAt,
             IsPublished = article.IsPublished,
-            AuthorName = article.Author != null ? article.Author.Name ?? article.Author.UserName : "Unknown"
+            AuthorName = article.Author != null ? article.Author.Name ?? article.Author.UserName : "Unknown",
+            ImageUrl = article.ImageUrl
         };
 
         return CreatedAtAction(nameof(GetArticle), new { id = article.Id }, articleDto);
@@ -182,12 +187,43 @@ public class ArticlesController : ControllerBase
         article.Title = updateDto.Title;
         article.Content = updateDto.Content;
         article.Summary = updateDto.Summary;
+        article.ImageUrl = updateDto.ImageUrl;
         article.IsPublished = updateDto.IsPublished;
         article.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    // POST: api/articles/upload-image - Admin endpoint to upload article image
+    [Authorize]
+    [RequireAdmin]
+    [HttpPost("upload-image")]
+    public async Task<IActionResult> UploadArticleImage(IFormFile? file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { message = "No file uploaded." });
+
+        // Build uploads folder path (wwwroot/uploads/articles)
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "articles");
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        // Generate unique filename
+        var extension = Path.GetExtension(file.FileName);
+        var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        var imageUrl = $"/uploads/articles/{uniqueFileName}";
+        return Ok(new { ImageUrl = imageUrl });
     }
 
     // DELETE: api/articles/{id} - Admin endpoint to delete article
@@ -199,6 +235,17 @@ public class ArticlesController : ControllerBase
         var article = await _context.Articles.FindAsync(id);
         if (article == null)
             return NotFound();
+
+        // Delete associated image if it exists
+        if (!string.IsNullOrEmpty(article.ImageUrl) && article.ImageUrl.StartsWith("/uploads/articles/"))
+        {
+            var fileName = Path.GetFileName(article.ImageUrl);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "articles", fileName);
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+        }
 
         _context.Articles.Remove(article);
         await _context.SaveChangesAsync();

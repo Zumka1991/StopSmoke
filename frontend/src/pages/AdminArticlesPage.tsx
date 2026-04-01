@@ -11,6 +11,7 @@ interface Article {
     title: string;
     content: string;
     summary?: string;
+    imageUrl?: string;
     createdAt: string;
     updatedAt?: string;
     isPublished: boolean;
@@ -21,6 +22,7 @@ interface ArticleFormData {
     title: string;
     content: string;
     summary: string;
+    imageUrl: string;
     isPublished: boolean;
 }
 
@@ -36,9 +38,11 @@ export default function AdminArticlesPage() {
         title: '',
         content: '',
         summary: '',
+        imageUrl: '',
         isPublished: false
     });
     const [submitting, setSubmitting] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
 
     useEffect(() => {
         fetchArticles();
@@ -73,6 +77,7 @@ export default function AdminArticlesPage() {
             title: '',
             content: '',
             summary: '',
+            imageUrl: '',
             isPublished: false
         });
         setShowForm(true);
@@ -84,9 +89,32 @@ export default function AdminArticlesPage() {
             title: article.title,
             content: article.content,
             summary: article.summary || '',
+            imageUrl: article.imageUrl || '',
             isPublished: article.isPublished
         });
         setShowForm(true);
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            setUploadingImage(true);
+            setError('');
+            const response = await api.post('/articles/upload-image', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            setFormData(prev => ({ ...prev, imageUrl: response.data.imageUrl }));
+        } catch (err: any) {
+            setError(t('articles.errorUploadingImage') || 'Failed to upload image');
+            console.error('Image upload failed', err);
+        } finally {
+            setUploadingImage(false);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -230,6 +258,77 @@ export default function AdminArticlesPage() {
                                 </label>
                             </div>
 
+                            <div className="form-group">
+                                <label className="form-label">{t('articles.imageLabel') || 'Изображение'}</label>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        style={{ display: 'none' }}
+                                        id="article-image-upload"
+                                    />
+                                    <label 
+                                        htmlFor="article-image-upload"
+                                        style={{
+                                            display: 'inline-block',
+                                            padding: '0.75rem 1.5rem',
+                                            background: 'rgba(59, 130, 246, 0.1)',
+                                            border: '2px dashed rgba(59, 130, 246, 0.3)',
+                                            borderRadius: '0.5rem',
+                                            cursor: 'pointer',
+                                            textAlign: 'center',
+                                            color: 'var(--accent-color)',
+                                            fontWeight: 600,
+                                            transition: 'all 0.2s'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)';
+                                            e.currentTarget.style.borderColor = 'var(--accent-color)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
+                                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                                        }}
+                                    >
+                                        {uploadingImage ? t('articles.uploading') || 'Загрузка...' : `📷 ${t('articles.chooseImage') || 'Выбрать изображение'}`}
+                                    </label>
+
+                                    {formData.imageUrl && (
+                                        <div style={{ position: 'relative', width: '200px', height: '120px' }}>
+                                            <img 
+                                                src={`${import.meta.env.VITE_API_URL || ''}${formData.imageUrl}`} 
+                                                alt="Preview" 
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0.5rem' }} 
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData({ ...formData, imageUrl: '' })}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '-8px',
+                                                    right: '-8px',
+                                                    background: '#ef4444',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '50%',
+                                                    width: '24px',
+                                                    height: '24px',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontSize: '14px',
+                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
                                 <Button
                                     type="submit"
@@ -274,14 +373,26 @@ export default function AdminArticlesPage() {
                         {articles.map((article) => (
                             <div key={article.id} className="card" style={{
                                 border: `2px solid ${article.isPublished ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-                                maxWidth: 'none'
+                                maxWidth: 'none',
+                                padding: 0,
+                                overflow: 'hidden'
                             }}>
-                                <div style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'start',
-                                    marginBottom: '1rem'
-                                }}>
+                                {article.imageUrl && (
+                                    <div style={{ width: '100%', height: '160px', overflow: 'hidden' }}>
+                                        <img 
+                                            src={`${import.meta.env.VITE_API_URL || ''}${article.imageUrl}`} 
+                                            alt={article.title} 
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                        />
+                                    </div>
+                                )}
+                                <div style={{ padding: '1.5rem' }}>
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'start',
+                                        marginBottom: '1rem'
+                                    }}>
                                     <h3 style={{
                                         fontSize: '1.25rem',
                                         color: 'var(--text-primary)',
@@ -341,6 +452,7 @@ export default function AdminArticlesPage() {
                                     </Button>
                                 </div>
                             </div>
+                        </div>
                         ))}
                     </div>
                 )}

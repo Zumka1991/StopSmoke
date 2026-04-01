@@ -1784,3 +1784,35 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Article Card Responsive Styles */
+.article-card {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+.article-card-image-wrapper {
+  width: 350px;
+  min-width: 350px;
+  height: auto;
+  overflow: hidden;
+  position: relative;
+  background: #334155;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .article-card {
+    flex-direction: column !important;
+  }
+  
+  .article-card-image-wrapper {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 200px !important;
+  }
+
+  .article-card h2 {
+    font-size: 1.25rem !important;
+  }
+}

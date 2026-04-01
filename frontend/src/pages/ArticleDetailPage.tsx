@@ -11,6 +11,7 @@ interface Article {
     title: string;
     content: string;
     summary?: string;
+    imageUrl?: string;
     createdAt: string;
     updatedAt?: string;
     isPublished: boolean;
@@ -59,6 +60,8 @@ export default function ArticleDetailPage() {
         });
     };
 
+    const apiBaseUrl = import.meta.env.VITE_API_URL || '';
+
     return (
         <>
             <Navbar onLogout={handleLogout} />
@@ -70,7 +73,10 @@ export default function ArticleDetailPage() {
                         marginBottom: '1.5rem',
                         background: 'rgba(59, 130, 246, 0.1)',
                         border: '2px solid rgba(59, 130, 246, 0.3)',
-                        color: 'var(--accent-color)'
+                        color: 'var(--accent-color)',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '0.5rem',
+                        fontWeight: 600
                     }}
                 >
                     ← {t('articles.backToList')}
@@ -96,50 +102,84 @@ export default function ArticleDetailPage() {
                 )}
 
                 {article && (
-                    <div className="card" style={{ maxWidth: 'none' }}>
-                        <h1 style={{
-                            fontSize: '2rem',
-                            marginBottom: '1rem',
-                            color: 'var(--text-primary)',
-                            lineHeight: 1.3
-                        }}>
-                            {article.title}
-                        </h1>
+                    <div className="card" style={{ maxWidth: 'none', padding: 0, overflow: 'hidden' }}>
+                        {article.imageUrl && (
+                            <div style={{
+                                width: '100%',
+                                height: '400px',
+                                overflow: 'hidden',
+                                position: 'relative'
+                            }}>
+                                <img 
+                                    src={`${apiBaseUrl}${article.imageUrl}`} 
+                                    alt={article.title}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover'
+                                    }}
+                                />
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    height: '50%',
+                                    background: 'linear-gradient(to top, rgba(30, 41, 59, 0.9), transparent)'
+                                }}></div>
+                            </div>
+                        )}
+                        
+                        <div style={{ padding: '2.5rem' }}>
+                            <h1 style={{
+                                fontSize: '2.5rem',
+                                marginBottom: '1.5rem',
+                                color: 'var(--text-primary)',
+                                lineHeight: 1.2,
+                                fontWeight: 800,
+                                letterSpacing: '-0.02em'
+                            }}>
+                                {article.title}
+                            </h1>
 
-                        <div style={{
-                            display: 'flex',
-                            gap: '1rem',
-                            fontSize: '0.875rem',
-                            color: 'var(--text-secondary)',
-                            marginBottom: '2rem',
-                            paddingBottom: '1rem',
-                            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-                        }}>
-                            <span>{formatDate(article.createdAt)}</span>
-                            {article.authorName && (
-                                <>
-                                    <span>•</span>
-                                    <span>{article.authorName}</span>
-                                </>
-                            )}
-                            {article.updatedAt && (
-                                <>
-                                    <span>•</span>
-                                    <span>{t('articles.updated')}: {formatDate(article.updatedAt)}</span>
-                                </>
-                            )}
-                        </div>
+                            <div style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '1.5rem',
+                                fontSize: '0.9rem',
+                                color: 'var(--text-secondary)',
+                                marginBottom: '2.5rem',
+                                paddingBottom: '1.5rem',
+                                borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <span>📅 {formatDate(article.createdAt)}</span>
+                                </div>
+                                {article.authorName && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <span>👤 {article.authorName}</span>
+                                    </div>
+                                )}
+                                {article.updatedAt && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <span>🔄 {t('articles.updated')}: {formatDate(article.updatedAt)}</span>
+                                    </div>
+                                )}
+                            </div>
 
-                        <div style={{
-                            color: 'var(--text-primary)',
-                            lineHeight: 1.8,
-                            fontSize: '1.05rem'
-                        }}>
-                            {article.content.split('\n').map((paragraph, index) => (
-                                <p key={index} style={{ marginBottom: '1rem' }}>
-                                    {paragraph}
-                                </p>
-                            ))}
+                            <div style={{
+                                lineHeight: 1.8,
+                                fontSize: '1.15rem',
+                                color: '#e2e8f0'
+                            }}>
+                                {article.content.split('\n').map((paragraph, index) => (
+                                    paragraph.trim() && (
+                                        <p key={index} style={{ marginBottom: '1.5rem' }}>
+                                            {paragraph}
+                                        </p>
+                                    )
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )}

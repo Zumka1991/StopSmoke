@@ -12,6 +12,7 @@ public class ArticleDto
     public DateTime? UpdatedAt { get; set; }
     public bool IsPublished { get; set; }
     public string? AuthorName { get; set; }
+    public string? ImageUrl { get; set; }
 }
 
 public class CreateArticleDto
@@ -25,6 +26,8 @@ public class CreateArticleDto
 
     [StringLength(500, ErrorMessage = "Summary cannot exceed 500 characters")]
     public string? Summary { get; set; }
+
+    public string? ImageUrl { get; set; }
 
     public bool IsPublished { get; set; } = false;
 }
@@ -40,6 +43,8 @@ public class UpdateArticleDto
 
     [StringLength(500, ErrorMessage = "Summary cannot exceed 500 characters")]
     public string? Summary { get; set; }
+
+    public string? ImageUrl { get; set; }
 
     public bool IsPublished { get; set; } = false;
 }
