@@ -319,6 +319,36 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         setTimeout(() => el.classList.remove('message-highlight'), 1500);
     };
 
+    const renderMessageContent = (content: string) => {
+        if (!content) return '';
+        
+        // Regex for URLs (http/https and www)
+        const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
+        const parts = content.split(urlRegex);
+        
+        return parts.map((part, index) => {
+            if (part && part.match(urlRegex)) {
+                let url = part;
+                if (part.toLowerCase().startsWith('www.')) {
+                    url = 'https://' + part;
+                }
+                return (
+                    <a 
+                        key={index} 
+                        href={url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="chat-link"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {part}
+                    </a>
+                );
+            }
+            return part;
+        });
+    };
+
     const handleOpenOnlineUsers = async () => {
         if (!isGlobal || isLoadingOnlineUsers) return;
         
@@ -687,11 +717,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                                                 </div>
                                             );
                                         } catch {
-                                            return <p>{message.content}</p>;
+                                            return <p>{renderMessageContent(message.content)}</p>;
                                         }
                                     })()
                                 ) : (
-                                    <p>{message.content}</p>
+                                    <p>{renderMessageContent(message.content)}</p>
                                 )}
                                 <span className="message-time">{formatMessageTime(message.sentAt)}</span>
                             </div>

@@ -1375,8 +1375,30 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .message-content p {
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   word-wrap: break-word;
+}
+
+.chat-link {
+  color: var(--accent-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
+}
+
+.chat-link:hover {
+  opacity: 0.8;
+  text-decoration-thickness: 2px;
+}
+
+.message-sent .chat-link {
+  color: white;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.7);
+}
+
+.message-sent .chat-link:hover {
+  text-decoration-color: white;
 }
 
 /* Sender name for global chat messages */
