@@ -1,124 +1,175 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * LanguageSwitcher - A premium toggle-style (tumbler) component for RU/EN switching.
+ * Highly responsive and visually optimized for both desktop and mobile views.
+ */
 export default function LanguageSwitcher() {
     const { i18n } = useTranslation();
-    const [isOpen, setIsOpen] = useState(false);
 
-    const changeLanguage = (lng: string) => {
-        i18n.changeLanguage(lng);
-        setIsOpen(false);
+    const toggleLanguage = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const nextLng = i18n.language === 'en' ? 'ru' : 'en';
+        i18n.changeLanguage(nextLng);
     };
 
-    const languages = [
-        { code: 'en', name: 'English', flag: '🇬🇧' },
-        { code: 'ru', name: 'Russian', flag: '🇷🇺' }
-    ];
-
-    const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+    const isRussian = i18n.language === 'ru';
 
     return (
-        <div style={{ position: 'relative' }}>
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                style={{
-                    padding: '0.5rem 1rem',
-                    background: 'rgba(59, 130, 246, 0.1)',
-                    border: '2px solid var(--accent-color)',
-                    borderRadius: '0.5rem',
-                    color: 'var(--text-primary)',
-                    cursor: 'pointer',
-                    fontSize: '0.875rem',
-                    fontWeight: '600',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    transition: 'all 0.2s',
-                    minWidth: '120px'
-                }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)';
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
-                }}
-            >
-                <span>{currentLanguage.flag}</span>
-                <span>{currentLanguage.name}</span>
-                <span style={{ marginLeft: 'auto', fontSize: '0.7rem' }}>
-                    {isOpen ? '▲' : '▼'}
-                </span>
-            </button>
+        <div 
+            onClick={toggleLanguage}
+            className="language-toggle-container"
+            title={isRussian ? "Switch to English" : "Переключить на русский"}
+        >
+            {/* Sliding Thumb Indicator */}
+            <div className={`toggle-thumb ${isRussian ? 'is-ru' : 'is-en'}`}>
+                {/* Shine effect on the thumb */}
+                <div className="thumb-shine" />
+            </div>
 
-            {isOpen && (
-                <>
-                    {/* Backdrop to close dropdown when clicking outside */}
-                    <div
-                        onClick={() => setIsOpen(false)}
-                        style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            zIndex: 999
-                        }}
-                    />
+            {/* Language Labels with Icons */}
+            <div className="toggle-labels">
+                <div className={`label-item ${!isRussian ? 'active' : ''}`}>
+                    <span className="flag-icon">🇬🇧</span>
+                    <span className="lang-text">EN</span>
+                </div>
+                <div className={`label-item ${isRussian ? 'active' : ''}`}>
+                    <span className="flag-icon">🇷🇺</span>
+                    <span className="lang-text">RU</span>
+                </div>
+            </div>
 
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: 'calc(100% + 0.5rem)',
-                            right: 0,
-                            background: 'var(--card-bg)',
-                            border: '2px solid var(--accent-color)',
-                            borderRadius: '0.5rem',
-                            boxShadow: '0 10px 40px -10px rgba(0, 0, 0, 0.5)',
-                            minWidth: '150px',
-                            zIndex: 1000,
-                            overflow: 'hidden'
-                        }}
-                    >
-                        {languages.map((lang) => (
-                            <button
-                                key={lang.code}
-                                onClick={() => changeLanguage(lang.code)}
-                                style={{
-                                    width: '100%',
-                                    padding: '0.75rem 1rem',
-                                    background: i18n.language === lang.code
-                                        ? 'rgba(59, 130, 246, 0.2)'
-                                        : 'transparent',
-                                    border: 'none',
-                                    color: 'var(--text-primary)',
-                                    cursor: 'pointer',
-                                    fontSize: '0.875rem',
-                                    fontWeight: i18n.language === lang.code ? '600' : '400',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.75rem',
-                                    transition: 'all 0.2s',
-                                    textAlign: 'left'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = i18n.language === lang.code
-                                        ? 'rgba(59, 130, 246, 0.2)'
-                                        : 'transparent';
-                                }}
-                            >
-                                <span style={{ fontSize: '1.2rem' }}>{lang.flag}</span>
-                                <span>{lang.name}</span>
-                                {i18n.language === lang.code && (
-                                    <span style={{ marginLeft: 'auto', color: 'var(--accent-color)' }}>✓</span>
-                                )}
-                            </button>
-                        ))}
-                    </div>
-                </>
-            )}
+            <style>{`
+                .language-toggle-container {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    width: 100%; /* Default to full width for mobile containers */
+                    max-width: 160px; /* Limit width on desktop */
+                    height: 48px;
+                    background: rgba(30, 41, 59, 0.7);
+                    backdrop-filter: blur(8px);
+                    border-radius: 12px;
+                    padding: 4px;
+                    cursor: pointer;
+                    border: 2px solid rgba(59, 130, 246, 0.3);
+                    box-shadow: 
+                        0 4px 15px rgba(0, 0, 0, 0.3),
+                        inset 0 2px 4px rgba(0, 0, 0, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    user-select: none;
+                    overflow: hidden;
+                    margin: 0.5rem 0;
+                }
+
+                @media (min-width: 768px) {
+                    .language-toggle-container {
+                        max-width: 90px;
+                        height: 36px;
+                        border-radius: 18px;
+                        margin: 0;
+                    }
+                    .lang-text {
+                        font-size: 10px;
+                    }
+                    .flag-icon {
+                        display: none; /* Hide flags on desktop for cleaner look */
+                    }
+                }
+
+                .language-toggle-container:hover {
+                    border-color: rgba(59, 130, 246, 0.6);
+                    background: rgba(30, 41, 59, 0.9);
+                    transform: translateY(-1px);
+                    box-shadow: 
+                        0 6px 20px rgba(0, 0, 0, 0.4),
+                        inset 0 2px 4px rgba(0, 0, 0, 0.4),
+                        0 0 20px rgba(59, 130, 246, 0.1);
+                }
+
+                .toggle-thumb {
+                    position: absolute;
+                    top: 4px;
+                    left: 4px;
+                    width: calc(50% - 4px);
+                    height: calc(100% - 8px);
+                    background: linear-gradient(135deg, var(--accent-color), #2563eb);
+                    border-radius: 8px;
+                    box-shadow: 
+                        0 2px 10px rgba(59, 130, 246, 0.6),
+                        0 0 15px rgba(59, 130, 246, 0.3);
+                    transition: transform 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+                    z-index: 1;
+                }
+
+                @media (min-width: 768px) {
+                    .toggle-thumb {
+                        border-radius: 14px;
+                    }
+                }
+
+                .toggle-thumb.is-ru {
+                    transform: translateX(100%);
+                }
+
+                .thumb-shine {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(
+                        135deg,
+                        rgba(255, 255, 255, 0.2) 0%,
+                        rgba(255, 255, 255, 0) 50%,
+                        rgba(0, 0, 0, 0.1) 100%
+                    );
+                    border-radius: inherit;
+                }
+
+                .toggle-labels {
+                    display: flex;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 2;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+
+                .label-item {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    opacity: 0.4;
+                    transition: all 0.4s ease;
+                    color: white;
+                    font-weight: 800;
+                    font-size: 14px;
+                }
+
+                @media (min-width: 768px) {
+                    .label-item {
+                        font-size: 11px;
+                        gap: 0;
+                    }
+                }
+
+                .label-item.active {
+                    opacity: 1;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+                }
+
+                .lang-text {
+                    font-family: 'Inter', sans-serif;
+                }
+
+                .flag-icon {
+                    font-size: 1.2rem;
+                }
+            `}</style>
         </div>
     );
 }
