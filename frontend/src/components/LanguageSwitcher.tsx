@@ -44,8 +44,8 @@ export default function LanguageSwitcher() {
                     position: relative;
                     display: flex;
                     align-items: center;
-                    width: 100%; /* Default to full width for mobile containers */
-                    max-width: 160px; /* Limit width on desktop */
+                    width: 100%;
+                    max-width: 160px; /* Mobile width */
                     height: 48px;
                     background: rgba(30, 41, 59, 0.7);
                     backdrop-filter: blur(8px);
@@ -63,18 +63,21 @@ export default function LanguageSwitcher() {
                     margin: 0.5rem 0;
                 }
 
+                /* Desktop Version Enhancements */
                 @media (min-width: 768px) {
                     .language-toggle-container {
-                        max-width: 90px;
-                        height: 36px;
-                        border-radius: 18px;
-                        margin: 0;
+                        max-width: 120px; /* Increased from 90px */
+                        height: 42px;    /* Increased from 36px */
+                        border-radius: 21px; 
+                        margin: 0.5rem;
+                        border-width: 2px;
                     }
                     .lang-text {
-                        font-size: 10px;
+                        font-size: 13px; /* Increased from 10px */
                     }
                     .flag-icon {
-                        display: none; /* Hide flags on desktop for cleaner look */
+                        display: block; /* Show flags on desktop too for better visibility */
+                        font-size: 1.1rem;
                     }
                 }
 
@@ -85,7 +88,7 @@ export default function LanguageSwitcher() {
                     box-shadow: 
                         0 6px 20px rgba(0, 0, 0, 0.4),
                         inset 0 2px 4px rgba(0, 0, 0, 0.4),
-                        0 0 20px rgba(59, 130, 246, 0.1);
+                        0 0 20px rgba(59, 130, 246, 0.2);
                 }
 
                 .toggle-thumb {
@@ -105,7 +108,7 @@ export default function LanguageSwitcher() {
 
                 @media (min-width: 768px) {
                     .toggle-thumb {
-                        border-radius: 14px;
+                        border-radius: 17px; /* Slightly more rounded for desktop */
                     }
                 }
 
@@ -152,8 +155,8 @@ export default function LanguageSwitcher() {
 
                 @media (min-width: 768px) {
                     .label-item {
-                        font-size: 11px;
-                        gap: 0;
+                        font-size: 12px;
+                        gap: 6px;
                     }
                 }
 
@@ -168,6 +171,12 @@ export default function LanguageSwitcher() {
 
                 .flag-icon {
                     font-size: 1.2rem;
+                }
+
+                @media (max-width: 767px) {
+                    .flag-icon {
+                        font-size: 1.1rem;
+                    }
                 }
             `}</style>
         </div>
