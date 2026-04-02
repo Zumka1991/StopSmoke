@@ -11,6 +11,9 @@ import SecretAdminPage from './pages/SecretAdminPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import AdminArticlesPage from './pages/AdminArticlesPage';
+import BooksPage from './pages/BooksPage';
+import BookDetailPage from './pages/BookDetailPage';
+import AdminBooksPage from './pages/AdminBooksPage';
 import LandingPage from './pages/LandingPage';
 import UserProfilePage from './pages/UserProfilePage';
 import { NotificationProvider } from './contexts/NotificationContext';
@@ -33,6 +36,8 @@ function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/articles" element={<ArticlesPage />} />
               <Route path="/articles/:id" element={<ArticleDetailPage />} />
+              <Route path="/books" element={<BooksPage />} />
+              <Route path="/books/:id" element={<BookDetailPage />} />
               <Route path="/leaderboard" element={<LeaderboardPage />} />
               <Route path="/marathons" element={<MarathonPage />} />
 
@@ -82,6 +87,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AdminArticlesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/books"
+                element={
+                  <ProtectedRoute>
+                    <AdminBooksPage />
                   </ProtectedRoute>
                 }
               />

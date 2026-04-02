@@ -14,6 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Message> Messages { get; set; }
     public DbSet<Article> Articles { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<Book> Books { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

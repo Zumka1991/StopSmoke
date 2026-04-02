@@ -46,7 +46,8 @@
     "dashboard": "Dashboard",
     "leaderboard": "Leaderboard",
     "profile": "Profile",
-    "community": "Community"
+    "community": "Community",
+    "books": "Books"
   },
   "profile": {
     "viewProfile": "View Profile",
@@ -409,5 +410,21 @@
   },
   "footer": {
     "rights": "All rights reserved"
+  },
+  "books": {
+    "title": "Library",
+    "subtitle": "Helpful literature for those who decided to quit smoking",
+    "noBooks": "No books added yet. We will add them soon!",
+    "errorLoading": "Error loading books",
+    "errorLoadingBook": "Error loading book details",
+    "details": "Details →",
+    "readFragment": "Read Fragment",
+    "downloadFb2": "Download FB2",
+    "buyOnLitres": "Buy on LitRes",
+    "closeReader": "Close Reader",
+    "fragmentTitle": "Preview Fragment",
+    "loadingFragment": "Loading fragment...",
+    "parsingError": "Could not read the book fragment. Please try downloading the file.",
+    "fragmentEnd": "End of preview fragment."
   }
 }
