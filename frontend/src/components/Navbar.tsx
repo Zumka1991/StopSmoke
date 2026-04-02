@@ -47,10 +47,24 @@ export default function Navbar({ onLogout }: NavbarProps) {
     ];
 
     const guestNavItems: NavItem[] = [
-        { path: '/articles', label: t('articles.title'), icon: '📰' },
-        { path: '/books', label: t('books.title') || 'Библиотека', icon: '📚' },
-        { path: '/leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
-        { path: '/marathons', label: t('marathon.title'), icon: '🏃' },
+        {
+            id: 'explore',
+            label: t('landing.explore.title') || 'Полезное',
+            icon: '🔍',
+            children: [
+                { path: '/articles', label: t('articles.title'), icon: '📰' },
+                { path: '/books', label: t('books.title') || 'Библиотека', icon: '📚' },
+            ]
+        },
+        {
+            id: 'community_guest',
+            label: t('nav.community'),
+            icon: '👥',
+            children: [
+                { path: '/leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
+                { path: '/marathons', label: t('marathon.title'), icon: '🏃' },
+            ]
+        },
     ];
 
     const navItems = isAuthenticated ? authenticatedNavItems : guestNavItems;
