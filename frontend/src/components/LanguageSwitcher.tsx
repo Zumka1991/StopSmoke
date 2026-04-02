@@ -30,11 +30,28 @@ export default function LanguageSwitcher() {
             {/* Language Labels with Icons */}
             <div className="toggle-labels">
                 <div className={`label-item ${!isRussian ? 'active' : ''}`}>
-                    <span className="flag-icon">🇬🇧</span>
+                    <span className="flag-icon">
+                        <svg width="20" height="15" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+                            <clipPath id="uk-flag-clip">
+                                <path d="M0,0 v30 h60 v-30 z"/>
+                            </clipPath>
+                            <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+                            <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6" clipPath="url(#uk-flag-clip)"/>
+                            <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4" clipPath="url(#uk-flag-clip)"/>
+                            <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                            <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+                        </svg>
+                    </span>
                     <span className="lang-text">EN</span>
                 </div>
                 <div className={`label-item ${isRussian ? 'active' : ''}`}>
-                    <span className="flag-icon">🇷🇺</span>
+                    <span className="flag-icon">
+                        <svg width="20" height="15" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+                            <rect fill="#fff" width="9" height="2"/>
+                            <rect fill="#0039A6" y="2" width="9" height="2"/>
+                            <rect fill="#D52B1E" y="4" width="9" height="2"/>
+                        </svg>
+                    </span>
                     <span className="lang-text">RU</span>
                 </div>
             </div>
@@ -76,8 +93,7 @@ export default function LanguageSwitcher() {
                         font-size: 13px; /* Increased from 10px */
                     }
                     .flag-icon {
-                        display: block; /* Show flags on desktop too for better visibility */
-                        font-size: 1.1rem;
+                        display: flex; /* Show flags on desktop too for better visibility */
                     }
                 }
 
@@ -170,12 +186,20 @@ export default function LanguageSwitcher() {
                 }
 
                 .flag-icon {
-                    font-size: 1.2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+                    height: 15px;
+                    border-radius: 2px;
+                    overflow: hidden;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
                 }
 
                 @media (max-width: 767px) {
                     .flag-icon {
-                        font-size: 1.1rem;
+                        width: 18px;
+                        height: 14px;
                     }
                 }
             `}</style>
