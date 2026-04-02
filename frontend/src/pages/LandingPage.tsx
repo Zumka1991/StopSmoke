@@ -220,6 +220,12 @@ export default function LandingPage() {
                             📰 {t('landing.explore.articles')}
                         </Button>
                         <Button
+                            onClick={() => navigate('/books')}
+                            variant="outline"
+                        >
+                            📚 {t('books.title') || 'Библиотека'}
+                        </Button>
+                        <Button
                             onClick={() => navigate('/leaderboard')}
                             variant="outline"
                         >
