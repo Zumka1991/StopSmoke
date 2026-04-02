@@ -8,7 +8,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Button from '../components/Button';
 
 export default function AdminBooksPage() {
-    const { t } = useTranslation();
+    useTranslation();
     const navigate = useNavigate();
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
