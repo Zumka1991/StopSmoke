@@ -388,6 +388,7 @@
       }
     },
     "explore": {
+      "title": "Полезное",
       "articles": "Статьи",
       "leaderboard": "Таблица лидеров",
       "marathons": "Марафоны"

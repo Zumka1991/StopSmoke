@@ -388,6 +388,7 @@
       }
     },
     "explore": {
+      "title": "Explore",
       "articles": "Articles",
       "leaderboard": "Leaderboard",
       "marathons": "Marathons"
