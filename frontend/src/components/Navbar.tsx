@@ -30,6 +30,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
     const authenticatedNavItems: NavItem[] = [
         { path: '/dashboard', label: t('nav.dashboard'), icon: '🏠' },
+        { path: '/books', label: t('books.title') || 'Библиотека', icon: '📚' },
         {
             id: 'community',
             label: t('nav.community'),
@@ -47,6 +48,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
     const guestNavItems: NavItem[] = [
         { path: '/articles', label: t('articles.title'), icon: '📰' },
+        { path: '/books', label: t('books.title') || 'Библиотека', icon: '📚' },
         { path: '/leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
         { path: '/marathons', label: t('marathon.title'), icon: '🏃' },
     ];
