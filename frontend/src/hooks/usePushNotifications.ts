@@ -18,9 +18,7 @@ function urlBase64ToUint8Array(base64String: string) {
 export default function usePushNotifications() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>('default');
-  const [isMuted, setIsMuted] = useState(() => {
-    return localStorage.getItem('pushMuted') === 'true';
-  });
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
@@ -35,11 +33,14 @@ export default function usePushNotifications() {
         // Check current subscription
         const existingSubscription = await registration.pushManager.getSubscription();
         
-        // If subscription exists in browser, ensure backend knows about it too
+        // Sync with backend to get current status
         if (existingSubscription) {
           console.log('Found existing browser subscription, syncing with backend...');
           await sendSubscriptionToBackend(existingSubscription);
         }
+        
+        // Fetch mute status from backend
+        await fetchMuteStatus();
 
         // Check permission
         if ('Notification' in window) {
@@ -47,6 +48,16 @@ export default function usePushNotifications() {
         }
       } catch (error) {
         console.error('Error initializing push:', error);
+      }
+    };
+
+    const fetchMuteStatus = async () => {
+      try {
+        const res = await api.get('/push/status');
+        setIsMuted(res.data.isMuted);
+        setIsSubscribed(res.data.isSubscribed);
+      } catch (error) {
+        console.error('Failed to fetch mute status:', error);
       }
     };
 
@@ -144,13 +155,13 @@ export default function usePushNotifications() {
     isSubscribed,
     permission,
     isMuted,
-    toggleMute: () => {
-      const newMuted = !isMuted;
-      setIsMuted(newMuted);
-      localStorage.setItem('pushMuted', newMuted.toString());
-      // Если включаем уведомления, пробуем подписаться
-      if (!newMuted && permission === 'granted') {
-        subscribe();
+    toggleMute: async () => {
+      try {
+        // Call backend to toggle the flag
+        const res = await api.post('/push/toggle-mute');
+        setIsMuted(res.data.isMuted);
+      } catch (error) {
+        console.error('Failed to toggle mute:', error);
       }
     },
     requestPermission,

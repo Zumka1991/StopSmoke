@@ -194,7 +194,7 @@ public class ChatHub : Hub
             }
 
             var subscriptions = await _context.PushSubscriptions
-                .Where(s => s.UserId == recipientUserId)
+                .Where(s => s.UserId == recipientUserId && !s.IsPushMuted)
                 .ToListAsync();
 
             if (!subscriptions.Any())

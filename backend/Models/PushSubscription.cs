@@ -19,6 +19,8 @@ public class PushSubscription
     [Required]
     public string Auth { get; set; } = string.Empty;
     
+    public bool IsPushMuted { get; set; } = false;
+    
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     // Navigation
