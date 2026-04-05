@@ -68,12 +68,8 @@ export default function usePushNotifications() {
         
         setIsSubscribed(true);
         console.log('Subscription synced with backend');
-        alert('✅ Подписка успешно создана!');
       } catch (error: any) {
         console.error('Failed to sync subscription:', error);
-        // Показываем ошибку пользователю
-        const msg = error.response?.data || error.message || 'Unknown error';
-        alert('❌ Ошибка подписки: ' + JSON.stringify(msg).substring(0, 100));
       }
     };
 
