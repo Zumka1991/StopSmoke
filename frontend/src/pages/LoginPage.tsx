@@ -79,7 +79,7 @@ export default function LoginPage() {
 
                             <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
                                 <Link to="/forgot-password" className="link" style={{ fontSize: '0.875rem' }}>
-                                    {t('auth.login.forgotPassword') || 'Забыли пароль?'}
+                                    {t('auth.forgotPassword') || 'Забыли пароль?'}
                                 </Link>
                             </div>
 
