@@ -327,7 +327,15 @@
     "errorEditingMessage": "Failed to edit message. Please try again.",
     "copyMessage": "Copy",
     "confirmShareDuration": "Are you sure you want to share your quit duration?",
-    "shareDurationTitle": "Share Quit Duration"
+    "shareDurationTitle": "Share Quit Duration",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago",
+    "noConversationsYet": "No conversations yet",
+    "searchUsersToStartChat": "Search for users to start chatting",
+    "onlineStatus": "Online",
+    "noMessagesYet": "No messages yet"
   },
   "articles": {
     "title": "Articles",

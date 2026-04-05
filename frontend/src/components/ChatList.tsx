@@ -25,10 +25,10 @@ const ChatList: React.FC<ChatListProps> = ({
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 1) return 'Just now';
-        if (diffMins < 60) return `${diffMins}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        if (diffDays < 7) return `${diffDays}d ago`;
+        if (diffMins < 1) return t('messages.justNow', 'Только что');
+        if (diffMins < 60) return t('messages.minutesAgo', '{{count}}м назад', { count: diffMins });
+        if (diffHours < 24) return t('messages.hoursAgo', '{{count}}ч назад', { count: diffHours });
+        if (diffDays < 7) return t('messages.daysAgo', '{{count}}д назад', { count: diffDays });
         return date.toLocaleDateString();
     };
 
@@ -37,8 +37,8 @@ const ChatList: React.FC<ChatListProps> = ({
             {conversations.length === 0 ? (
                 <div className="chat-list-empty">
                     <MessageCircle size={48} />
-                    <p>No conversations yet</p>
-                    <small>Search for users to start chatting</small>
+                    <p>{t('messages.noConversationsYet', 'No conversations yet')}</p>
+                    <small>{t('messages.searchUsersToStartChat', 'Search for users to start chatting')}</small>
                 </div>
             ) : (
                 conversations.map((conv) => (
@@ -70,7 +70,7 @@ const ChatList: React.FC<ChatListProps> = ({
                                     {conv.isGlobal
                                         ? `${conv.onlineCount} ${t('messages.online').toLowerCase()}`
                                         : conv.isOtherUserOnline
-                                            ? 'Online'
+                                            ? t('messages.onlineStatus', 'Online')
                                             : formatTime(conv.otherUserLastSeen)}
                                 </span>
                             </div>
@@ -81,7 +81,7 @@ const ChatList: React.FC<ChatListProps> = ({
                                             🏆 {t('profile.sharedDuration') || 'Поделился сроком отказа'}
                                         </span>
                                     ) : (
-                                        conv.lastMessage || 'No messages yet'
+                                        conv.lastMessage || t('messages.noMessagesYet', 'No messages yet')
                                     )}
                                 </span>
                                 {conv.unreadCount > 0 && (
