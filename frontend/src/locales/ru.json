@@ -28,7 +28,24 @@
       "passwordMinLength": "Минимум 6 символов",
       "namePlaceholder": "Ваше имя",
       "recaptchaRequired": "Пожалуйста, подтвердите, что вы не робот"
-    }
+    },
+    "forgotPassword": "Забыли пароль?",
+    "forgotPasswordTitle": "Забыли пароль?",
+    "forgotPasswordHint": "Введите email, и мы пришлем ссылку для восстановления",
+    "checkEmail": "Проверьте почту!",
+    "emailSentHint": "Мы отправили вам ссылку для сброса пароля.",
+    "sendResetLink": "Отправить ссылку",
+    "backToLogin": "Вернуться ко входу",
+    "resetFailed": "Не удалось сбросить пароль",
+    "resetPasswordTitle": "Новый пароль",
+    "resettingFor": "Сброс пароля для:",
+    "newPassword": "Новый пароль",
+    "confirmNewPassword": "Подтвердите новый пароль",
+    "changePassword": "Сменить пароль",
+    "passwordMismatch": "Пароли не совпадают",
+    "invalidLink": "Неверная ссылка для сброса",
+    "passwordChanged": "Пароль успешно изменен!",
+    "redirectToLogin": "Перенаправляем на страницу входа..."
   },
   "home": {
     "title": "Добро пожаловать в StopSmoke",

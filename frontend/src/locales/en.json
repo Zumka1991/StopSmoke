@@ -28,7 +28,24 @@
       "passwordMinLength": "Min 6 chars",
       "namePlaceholder": "Your name",
       "recaptchaRequired": "Please complete the reCAPTCHA"
-    }
+    },
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Forgot Password?",
+    "forgotPasswordHint": "Enter your email and we'll send you a link to reset it",
+    "checkEmail": "Check your email!",
+    "emailSentHint": "We've sent you a password reset link.",
+    "sendResetLink": "Send reset link",
+    "backToLogin": "Back to login",
+    "resetFailed": "Failed to reset password",
+    "resetPasswordTitle": "New Password",
+    "resettingFor": "Resetting password for:",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "changePassword": "Change Password",
+    "passwordMismatch": "Passwords do not match",
+    "invalidLink": "Invalid reset link",
+    "passwordChanged": "Password changed successfully!",
+    "redirectToLogin": "Redirecting to login..."
   },
   "home": {
     "title": "Welcome to StopSmoke",
