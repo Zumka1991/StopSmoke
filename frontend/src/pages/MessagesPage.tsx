@@ -165,10 +165,17 @@ const MessagesPage: React.FC = () => {
     const loadConversation = async (id: number) => {
         setIsConversationLoading(true);
         try {
+            const prevConversationId = selectedConversationIdRef.current;
+
             const response = await api.get(`/messages/conversations/${id}`);
             setCurrentConversation(response.data);
             setSelectedConversationId(id);
             setShowMobileSidebar(false); // Hide sidebar on mobile when chat is opened
+
+            // Leave previous conversation to avoid accumulating SignalR subscriptions
+            if (prevConversationId && prevConversationId !== id) {
+                await signalRService.leaveConversation(prevConversationId);
+            }
 
             // Join conversation room
             await signalRService.joinConversation(id);
