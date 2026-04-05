@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using StopSmoke.Backend.Data;
 using StopSmoke.Backend.DTOs;
+using StopSmoke.Backend.Models;
 using System.Collections.Concurrent;
+using WebPush;
 
 namespace StopSmoke.Backend.Hubs;
 
@@ -11,12 +13,14 @@ namespace StopSmoke.Backend.Hubs;
 public class ChatHub : Hub
 {
     private readonly ApplicationDbContext _context;
+    private readonly IConfiguration _configuration;
     // Store multiple connection IDs per user
     private static readonly ConcurrentDictionary<string, HashSet<string>> _onlineUsers = new();
 
-    public ChatHub(ApplicationDbContext context)
+    public ChatHub(ApplicationDbContext context, IConfiguration configuration)
     {
         _context = context;
+        _configuration = configuration;
     }
 
     public override async Task OnConnectedAsync()
@@ -161,7 +165,88 @@ public class ChatHub : Hub
                 .Select(p => p.UserId)
                 .ToListAsync();
 
-            await Clients.Users(participantIds).SendAsync("ReceiveMessage", messageResponse);
+            foreach (var participantId in participantIds)
+            {
+                // Don't send to the sender
+                if (participantId != userId)
+                {
+                    await Clients.User(participantId).SendAsync("ReceiveMessage", messageResponse);
+                    
+                    // Send push notification if user is offline
+                    await SendPushNotificationAsync(participantId, messageResponse, conversationId);
+                }
+            }
+        }
+
+        await Clients.Caller.SendAsync("MessageSent", message.Id);
+    }
+
+    private async Task SendPushNotificationAsync(string recipientUserId, MessageResponse message, int conversationId)
+    {
+        try
+        {
+            var vapidPublicKey = _configuration["Vapid:PublicKey"];
+            var vapidPrivateKey = _configuration["Vapid:PrivateKey"];
+            
+            if (string.IsNullOrEmpty(vapidPublicKey) || string.IsNullOrEmpty(vapidPrivateKey))
+            {
+                return;
+            }
+
+            var subscriptions = await _context.PushSubscriptions
+                .Where(s => s.UserId == recipientUserId)
+                .ToListAsync();
+
+            if (!subscriptions.Any())
+            {
+                return;
+            }
+
+            var pushClient = new PushClient();
+            var vapidDetails = new VapidDetails(
+                "mailto:admin@stopsmoke.info",
+                vapidPublicKey,
+                vapidPrivateKey
+            );
+
+            foreach (var subscription in subscriptions)
+            {
+                try
+                {
+                    var pushSubscription = new PushSubscription(
+                        subscription.Endpoint,
+                        subscription.P256DH,
+                        subscription.Auth
+                    );
+
+                    var payload = new
+                    {
+                        title = $"💬 {message.SenderName}",
+                        body = message.Content.Length > 100 ? message.Content[..100] + "..." : message.Content,
+                        icon = "/pwa-512x512.png",
+                        conversationId = conversationId,
+                        messageId = message.Id
+                    };
+
+                    var jsonPayload = System.Text.Json.JsonSerializer.Serialize(payload);
+
+                    await pushClient.SendNotificationAsync(
+                        pushSubscription,
+                        jsonPayload,
+                        vapidDetails
+                    );
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Push notification failed for subscription: {ex.Message}");
+                    // Remove invalid subscription
+                    await _context.PushSubscriptions.Where(s => s.Id == subscription.Id).ExecuteDeleteAsync();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Push notification error: {ex.Message}");
         }
     }
 

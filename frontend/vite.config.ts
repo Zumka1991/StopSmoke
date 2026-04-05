@@ -9,6 +9,13 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icon.svg', 'robots.txt', 'apple-touch-icon.png'],
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
+      injectManifest: {
+        rollupFormat: 'iife',
+        injectionPoint: undefined
+      },
       manifest: {
         name: 'StopSmoke - Брось курить!',
         short_name: 'StopSmoke',

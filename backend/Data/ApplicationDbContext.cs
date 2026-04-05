@@ -12,6 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Conversation> Conversations { get; set; }
     public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<PushSubscription> PushSubscriptions { get; set; }
     public DbSet<Article> Articles { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Book> Books { get; set; }

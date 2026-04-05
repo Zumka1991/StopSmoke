@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar';
 import ChatList from '../components/ChatList';
 import ChatWindow from '../components/ChatWindow';
 import UserSearch from '../components/UserSearch';
+import usePushNotifications from '../hooks/usePushNotifications';
 import type { ConversationListItem, Conversation, Message } from '../types/chatTypes';
 import { MessageCircle } from 'lucide-react';
 import { useNotifications } from '../contexts/NotificationContext';
@@ -23,6 +24,9 @@ const MessagesPage: React.FC = () => {
     const [isConversationLoading, setIsConversationLoading] = useState(false);
     const [showMobileSidebar, setShowMobileSidebar] = useState(true);
     const { setUnreadCount, playNotificationSound } = useNotifications();
+    
+    // Push notifications
+    const { requestPermission } = usePushNotifications();
     const isMountedRef = useRef<boolean>(false);
 
     // Use refs to avoid stale closures in SignalR callbacks
@@ -50,6 +54,9 @@ const MessagesPage: React.FC = () => {
         setCurrentUserId(userId);
         initializeSignalR(token);
         loadConversations();
+        
+        // Request push notification permission
+        requestPermission();
 
         // Restore conversation from URL parameter
         const chatIdParam = searchParams.get('chat');
