@@ -335,7 +335,8 @@
     "noConversationsYet": "No conversations yet",
     "searchUsersToStartChat": "Search for users to start chatting",
     "onlineStatus": "Online",
-    "noMessagesYet": "No messages yet"
+    "noMessagesYet": "No messages yet",
+    "loadingConversation": "Loading conversation..."
   },
   "articles": {
     "title": "Articles",

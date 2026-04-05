@@ -19,6 +19,7 @@ const MessagesPage: React.FC = () => {
     const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
     const [currentUserId, setCurrentUserId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
+    const [isConversationLoading, setIsConversationLoading] = useState(false);
     const [showMobileSidebar, setShowMobileSidebar] = useState(true);
     const { setUnreadCount, playNotificationSound } = useNotifications();
 
@@ -162,6 +163,7 @@ const MessagesPage: React.FC = () => {
     };
 
     const loadConversation = async (id: number) => {
+        setIsConversationLoading(true);
         try {
             const response = await api.get(`/messages/conversations/${id}`);
             setCurrentConversation(response.data);
@@ -180,6 +182,8 @@ const MessagesPage: React.FC = () => {
             loadConversations();
         } catch (error) {
             console.error('Error loading conversation:', error);
+        } finally {
+            setIsConversationLoading(false);
         }
     };
 
@@ -407,7 +411,12 @@ const MessagesPage: React.FC = () => {
                         </div>
 
                         <div className={`messages-main ${!showMobileSidebar ? 'show' : ''}`}>
-                            {currentConversation ? (
+                            {isConversationLoading ? (
+                                <div className="messages-loading">
+                                    <div className="loading-spinner"></div>
+                                    <p>{t('messages.loadingConversation') || 'Загрузка диалога...'}</p>
+                                </div>
+                            ) : currentConversation ? (
                                 <ChatWindow
                                     conversationId={currentConversation.id}
                                     messages={currentConversation.messages}

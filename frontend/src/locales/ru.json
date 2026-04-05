@@ -335,7 +335,8 @@
     "noConversationsYet": "Диалогов пока нет",
     "searchUsersToStartChat": "Найдите пользователя, чтобы начать общение",
     "onlineStatus": "Онлайн",
-    "noMessagesYet": "Сообщений пока нет"
+    "noMessagesYet": "Сообщений пока нет",
+    "loadingConversation": "Загрузка диалога..."
   },
   "articles": {
     "title": "Статьи",
