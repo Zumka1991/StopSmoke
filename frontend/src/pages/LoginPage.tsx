@@ -77,6 +77,12 @@ export default function LoginPage() {
                                 {errors.password && <p className="error-msg">{errors.password.message as string}</p>}
                             </div>
 
+                            <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
+                                <Link to="/forgot-password" className="link" style={{ fontSize: '0.875rem' }}>
+                                    {t('auth.login.forgotPassword') || 'Забыли пароль?'}
+                                </Link>
+                            </div>
+
                             {serverError && <p className="error-msg text-center">{serverError}</p>}
 
                             <Button type="submit" variant="primary" fullWidth>{t('auth.login.submit')}</Button>
