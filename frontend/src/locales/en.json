@@ -322,7 +322,8 @@
     "editingMessage": "Edit message",
     "edited": "edited",
     "editedAt": "Edited at",
-    "errorEditingMessage": "Failed to edit message. Please try again."
+    "errorEditingMessage": "Failed to edit message. Please try again.",
+    "copyMessage": "Copy"
   },
   "articles": {
     "title": "Articles",

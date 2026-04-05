@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Message } from '../types/chatTypes';
-import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trophy } from 'lucide-react';
+import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trophy, Copy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
@@ -154,6 +154,48 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    // Position context menu to ensure it stays within viewport
+    useEffect(() => {
+        if (messageContextMenu && messageMenuRef.current) {
+            const menu = messageMenuRef.current;
+            const rect = menu.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const margin = 10;
+
+            let top = messageContextMenu.y;
+            let left = messageContextMenu.x;
+
+            // Adjust if menu goes beyond right edge
+            if (left + rect.width > viewportWidth - margin) {
+                left = viewportWidth - rect.width - margin;
+            }
+
+            // Adjust if menu goes beyond left edge
+            if (left < margin) {
+                left = margin;
+            }
+
+            // Adjust if menu goes beyond bottom edge
+            if (top + rect.height > viewportHeight - margin) {
+                top = viewportHeight - rect.height - margin;
+            }
+
+            // Adjust if menu goes beyond top edge
+            if (top < margin) {
+                top = margin;
+            }
+
+            menu.style.top = `${top}px`;
+            menu.style.left = `${left}px`;
+            menu.style.background = 'var(--card-bg)';
+            menu.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+            menu.style.borderRadius = '0.5rem';
+            menu.style.padding = '0.5rem';
+            menu.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.5)';
+        }
+    }, [messageContextMenu]);
 
     const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {
         const container = e.currentTarget;
@@ -414,6 +456,21 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 setMessageContextMenu(null);
             }
         }
+    };
+
+    const handleCopyMessage = async () => {
+        if (messageContextMenu) {
+            const msg = messages.find(m => m.id === messageContextMenu.messageId);
+            if (msg && msg.content) {
+                try {
+                    await navigator.clipboard.writeText(msg.content);
+                    // Можно добавить toast-уведомление, если есть
+                } catch (error) {
+                    console.error('Failed to copy message:', error);
+                }
+            }
+        }
+        setMessageContextMenu(null);
     };
 
     return (
@@ -767,18 +824,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             {messageContextMenu && (
                 <div
                     ref={messageMenuRef}
+                    className="chat-message-context-menu"
                     style={{
                         position: 'fixed',
-                        top: messageContextMenu.y,
-                        left: messageContextMenu.x,
-                        background: 'var(--card-bg)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: '0.5rem',
-                        padding: '0.5rem',
-                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.5)',
                         zIndex: 1000,
                         minWidth: '180px'
                     }}
+                    data-x={messageContextMenu.x}
+                    data-y={messageContextMenu.y}
                 >
                     {/* Reply button - always visible */}
                     <button
@@ -803,8 +856,32 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     >
                         ↩️ {t('messages.replyMessage') || 'Ответить'}
                     </button>
+                    {/* Copy button - always visible */}
+                    <button
+                        onClick={handleCopyMessage}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            width: '100%',
+                            padding: '0.75rem',
+                            background: 'transparent',
+                            border: 'none',
+                            color: 'var(--text-primary)',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            fontSize: '0.9rem',
+                            borderRadius: '0.25rem',
+                            transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                        <Copy size={18} />
+                        {t('messages.copyMessage') || 'Копировать'}
+                    </button>
                     {/* Edit button - only own messages and not system meta-messages */}
-                    {messageContextMenu?.senderId === currentUserId && 
+                    {messageContextMenu?.senderId === currentUserId &&
                      !messages.find(m => m.id === messageContextMenu.messageId)?.content.startsWith('[APP_META:') && (
                         <button
                             onClick={handleEditMessage}
