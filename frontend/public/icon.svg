@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <circle cx="256" cy="256" r="256" fill="url(#bgGrad)" />
+  
+  <!-- Cigarette Body -->
+  <rect x="120" y="200" width="272" height="112" rx="8" fill="#f8fafc" />
+  
+  <!-- Filter -->
+  <rect x="340" y="200" width="72" height="112" rx="8" fill="#fbbf24" />
+  <rect x="340" y="200" width="20" height="112" fill="#d97706" opacity="0.3" />
+  <rect x="370" y="200" width="10" height="112" fill="#d97706" opacity="0.3" />
+
+  <!-- Smoke Lines -->
+  <path d="M120 256 C 80 256, 40 200, 60 140 C 80 80, 120 160, 100 100" fill="none" stroke="#f8fafc" stroke-width="16" stroke-linecap="round" opacity="0.6" />
+  <path d="M120 256 C 90 256, 60 220, 70 180" fill="none" stroke="#f8fafc" stroke-width="12" stroke-linecap="round" opacity="0.4" />
+
+  <!-- Red Cross / Stop Sign -->
+  <path d="M160 160 L352 352 M352 160 L160 352" stroke="#ef4444" stroke-width="48" stroke-linecap="round" />
+</svg>
