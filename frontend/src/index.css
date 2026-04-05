@@ -1060,6 +1060,10 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   cursor: pointer;
   transition: background 0.2s;
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .chat-list-item:hover {
@@ -1359,6 +1363,10 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   border-radius: 1.25rem;
   position: relative;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .message-sent .message-content {
@@ -1501,6 +1509,10 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 
   .message-content {
     max-width: 85%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   .chat-window-header {
@@ -1552,6 +1564,10 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
 
   .chat-list-item {
     padding: 0.75rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 }
 
