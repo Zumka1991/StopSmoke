@@ -12,10 +12,6 @@ export default defineConfig({
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.ts',
-      injectManifest: {
-        rollupFormat: 'iife',
-        injectionPoint: undefined
-      },
       manifest: {
         name: 'StopSmoke - Брось курить!',
         short_name: 'StopSmoke',
