@@ -217,6 +217,15 @@ const MessagesPage: React.FC = () => {
         try {
             const prevConversationId = selectedConversationIdRef.current;
 
+            // Check if SignalR is connected, if not try to reconnect
+            if (!signalRService.isConnected()) {
+                console.log('SignalR disconnected, reconnecting before joining conversation...');
+                const token = localStorage.getItem('token');
+                if (token) {
+                    await signalRService.start(token);
+                }
+            }
+
             const response = await api.get(`/messages/conversations/${id}`);
             setCurrentConversation(response.data);
             setSelectedConversationId(id);
