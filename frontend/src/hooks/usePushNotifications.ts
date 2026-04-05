@@ -49,7 +49,10 @@ export default function usePushNotifications() {
 
     const sendSubscriptionToBackend = async (subscription: PushSubscription) => {
       try {
-        await api.post('/api/push/subscribe', {
+        // Отладочный alert
+        console.log('Sending subscription to backend...');
+        
+        const payload = {
           endpoint: subscription.endpoint,
           p256dh: btoa(
             String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')!))
@@ -57,11 +60,20 @@ export default function usePushNotifications() {
           auth: btoa(
             String.fromCharCode(...new Uint8Array(subscription.getKey('auth')!))
           )
-        });
+        };
+
+        console.log('Payload:', JSON.stringify(payload).substring(0, 100) + '...');
+
+        await api.post('/api/push/subscribe', payload);
+        
         setIsSubscribed(true);
         console.log('Subscription synced with backend');
-      } catch (error) {
+        alert('✅ Подписка успешно создана!');
+      } catch (error: any) {
         console.error('Failed to sync subscription:', error);
+        // Показываем ошибку пользователю
+        const msg = error.response?.data || error.message || 'Unknown error';
+        alert('❌ Ошибка подписки: ' + JSON.stringify(msg).substring(0, 100));
       }
     };
 
