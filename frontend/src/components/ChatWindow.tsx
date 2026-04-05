@@ -219,7 +219,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             const hasMore = await onLoadOlderMessages();
 
             // Wait a frame for messages to be rendered
-            const frameId1 = requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
                 if (!isMountedRef.current) return;
                 
                 // Update hasMoreMessages flag based on result
@@ -236,7 +236,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 setIsLoadingOlder(false);
 
                 // Reset the ref after another frame to ensure useEffect has processed
-                const frameId2 = requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
                     if (!isMountedRef.current) return;
                     isLoadingOlderRef.current = false;
                 });
