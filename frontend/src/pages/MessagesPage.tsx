@@ -56,7 +56,7 @@ const MessagesPage: React.FC = () => {
         loadConversations();
         
         // Request push notification permission
-        requestPermission();
+        requestPermission().catch(err => console.error('Push permission error:', err));
 
         // Restore conversation from URL parameter
         const chatIdParam = searchParams.get('chat');
