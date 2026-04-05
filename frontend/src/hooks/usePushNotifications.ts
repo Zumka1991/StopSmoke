@@ -64,7 +64,7 @@ export default function usePushNotifications() {
 
         console.log('Payload:', JSON.stringify(payload).substring(0, 100) + '...');
 
-        await api.post('/api/push/subscribe', payload);
+        await api.post('/push/subscribe', payload);
         
         setIsSubscribed(true);
         console.log('Subscription synced with backend');
@@ -104,7 +104,7 @@ export default function usePushNotifications() {
       });
 
       // Send subscription to backend
-      await api.post('/api/push/subscribe', {
+      await api.post('/push/subscribe', {
         endpoint: subscription.endpoint,
         p256dh: btoa(
           String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')!))
@@ -128,7 +128,7 @@ export default function usePushNotifications() {
 
       if (existingSubscription) {
         // Remove from backend
-        await api.delete('/api/push/unsubscribe', {
+        await api.delete('/push/unsubscribe', {
           data: { endpoint: existingSubscription.endpoint }
         });
 
