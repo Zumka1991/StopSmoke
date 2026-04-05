@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import { signalRService } from '../api/signalrService';
@@ -14,6 +14,7 @@ import { useNotifications } from '../contexts/NotificationContext';
 const MessagesPage: React.FC = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [conversations, setConversations] = useState<ConversationListItem[]>([]);
     const [selectedConversationId, setSelectedConversationId] = useState<number | null>(null);
     const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
@@ -45,6 +46,18 @@ const MessagesPage: React.FC = () => {
         setCurrentUserId(userId);
         initializeSignalR(token);
         loadConversations();
+
+        // Restore conversation from URL parameter
+        const chatIdParam = searchParams.get('chat');
+        if (chatIdParam) {
+            const chatId = parseInt(chatIdParam, 10);
+            if (!isNaN(chatId)) {
+                // Wait for conversations to load first
+                setTimeout(() => {
+                    loadConversation(chatId, false);
+                }, 100);
+            }
+        }
 
         return () => {
             signalRService.offReceiveMessage();
@@ -162,7 +175,7 @@ const MessagesPage: React.FC = () => {
         }
     };
 
-    const loadConversation = async (id: number) => {
+    const loadConversation = async (id: number, updateUrl: boolean = true) => {
         setIsConversationLoading(true);
         try {
             const prevConversationId = selectedConversationIdRef.current;
@@ -171,6 +184,12 @@ const MessagesPage: React.FC = () => {
             setCurrentConversation(response.data);
             setSelectedConversationId(id);
             setShowMobileSidebar(false); // Hide sidebar on mobile when chat is opened
+
+            // Update URL and localStorage
+            if (updateUrl) {
+                setSearchParams({ chat: id.toString() });
+                localStorage.setItem('lastConversationId', id.toString());
+            }
 
             // Leave previous conversation to avoid accumulating SignalR subscriptions
             if (prevConversationId && prevConversationId !== id) {
@@ -311,6 +330,8 @@ const MessagesPage: React.FC = () => {
         setShowMobileSidebar(true);
         setSelectedConversationId(null);
         setCurrentConversation(null);
+        setSearchParams({});
+        localStorage.removeItem('lastConversationId');
     };
 
     const handleBlockUser = async () => {
@@ -463,3 +484,17 @@ const MessagesPage: React.FC = () => {
 };
 
 export default MessagesPage;
+
+// Expose function to select conversation from outside
+declare global {
+    interface Window {
+        selectConversation?: (id: number) => void;
+    }
+}
+window.selectConversation = (id: number) => {
+    // This will be called via custom events or URL navigation
+    const chatId = parseInt(id.toString(), 10);
+    if (!isNaN(chatId)) {
+        window.location.hash = `#/messages?chat=${chatId}`;
+    }
+};

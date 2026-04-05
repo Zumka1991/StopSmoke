@@ -52,10 +52,12 @@ export default function UserProfilePage() {
         if (!profile) return;
         setStartingChat(true);
         try {
-            await api.post('/messages/conversations', { 
-                participantEmail: profile.email 
+            const response = await api.post('/messages/conversations', {
+                participantEmail: profile.email
             });
-            navigate('/messages');
+            const conversationId = response.data.conversationId;
+            // Navigate to messages page with the new conversation selected
+            navigate(`/messages?chat=${conversationId}`);
         } catch (err) {
             console.error('Error starting chat', err);
             setToast({ message: t('messages.errorCreatingConversation'), type: 'error' });
