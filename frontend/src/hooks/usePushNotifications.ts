@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 
 // VAPID Public Key - нужно заменить на реальный ключ из бэкенда
-const VAPID_PUBLIC_KEY = 'BG2rB4kX8vP3Q9mN2jL6fR7sT1yU0wE4cH5dA8iO9xK3gM6nV2bZ7qW1rY4tP0sL3kJ8hF6gD5aG2nM9vC4xB7eE';
+const VAPID_PUBLIC_KEY = 'BDY0mHuJciNadYkl7q9fZaATstZytiQscvBlR4SOTgEkzxdAdiRGNA34zmrB_S-VNeTWBxAlZ0Bda-hAZGE_oXo';
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -28,7 +28,7 @@ export default function usePushNotifications() {
     const initializePush = async () => {
       try {
         const registration = await navigator.serviceWorker.ready;
-        
+
         // Check current subscription
         const existingSubscription = await registration.pushManager.getSubscription();
         if (existingSubscription) {
