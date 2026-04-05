@@ -19,6 +19,28 @@ export default function usePushNotifications() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>('default');
 
+  // Helper function to sync subscription with backend
+  const sendSubscriptionToBackend = async (subscription: PushSubscription) => {
+    try {
+      const payload = {
+        endpoint: subscription.endpoint,
+        p256dh: btoa(
+          String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')!))
+        ),
+        auth: btoa(
+          String.fromCharCode(...new Uint8Array(subscription.getKey('auth')!))
+        )
+      };
+
+      await api.post('/push/subscribe', payload);
+      
+      setIsSubscribed(true);
+      console.log('Subscription synced with backend');
+    } catch (error: any) {
+      console.error('Failed to sync subscription:', error);
+    }
+  };
+
   useEffect(() => {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
       console.log('Push notifications not supported');
@@ -44,27 +66,6 @@ export default function usePushNotifications() {
         }
       } catch (error) {
         console.error('Error initializing push:', error);
-      }
-    };
-
-    const sendSubscriptionToBackend = async (subscription: PushSubscription) => {
-      try {
-        const payload = {
-          endpoint: subscription.endpoint,
-          p256dh: btoa(
-            String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')!))
-          ),
-          auth: btoa(
-            String.fromCharCode(...new Uint8Array(subscription.getKey('auth')!))
-          )
-        };
-
-        await api.post('/push/subscribe', payload);
-        
-        setIsSubscribed(true);
-        console.log('Subscription synced with backend');
-      } catch (error: any) {
-        console.error('Failed to sync subscription:', error);
       }
     };
 
