@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
         var encodedToken = Uri.EscapeDataString(token);
         
         // Link to frontend
-        var resetLink = $"https://stopsmoke.ru/reset-password?email={Uri.EscapeDataString(email)}&token={encodedToken}";
+        var resetLink = $"https://stopsmoke.info/reset-password?email={Uri.EscapeDataString(email)}&token={encodedToken}";
 
         var subject = "Сброс пароля - StopSmoke";
         var body = $@"
