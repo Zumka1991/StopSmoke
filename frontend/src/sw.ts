@@ -46,7 +46,7 @@ self.addEventListener('notificationclick', (event: any) => {
   const urlToOpen = event.notification.data?.url || '/messages';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients: any) => {
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients: any) => {
       // Check if there's already a window open
       for (let i = 0; i < windowClients.length; i++) {
         const client = windowClients[i];
@@ -55,7 +55,7 @@ self.addEventListener('notificationclick', (event: any) => {
         }
       }
       // No window open, open a new one
-      return clients.openWindow(urlToOpen);
+      return self.clients.openWindow(urlToOpen);
     })
   );
 });
