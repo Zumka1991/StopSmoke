@@ -26,7 +26,8 @@ const MessagesPage: React.FC = () => {
     const { setUnreadCount, playNotificationSound } = useNotifications();
     
     // Push notifications
-    const { requestPermission, permission, isSubscribed, isMuted, toggleMute } = usePushNotifications();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { requestPermission, permission, isSubscribed, isMuted, toggleMute, swRegistered, debug: _debug, resetSubscription } = usePushNotifications();
     const isMountedRef = useRef<boolean>(false);
 
     // Use refs to avoid stale closures in SignalR callbacks
@@ -511,6 +512,45 @@ const MessagesPage: React.FC = () => {
                                     <span>{isMuted ? 'Уведомления выкл.' : 'Уведомления вкл.'}</span>
                                 </button>
                             )}
+
+                            {/* Debug reset button */}
+                            <button
+                                onClick={resetSubscription}
+                                style={{
+                                    margin: '0.5rem',
+                                    background: 'rgba(168, 85, 247, 0.1)',
+                                    border: '1px solid rgba(168, 85, 247, 0.3)',
+                                    color: '#c084fc',
+                                    padding: '0.5rem 0.8rem',
+                                    borderRadius: '0.5rem',
+                                    cursor: 'pointer',
+                                    fontSize: '0.8rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                🔄 Переподключить уведомления
+                            </button>
+
+                            {/* Debug info panel */}
+                            <div style={{
+                                margin: '0.5rem',
+                                padding: '0.8rem',
+                                background: 'rgba(0, 0, 0, 0.3)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                borderRadius: '0.5rem',
+                                fontSize: '0.75rem',
+                                fontFamily: 'monospace',
+                                lineHeight: '1.5'
+                            }}>
+                                <div>🟢 Service Worker: {swRegistered ? '✅ Да' : '❌ Нет'}</div>
+                                <div>🔔 Permission: {permission}</div>
+                                <div>📡 Subscribed: {isSubscribed ? '✅ Да' : '❌ Нет'}</div>
+                                <div>🔇 Muted: {isMuted ? '✅ Да' : '❌ Нет'}</div>
+                            </div>
 
                             {permission === 'denied' ? (
                                 <div className="mobile-push-warning" style={{
