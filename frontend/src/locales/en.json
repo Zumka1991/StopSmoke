@@ -59,7 +59,8 @@
     "profile": "Profile",
     "save": "Save",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "installApp": "Install App"
   },
   "nav": {
     "dashboard": "Dashboard",

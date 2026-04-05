@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
+import InstallPwaButton from './InstallPwaButton';
 import SOSModal from './SOSModal';
 import { useNotifications } from '../contexts/NotificationContext';
 import Logo from './Logo';
@@ -336,6 +337,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }}></div>
 
                         <LanguageSwitcher />
+                        <InstallPwaButton />
 
                         {isAuthenticated ? (
                             <button
@@ -652,6 +654,9 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
                         <div style={{ padding: '0.5rem 0' }}>
                             <LanguageSwitcher />
+                            <div style={{ marginTop: '0.5rem' }}>
+                                <InstallPwaButton />
+                            </div>
                         </div>
 
                         {isAuthenticated ? (
