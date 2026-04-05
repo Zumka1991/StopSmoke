@@ -28,11 +28,14 @@ export default function usePushNotifications() {
     const initializePush = async () => {
       try {
         const registration = await navigator.serviceWorker.ready;
-
+        
         // Check current subscription
         const existingSubscription = await registration.pushManager.getSubscription();
+        
+        // If subscription exists in browser, ensure backend knows about it too
         if (existingSubscription) {
-          setIsSubscribed(true);
+          console.log('Found existing browser subscription, syncing with backend...');
+          await sendSubscriptionToBackend(existingSubscription);
         }
 
         // Check permission
@@ -41,6 +44,24 @@ export default function usePushNotifications() {
         }
       } catch (error) {
         console.error('Error initializing push:', error);
+      }
+    };
+
+    const sendSubscriptionToBackend = async (subscription: PushSubscription) => {
+      try {
+        await api.post('/api/push/subscribe', {
+          endpoint: subscription.endpoint,
+          p256dh: btoa(
+            String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh')!))
+          ),
+          auth: btoa(
+            String.fromCharCode(...new Uint8Array(subscription.getKey('auth')!))
+          )
+        });
+        setIsSubscribed(true);
+        console.log('Subscription synced with backend');
+      } catch (error) {
+        console.error('Failed to sync subscription:', error);
       }
     };
 
