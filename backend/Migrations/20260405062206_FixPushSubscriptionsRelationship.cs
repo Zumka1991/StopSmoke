@@ -10,27 +10,20 @@ namespace StopSmoke.Backend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<bool>(
+            migrationBuilder.AddColumn<bool>(
                 name: "IsPushMuted",
                 table: "PushSubscriptions",
                 type: "boolean",
                 nullable: false,
-                oldClrType: typeof(bool),
-                oldType: "boolean",
-                oldDefaultValue: false);
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<bool>(
+            migrationBuilder.DropColumn(
                 name: "IsPushMuted",
-                table: "PushSubscriptions",
-                type: "boolean",
-                nullable: false,
-                defaultValue: false,
-                oldClrType: typeof(bool),
-                oldType: "boolean");
+                table: "PushSubscriptions");
         }
     }
 }
