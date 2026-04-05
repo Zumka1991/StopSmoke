@@ -217,15 +217,6 @@ const MessagesPage: React.FC = () => {
         try {
             const prevConversationId = selectedConversationIdRef.current;
 
-            // Check if SignalR is connected, if not try to reconnect
-            if (!signalRService.isConnected()) {
-                console.log('SignalR disconnected, reconnecting before joining conversation...');
-                const token = localStorage.getItem('token');
-                if (token) {
-                    await signalRService.start(token);
-                }
-            }
-
             const response = await api.get(`/messages/conversations/${id}`);
             setCurrentConversation(response.data);
             setSelectedConversationId(id);
@@ -239,11 +230,19 @@ const MessagesPage: React.FC = () => {
 
             // Leave previous conversation to avoid accumulating SignalR subscriptions
             if (prevConversationId && prevConversationId !== id) {
-                await signalRService.leaveConversation(prevConversationId);
+                try {
+                    await signalRService.leaveConversation(prevConversationId);
+                } catch (e) {
+                    console.warn('Failed to leave previous conversation:', e);
+                }
             }
 
             // Join conversation room
-            await signalRService.joinConversation(id);
+            try {
+                await signalRService.joinConversation(id);
+            } catch (e) {
+                console.warn('Failed to join conversation (real-time updates may not work):', e);
+            }
             console.log('Joined conversation:', id);
 
             // Mark as read

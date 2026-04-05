@@ -167,12 +167,12 @@ public class ChatHub : Hub
 
             foreach (var participantId in participantIds)
             {
-                // Don't send to the sender
+                // Отправляем сообщение всем участникам (включая отправителя для обновления UI)
+                await Clients.User(participantId).SendAsync("ReceiveMessage", messageResponse);
+                
+                // Push-уведомление отправляем ТОЛЬКО получателю (не отправителю)
                 if (participantId != userId)
                 {
-                    await Clients.User(participantId).SendAsync("ReceiveMessage", messageResponse);
-                    
-                    // Send push notification if user is offline
                     await SendPushNotificationAsync(participantId, messageResponse, conversationId);
                 }
             }
