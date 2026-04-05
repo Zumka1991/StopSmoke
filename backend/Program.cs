@@ -43,6 +43,9 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+// Register Email Service
+builder.Services.AddScoped<StopSmoke.Backend.Services.IEmailService, StopSmoke.Backend.Services.EmailService>();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

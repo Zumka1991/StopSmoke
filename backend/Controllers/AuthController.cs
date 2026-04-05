@@ -17,15 +17,77 @@ public class AuthController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;
     private readonly IRecaptchaService _recaptchaService;
+    private readonly IEmailService _emailService;
 
     public AuthController(
         UserManager<User> userManager,
         IConfiguration configuration,
-        IRecaptchaService recaptchaService)
+        IRecaptchaService recaptchaService,
+        IEmailService emailService)
     {
         _userManager = userManager;
         _configuration = configuration;
         _recaptchaService = recaptchaService;
+        _emailService = emailService;
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            // Security: Don't reveal if user exists
+            return Ok(new { message = "If the email exists, a reset link has been sent." });
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        // Important: Encode token for URL
+        var encodedToken = Uri.EscapeDataString(token);
+        
+        // Link to frontend
+        var resetLink = $"https://stopsmoke.ru/reset-password?email={Uri.EscapeDataString(email)}&token={encodedToken}";
+
+        var subject = "Сброс пароля - StopSmoke";
+        var body = $@"
+            <h3>Привет, {user.UserName ?? user.Email}!</h3>
+            <p>Вы (или кто-то другой) запросили восстановление пароля.</p>
+            <p>Нажмите на кнопку ниже, чтобы установить новый пароль:</p>
+            <a href='{resetLink}' style='background:#3b82f6;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;display:inline-block;margin:10px 0;'>Сменить пароль</a>
+            <p style='color:#666;font-size:12px;'>Если вы этого не делали, просто проигнорируйте это письмо.</p>
+        ";
+
+        try
+        {
+            await _emailService.SendEmailAsync(email, subject, body);
+            return Ok(new { message = "Письмо отправлено" });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Auth] Email Error: {ex.Message}");
+            return StatusCode(500, new { error = "Ошибка при отправке письма" });
+        }
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            return BadRequest(new { error = "Пользователь не найден" });
+        }
+
+        // Decode token from URL
+        var token = Uri.UnescapeDataString(model.Token);
+
+        var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Ok(new { message = "Пароль успешно изменен" });
     }
 
     [HttpPost("register")]
@@ -103,3 +165,6 @@ public class AuthController : ControllerBase
         return token;
     }
 }
+
+// DTO for Reset Password
+public record ResetPasswordDto(string Email, string Token, string NewPassword);
