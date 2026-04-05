@@ -470,24 +470,74 @@ const MessagesPage: React.FC = () => {
                                     <MessageCircle size={24} />
                                     {t('messages.title')}
                                 </h2>
-                                {!isSubscribed && permission !== 'granted' && (
-                                    <button 
-                                        onClick={requestPermission}
+                            </div>
+
+                            {permission === 'denied' ? (
+                                <div style={{
+                                    padding: '1rem',
+                                    margin: '0 0.5rem',
+                                    background: 'rgba(239, 68, 68, 0.1)',
+                                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                                    borderRadius: '0.5rem',
+                                    color: '#fca5a5',
+                                    fontSize: '0.8rem',
+                                    textAlign: 'center',
+                                    marginBottom: '0.5rem'
+                                }}>
+                                    <p style={{ margin: '0 0 0.5rem 0', fontWeight: 'bold' }}>
+                                        🔕 Уведомления заблокированы
+                                    </p>
+                                    <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.75rem' }}>
+                                        Вы запретили уведомления для этого сайта.
+                                        Чтобы получать оповещения о сообщениях, разрешите их в настройках сайта.
+                                    </p>
+                                    <button
+                                        onClick={() => window.open('chrome://settings/content/notifications', '_blank')}
                                         style={{
-                                            background: 'rgba(59, 130, 246, 0.1)',
-                                            border: '1px solid var(--accent-color)',
-                                            color: 'var(--accent-color)',
+                                            background: 'rgba(255, 255, 255, 0.1)',
+                                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                                            color: 'inherit',
                                             padding: '0.4rem 0.8rem',
                                             borderRadius: '0.5rem',
                                             cursor: 'pointer',
-                                            fontSize: '0.8rem',
-                                            fontWeight: 'bold'
+                                            fontSize: '0.75rem',
+                                            marginTop: '0.25rem'
                                         }}
                                     >
-                                        🔔 Включить уведомления
+                                        ⚙️ Открыть настройки браузера
                                     </button>
-                                )}
-                            </div>
+                                </div>
+                            ) : !isSubscribed && permission !== 'granted' ? (
+                                <button
+                                    onClick={requestPermission}
+                                    style={{
+                                        margin: '0.5rem',
+                                        background: 'rgba(59, 130, 246, 0.1)',
+                                        border: '1px solid var(--accent-color)',
+                                        color: 'var(--accent-color)',
+                                        padding: '0.6rem 0.8rem',
+                                        borderRadius: '0.5rem',
+                                        cursor: 'pointer',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 'bold',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
+                                        transition: 'all 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)';
+                                        e.currentTarget.style.transform = 'translateY(-1px)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                    }}
+                                >
+                                    🔔 Включить уведомления
+                                </button>
+                            ) : null}
                             <UserSearch onCreateConversation={handleCreateConversation} />
                             <ChatList
                                 conversations={conversations}
