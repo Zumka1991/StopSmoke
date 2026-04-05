@@ -23,11 +23,13 @@ const MessagesPage: React.FC = () => {
     const [isConversationLoading, setIsConversationLoading] = useState(false);
     const [showMobileSidebar, setShowMobileSidebar] = useState(true);
     const { setUnreadCount, playNotificationSound } = useNotifications();
+    const isMountedRef = useRef<boolean>(false);
 
     // Use refs to avoid stale closures in SignalR callbacks
     const selectedConversationIdRef = useRef<number | null>(null);
     const currentConversationRef = useRef<Conversation | null>(null);
     const onlineUsersRef = useRef<Set<string>>(new Set());
+    const conversationRestoreTimeoutRef = useRef<number | null>(null);
 
     useEffect(() => {
         selectedConversationIdRef.current = selectedConversationId;
@@ -35,6 +37,8 @@ const MessagesPage: React.FC = () => {
     }, [selectedConversationId, currentConversation]);
 
     useEffect(() => {
+        isMountedRef.current = true;
+
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
 
@@ -53,13 +57,21 @@ const MessagesPage: React.FC = () => {
             const chatId = parseInt(chatIdParam, 10);
             if (!isNaN(chatId)) {
                 // Wait for conversations to load first
-                setTimeout(() => {
-                    loadConversation(chatId, false);
+                conversationRestoreTimeoutRef.current = window.setTimeout(() => {
+                    if (isMountedRef.current) {
+                        loadConversation(chatId, false);
+                    }
                 }, 100);
             }
         }
 
         return () => {
+            isMountedRef.current = false;
+            if (conversationRestoreTimeoutRef.current) {
+                clearTimeout(conversationRestoreTimeoutRef.current);
+                conversationRestoreTimeoutRef.current = null;
+            }
+            onlineUsersRef.current.clear();
             signalRService.offReceiveMessage();
             signalRService.offMessageEdited();
             signalRService.offUserOnline();

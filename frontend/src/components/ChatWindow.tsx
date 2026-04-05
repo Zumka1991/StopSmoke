@@ -88,6 +88,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const longPressTimerRef = useRef<number | null>(null);
     const longPressTargetRef = useRef<{ messageId: number; senderId: string; x: number; y: number } | null>(null);
     const [showShareConfirmation, setShowShareConfirmation] = useState(false);
+    const isMountedRef = useRef<boolean>(true);
 
     const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
         messagesEndRef.current?.scrollIntoView({ behavior });
@@ -130,11 +131,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         }
     }, [conversationId, isBlocked, isBlockedByOther]);
 
-    // Cleanup interval on unmount
+    // Cleanup interval, long-press timer, and mounted ref on unmount
     useEffect(() => {
+        isMountedRef.current = true;
         return () => {
+            isMountedRef.current = false;
             if (cooldownIntervalRef.current) {
                 clearInterval(cooldownIntervalRef.current);
+                cooldownIntervalRef.current = null;
+            }
+            if (longPressTimerRef.current) {
+                clearTimeout(longPressTimerRef.current);
+                longPressTimerRef.current = null;
             }
         };
     }, []);
@@ -211,7 +219,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             const hasMore = await onLoadOlderMessages();
 
             // Wait a frame for messages to be rendered
-            requestAnimationFrame(() => {
+            const frameId1 = requestAnimationFrame(() => {
+                if (!isMountedRef.current) return;
+                
                 // Update hasMoreMessages flag based on result
                 if (hasMore === false) {
                     setHasMoreMessages(false);
@@ -226,7 +236,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 setIsLoadingOlder(false);
 
                 // Reset the ref after another frame to ensure useEffect has processed
-                requestAnimationFrame(() => {
+                const frameId2 = requestAnimationFrame(() => {
+                    if (!isMountedRef.current) return;
                     isLoadingOlderRef.current = false;
                 });
             });
