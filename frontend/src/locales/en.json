@@ -60,7 +60,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "installApp": "Install App"
+    "installApp": "Install App",
+    "close": "Got it"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -443,6 +444,12 @@
   },
   "footer": {
     "rights": "All rights reserved"
+  },
+  "pwa": {
+    "iosTitle": "Install on iPhone",
+    "iosInstructions": "Add StopSmoke to your home screen for quick access:",
+    "androidTitle": "Install on Android",
+    "androidInstructions": "Install the app for a better experience:"
   },
   "books": {
     "title": "Library",

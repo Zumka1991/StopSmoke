@@ -307,7 +307,8 @@
     "save": "Сохранить",
     "cancel": "Отмена",
     "confirm": "Подтвердить",
-    "installApp": "Установить приложение"
+    "installApp": "Установить приложение",
+    "close": "Понятно"
   },
   "messages": {
     "title": "Сообщения",
@@ -443,6 +444,12 @@
   },
   "footer": {
     "rights": "Все права защищены"
+  },
+  "pwa": {
+    "iosTitle": "Установка на iPhone",
+    "iosInstructions": "Добавьте StopSmoke на домашний экран для быстрого доступа:",
+    "androidTitle": "Установка на Android",
+    "androidInstructions": "Установите приложение для лучшего опыта:"
   },
   "books": {
     "title": "Библиотека",
