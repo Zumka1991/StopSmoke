@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Message } from '../types/chatTypes';
-import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trophy, Copy, Reply, Edit2 } from 'lucide-react';
+import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trophy, Copy, Reply, Edit2, X, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
@@ -87,6 +87,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     const cooldownIntervalRef = useRef<number | null>(null);
     const longPressTimerRef = useRef<number | null>(null);
     const longPressTargetRef = useRef<{ messageId: number; senderId: string; x: number; y: number } | null>(null);
+    const [showShareConfirmation, setShowShareConfirmation] = useState(false);
 
     const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
         messagesEndRef.current?.scrollIntoView({ behavior });
@@ -253,14 +254,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     };
 
     const handleShareDuration = async () => {
-        const confirmed = window.confirm(
-            t('messages.confirmShareDuration') || 'Вы действительно хотите поделиться своим сроком отказа?'
-        );
-        
-        if (!confirmed) {
-            return;
-        }
+        setShowShareConfirmation(true);
+    };
 
+    const handleConfirmShareDuration = async () => {
+        setShowShareConfirmation(false);
         setIsSharingDuration(true);
         try {
             const response = await api.get('/profile');
@@ -1084,11 +1082,53 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 </form>
             )}
 
-            <OnlineUsersModal 
-                isOpen={isOnlineUsersModalOpen} 
-                onClose={() => setIsOnlineUsersModalOpen(false)} 
-                users={onlineUsersList} 
+            <OnlineUsersModal
+                isOpen={isOnlineUsersModalOpen}
+                onClose={() => setIsOnlineUsersModalOpen(false)}
+                users={onlineUsersList}
             />
+
+            {/* Share Duration Confirmation Modal */}
+            {showShareConfirmation && (
+                <div className="modal-overlay" onClick={() => setShowShareConfirmation(false)}>
+                    <div className="share-confirmation-modal" onClick={(e) => e.stopPropagation()}>
+                        <button 
+                            className="modal-close-btn"
+                            onClick={() => setShowShareConfirmation(false)}
+                        >
+                            <X size={20} />
+                        </button>
+                        
+                        <div className="modal-icon-wrapper">
+                            <Trophy size={48} className="modal-icon" />
+                        </div>
+                        
+                        <h3 className="modal-title">
+                            {t('messages.shareDurationTitle') || 'Поделиться сроком отказа'}
+                        </h3>
+                        
+                        <p className="modal-description">
+                            {t('messages.confirmShareDuration') || 'Вы действительно хотите поделиться своим сроком отказа?'}
+                        </p>
+                        
+                        <div className="modal-actions">
+                            <button 
+                                className="modal-btn modal-btn-cancel"
+                                onClick={() => setShowShareConfirmation(false)}
+                            >
+                                {t('common.cancel') || 'Отмена'}
+                            </button>
+                            <button 
+                                className="modal-btn modal-btn-confirm"
+                                onClick={handleConfirmShareDuration}
+                            >
+                                <Check size={18} />
+                                {t('common.confirm') || 'Подтвердить'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

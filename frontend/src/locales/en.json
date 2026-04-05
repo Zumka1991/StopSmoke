@@ -40,7 +40,9 @@
     "language": "Language",
     "logout": "Logout",
     "profile": "Profile",
-    "save": "Save"
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -324,7 +326,8 @@
     "editedAt": "Edited at",
     "errorEditingMessage": "Failed to edit message. Please try again.",
     "copyMessage": "Copy",
-    "confirmShareDuration": "Are you sure you want to share your quit duration?"
+    "confirmShareDuration": "Are you sure you want to share your quit duration?",
+    "shareDurationTitle": "Share Quit Duration"
   },
   "articles": {
     "title": "Articles",
