@@ -8,7 +8,7 @@ RUN dotnet restore "StopSmoke.Backend.csproj"
 
 # Copy everything else and build
 COPY . .
-RUN dotnet build "StopSmoke.Backend.csproj" -c Release -o /app/build
+RUN dotnet nuget locals all --clear && dotnet build "StopSmoke.Backend.csproj" -c Release -o /app/build
 
 # Publish stage
 FROM build AS publish
