@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,7 +28,7 @@ export default function InstallPwaButton() {
         deferredPrompt.prompt();
 
         // Wait for the user to respond to the prompt
-        const { outcome } = await deferredPrompt.userChoice;
+        await deferredPrompt.userChoice;
         
         // Clear the deferredPrompt so the button disappears if installed
         setDeferredPrompt(null);
