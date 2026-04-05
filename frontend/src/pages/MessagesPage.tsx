@@ -26,7 +26,7 @@ const MessagesPage: React.FC = () => {
     const { setUnreadCount, playNotificationSound } = useNotifications();
     
     // Push notifications
-    const { requestPermission, permission, isSubscribed } = usePushNotifications();
+    const { requestPermission, permission, isSubscribed, isMuted, toggleMute } = usePushNotifications();
     const isMountedRef = useRef<boolean>(false);
 
     // Use refs to avoid stale closures in SignalR callbacks
