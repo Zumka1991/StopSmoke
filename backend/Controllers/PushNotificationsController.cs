@@ -72,8 +72,9 @@ public class PushNotificationsController : ControllerBase
     [HttpDelete("unsubscribe")]
     public async Task<IActionResult> Unsubscribe([FromBody] UnsubscribeRequest request)
     {
+        var userId = GetUserId();
         var subscriptions = await _context.PushSubscriptions
-            .Where(s => s.UserId == _userId && s.Endpoint == request.Endpoint)
+            .Where(s => s.UserId == userId && s.Endpoint == request.Endpoint)
             .ToListAsync();
 
         if (subscriptions.Any())
