@@ -9,7 +9,7 @@ import ChatWindow from '../components/ChatWindow';
 import UserSearch from '../components/UserSearch';
 import usePushNotifications from '../hooks/usePushNotifications';
 import type { ConversationListItem, Conversation, Message } from '../types/chatTypes';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Bell, BellOff } from 'lucide-react';
 import { useNotifications } from '../contexts/NotificationContext';
 
 const MessagesPage: React.FC = () => {
@@ -26,7 +26,7 @@ const MessagesPage: React.FC = () => {
     const { setUnreadCount, playNotificationSound } = useNotifications();
     
     // Push notifications
-    const { requestPermission, permission, isSubscribed } = usePushNotifications();
+    const { requestPermission, permission, isSubscribed, isMuted, toggleMute } = usePushNotifications();
     const isMountedRef = useRef<boolean>(false);
 
     // Use refs to avoid stale closures in SignalR callbacks
@@ -479,6 +479,38 @@ const MessagesPage: React.FC = () => {
                                     {t('messages.title')}
                                 </h2>
                             </div>
+
+                            {(permission === 'granted' || isSubscribed) && (
+                                <button
+                                    onClick={toggleMute}
+                                    title={isMuted ? 'Включить уведомления' : 'Выключить уведомления'}
+                                    style={{
+                                        margin: '0.5rem',
+                                        background: isMuted ? 'rgba(239, 68, 68, 0.1)' : 'rgba(59, 130, 246, 0.1)',
+                                        border: isMuted ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(59, 130, 246, 0.3)',
+                                        color: isMuted ? '#fca5a5' : 'var(--accent-color)',
+                                        padding: '0.5rem 0.8rem',
+                                        borderRadius: '0.5rem',
+                                        cursor: 'pointer',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 'bold',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
+                                        transition: 'all 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = isMuted ? 'rgba(239, 68, 68, 0.2)' : 'rgba(59, 130, 246, 0.2)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = isMuted ? 'rgba(239, 68, 68, 0.1)' : 'rgba(59, 130, 246, 0.1)';
+                                    }}
+                                >
+                                    {isMuted ? <BellOff size={18} /> : <Bell size={18} />}
+                                    <span>{isMuted ? 'Уведомления выкл.' : 'Уведомления вкл.'}</span>
+                                </button>
+                            )}
 
                             {permission === 'denied' ? (
                                 <div style={{

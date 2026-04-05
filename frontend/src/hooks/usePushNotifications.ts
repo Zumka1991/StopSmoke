@@ -18,6 +18,9 @@ function urlBase64ToUint8Array(base64String: string) {
 export default function usePushNotifications() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>('default');
+  const [isMuted, setIsMuted] = useState(() => {
+    return localStorage.getItem('pushMuted') === 'true';
+  });
 
   useEffect(() => {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
@@ -140,6 +143,16 @@ export default function usePushNotifications() {
   return {
     isSubscribed,
     permission,
+    isMuted,
+    toggleMute: () => {
+      const newMuted = !isMuted;
+      setIsMuted(newMuted);
+      localStorage.setItem('pushMuted', newMuted.toString());
+      // Если включаем уведомления, пробуем подписаться
+      if (!newMuted && permission === 'granted') {
+        subscribe();
+      }
+    },
     requestPermission,
     subscribe,
     unsubscribe
