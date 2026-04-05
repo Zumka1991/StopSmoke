@@ -513,7 +513,7 @@ const MessagesPage: React.FC = () => {
                             )}
 
                             {permission === 'denied' ? (
-                                <div style={{
+                                <div className="mobile-push-warning" style={{
                                     padding: '1rem',
                                     margin: '0 0.5rem',
                                     background: 'rgba(239, 68, 68, 0.1)',

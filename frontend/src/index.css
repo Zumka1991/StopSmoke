@@ -2186,6 +2186,13 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
+/* Hide push warning on desktop (screens > 768px) */
+@media (min-width: 769px) {
+  .mobile-push-warning {
+    display: none !important;
+  }
+}
+
 .messages-loading p {
   margin: 0;
   font-size: 0.95rem;
