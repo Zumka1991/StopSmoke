@@ -17,4 +17,7 @@ public class User : IdentityUser
     public DateTime? LastSeen { get; set; }
     public string? AvatarUrl { get; set; }
     public string? AvatarThumbnailUrl { get; set; }
+    
+    // Navigation
+    public ICollection<PushSubscription>? PushSubscriptions { get; set; }
 }
