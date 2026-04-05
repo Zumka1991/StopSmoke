@@ -189,7 +189,35 @@ public class ChatHub : Hub
         if (participant != null)
         {
             participant.LastReadAt = DateTime.UtcNow;
+            
+            // Mark all unread messages from other participants as read
+            var messagesToMarkAsRead = await _context.Messages
+                .Where(m => m.ConversationId == conversationId 
+                       && m.SenderId != userId 
+                       && !m.IsRead)
+                .ToListAsync();
+
+            foreach (var message in messagesToMarkAsRead)
+            {
+                message.IsRead = true;
+            }
+
             await _context.SaveChangesAsync();
+
+            // Notify the sender(s) that their messages were read
+            var conversation = await _context.Conversations
+                .Include(c => c.Participants)
+                .FirstOrDefaultAsync(c => c.Id == conversationId);
+
+            if (conversation != null)
+            {
+                foreach (var otherParticipant in conversation.Participants.Where(p => p.UserId != userId))
+                {
+                    // Send message status update to the other participant
+                    await Clients.User(otherParticipant.UserId)
+                        .SendAsync("MessagesRead", conversationId, messagesToMarkAsRead.Select(m => m.Id).ToList());
+                }
+            }
         }
     }
 

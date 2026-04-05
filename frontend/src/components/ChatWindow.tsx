@@ -810,7 +810,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                                 )}
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.4rem' }}>
                                     {message.isEdited && (
-                                        <span 
+                                        <span
                                             style={{ fontSize: '0.75rem', opacity: 0.6, fontStyle: 'italic' }}
                                             title={message.editedAt ? `${t('messages.editedAt') || 'Изменено'}: ${new Date(message.editedAt).toLocaleString()}` : undefined}
                                         >
@@ -818,6 +818,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                                         </span>
                                     )}
                                     <span className="message-time">{formatMessageTime(message.sentAt)}</span>
+                                    {message.senderId === currentUserId && !isGlobal && (
+                                        <span className={`message-status-icon ${message.isRead ? 'read' : 'sent'}`}>
+                                            <Check size={14} />
+                                            {message.isRead && <Check size={14} className="message-status-icon-second" />}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </div>

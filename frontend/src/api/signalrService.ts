@@ -170,6 +170,20 @@ class SignalRService {
         this.connection.on('UserOffline', callback);
     }
 
+    onMessagesRead(callback: (conversationId: number, messageIds: number[]) => void): void {
+        if (!this.connection) {
+            throw new Error('SignalR connection not established');
+        }
+
+        this.connection.on('MessagesRead', callback);
+    }
+
+    offMessagesRead(): void {
+        if (this.connection) {
+            this.connection.off('MessagesRead');
+        }
+    }
+
     offReceiveMessage(): void {
         if (this.connection) {
             this.connection.off('ReceiveMessage');

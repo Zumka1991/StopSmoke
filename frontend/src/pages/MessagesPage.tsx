@@ -64,6 +64,7 @@ const MessagesPage: React.FC = () => {
             signalRService.offMessageEdited();
             signalRService.offUserOnline();
             signalRService.offUserOffline();
+            signalRService.offMessagesRead();
             signalRService.stop();
         };
     }, [navigate]);
@@ -146,6 +147,23 @@ const MessagesPage: React.FC = () => {
                 onlineUsersRef.current.delete(userId);
                 updateUserOnlineStatus(userId, false);
             });
+
+            signalRService.onMessagesRead((conversationId: number, messageIds: number[]) => {
+                console.log('Messages read:', conversationId, messageIds);
+                
+                // Update messages in current conversation if it matches
+                if (selectedConversationIdRef.current === conversationId) {
+                    setCurrentConversation((prev) => {
+                        if (!prev) return prev;
+                        return {
+                            ...prev,
+                            messages: prev.messages.map(m => 
+                                messageIds.includes(m.id) ? { ...m, isRead: true } : m
+                            )
+                        };
+                    });
+                }
+            });
         } catch (error) {
             console.error('Failed to initialize SignalR:', error);
             // Don't show alert on initial connection failure - it will retry automatically
@@ -203,6 +221,10 @@ const MessagesPage: React.FC = () => {
             // Mark as read
             await api.put(`/messages/conversations/${id}/read`);
             await signalRService.markAsRead(id);
+
+            // Reload conversation to get updated isRead status
+            const updatedResponse = await api.get(`/messages/conversations/${id}`);
+            setCurrentConversation(updatedResponse.data);
 
             // Reload conversations to update unread count
             loadConversations();
