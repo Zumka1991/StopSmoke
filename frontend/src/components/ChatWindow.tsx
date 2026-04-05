@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Message } from '../types/chatTypes';
-import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trophy, Copy } from 'lucide-react';
+import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trophy, Copy, Reply, Edit2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
@@ -836,6 +836,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                     {/* Reply button - always visible */}
                     <button
                         onClick={handleReplyMessage}
+                        className="context-menu-button"
                         style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -854,11 +855,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                        ↩️ {t('messages.replyMessage') || 'Ответить'}
+                        <Reply size={18} />
+                        {t('messages.replyMessage') || 'Ответить'}
                     </button>
                     {/* Copy button - always visible */}
                     <button
                         onClick={handleCopyMessage}
+                        className="context-menu-button"
                         style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -885,6 +888,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                      !messages.find(m => m.id === messageContextMenu.messageId)?.content.startsWith('[APP_META:') && (
                         <button
                             onClick={handleEditMessage}
+                            className="context-menu-button"
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -903,13 +907,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                             onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
                             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                         >
-                            ✏️ {t('messages.editMessage') || 'Редактировать'}
+                            <Edit2 size={18} />
+                            {t('messages.editMessage') || 'Редактировать'}
                         </button>
                     )}
                     {/* Delete button - only own messages */}
                     {messageContextMenu?.senderId === currentUserId && (
                         <button
                             onClick={handleDeleteMessage}
+                            className="context-menu-button context-menu-button-danger"
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
