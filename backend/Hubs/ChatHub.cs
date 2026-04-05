@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using StopSmoke.Backend.Data;
 using StopSmoke.Backend.DTOs;
-using StopSmoke.Backend.Models;
 using System.Collections.Concurrent;
 using WebPush;
+using PushSubscriptionModel = StopSmoke.Backend.Models.PushSubscription;
 
 namespace StopSmoke.Backend.Hubs;
 
@@ -202,7 +202,7 @@ public class ChatHub : Hub
                 return;
             }
 
-            var pushClient = new PushClient();
+            var pushClient = new WebPushClient();
             var vapidDetails = new VapidDetails(
                 "mailto:admin@stopsmoke.info",
                 vapidPublicKey,
@@ -213,7 +213,7 @@ public class ChatHub : Hub
             {
                 try
                 {
-                    var pushSubscription = new PushSubscription(
+                    var pushSubscription = new WebPush.PushSubscription(
                         subscription.Endpoint,
                         subscription.P256DH,
                         subscription.Auth
