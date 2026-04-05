@@ -169,85 +169,64 @@ public class ChatHub : Hub
             {
                 // Отправляем сообщение всем участникам (включая отправителя для обновления UI)
                 await Clients.User(participantId).SendAsync("ReceiveMessage", messageResponse);
-                
+
                 // Push-уведомление отправляем ТОЛЬКО получателю (не отправителю)
                 if (participantId != userId)
                 {
-                    await SendPushNotificationAsync(participantId, messageResponse, conversationId);
+                    // 1. Быстро получаем подписки из БД (локальная операция)
+                    var subs = await _context.PushSubscriptions
+                        .Where(s => s.UserId == participantId && !s.IsPushMuted)
+                        .Select(s => new { s.Endpoint, s.P256DH, s.Auth })
+                        .ToListAsync();
+
+                    if (subs.Any())
+                    {
+                        // 2. Готовим данные для фона, чтобы не держать DbContext открытым
+                        var vapidPub = _configuration["Vapid:PublicKey"];
+                        var vapidPriv = _configuration["Vapid:PrivateKey"];
+                        var sender = messageResponse.SenderName;
+                        var content = messageResponse.Content;
+                        var cId = conversationId;
+                        var mId = messageResponse.Id;
+
+                        // 3. Запускаем отправку в фоне (не ждем завершения, чтобы не тормозить чат)
+                        _ = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                var pushClient = new WebPushClient();
+                                var vapidDetails = new VapidDetails("mailto:admin@stopsmoke.info", vapidPub, vapidPriv);
+                                
+                                foreach (var s in subs)
+                                {
+                                    var subscription = new PushSubscription(s.Endpoint, s.P256DH, s.Auth);
+                                    
+                                    var payload = new {
+                                        title = $"💬 {sender}",
+                                        body = (content?.Length > 100 ? content[..100] + "..." : content) ?? "",
+                                        icon = "/pwa-512x512.png",
+                                        conversationId = cId,
+                                        messageId = mId
+                                    };
+
+                                    await pushClient.SendNotificationAsync(
+                                        subscription, 
+                                        System.Text.Json.JsonSerializer.Serialize(payload), 
+                                        vapidDetails
+                                    );
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Background Push error: {ex.Message}");
+                            }
+                        });
+                    }
                 }
             }
         }
 
         await Clients.Caller.SendAsync("MessageSent", message.Id);
-    }
-
-    private async Task SendPushNotificationAsync(string recipientUserId, MessageResponse message, int conversationId)
-    {
-        try
-        {
-            var vapidPublicKey = _configuration["Vapid:PublicKey"];
-            var vapidPrivateKey = _configuration["Vapid:PrivateKey"];
-            
-            if (string.IsNullOrEmpty(vapidPublicKey) || string.IsNullOrEmpty(vapidPrivateKey))
-            {
-                return;
-            }
-
-            var subscriptions = await _context.PushSubscriptions
-                .Where(s => s.UserId == recipientUserId && !s.IsPushMuted)
-                .ToListAsync();
-
-            if (!subscriptions.Any())
-            {
-                return;
-            }
-
-            var pushClient = new WebPushClient();
-            var vapidDetails = new VapidDetails(
-                "mailto:admin@stopsmoke.info",
-                vapidPublicKey,
-                vapidPrivateKey
-            );
-
-            foreach (var subscription in subscriptions)
-            {
-                try
-                {
-                    var pushSubscription = new WebPush.PushSubscription(
-                        subscription.Endpoint,
-                        subscription.P256DH,
-                        subscription.Auth
-                    );
-
-                    var payload = new
-                    {
-                        title = $"💬 {message.SenderName}",
-                        body = message.Content.Length > 100 ? message.Content[..100] + "..." : message.Content,
-                        icon = "/pwa-512x512.png",
-                        conversationId = conversationId,
-                        messageId = message.Id
-                    };
-
-                    var jsonPayload = System.Text.Json.JsonSerializer.Serialize(payload);
-
-                    await pushClient.SendNotificationAsync(
-                        pushSubscription,
-                        jsonPayload,
-                        vapidDetails
-                    );
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Push notification failed for subscription: {ex.Message}");
-                    // Remove invalid subscription
-                    await _context.PushSubscriptions.Where(s => s.Id == subscription.Id).ExecuteDeleteAsync();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Push notification error: {ex.Message}");
-        }
     }
 
     public async Task JoinConversation(int conversationId)
