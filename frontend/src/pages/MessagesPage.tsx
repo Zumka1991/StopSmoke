@@ -26,7 +26,7 @@ const MessagesPage: React.FC = () => {
     const { setUnreadCount, playNotificationSound } = useNotifications();
     
     // Push notifications
-    const { requestPermission } = usePushNotifications();
+    const { requestPermission, permission, isSubscribed } = usePushNotifications();
     const isMountedRef = useRef<boolean>(false);
 
     // Use refs to avoid stale closures in SignalR callbacks
@@ -470,6 +470,23 @@ const MessagesPage: React.FC = () => {
                                     <MessageCircle size={24} />
                                     {t('messages.title')}
                                 </h2>
+                                {!isSubscribed && permission !== 'granted' && (
+                                    <button 
+                                        onClick={requestPermission}
+                                        style={{
+                                            background: 'rgba(59, 130, 246, 0.1)',
+                                            border: '1px solid var(--accent-color)',
+                                            color: 'var(--accent-color)',
+                                            padding: '0.4rem 0.8rem',
+                                            borderRadius: '0.5rem',
+                                            cursor: 'pointer',
+                                            fontSize: '0.8rem',
+                                            fontWeight: 'bold'
+                                        }}
+                                    >
+                                        🔔 Включить уведомления
+                                    </button>
+                                )}
                             </div>
                             <UserSearch onCreateConversation={handleCreateConversation} />
                             <ChatList
