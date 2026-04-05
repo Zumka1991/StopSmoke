@@ -253,11 +253,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     };
 
     const handleShareDuration = async () => {
+        const confirmed = window.confirm(
+            t('messages.confirmShareDuration') || 'Вы действительно хотите поделиться своим сроком отказа?'
+        );
+        
+        if (!confirmed) {
+            return;
+        }
+
         setIsSharingDuration(true);
         try {
             const response = await api.get('/profile');
             const data = response.data;
-            
+
             let days = 0;
             if (data.quitDate) {
                 const quit = new Date(data.quitDate).getTime();
@@ -269,7 +277,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 days,
                 marathons: data.completedMarathonsCount || 0
             });
-            
+
             onSendMessage(`[APP_META:QUIT_SHARE]${payload}`);
             startCooldown();
             scrollToBottom();

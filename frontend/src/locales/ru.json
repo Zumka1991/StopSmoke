@@ -323,7 +323,8 @@
     "edited": "ред.",
     "editedAt": "Изменено",
     "errorEditingMessage": "Не удалось отредактировать сообщение. Попробуйте снова.",
-    "copyMessage": "Копировать"
+    "copyMessage": "Копировать",
+    "confirmShareDuration": "Вы действительно хотите поделиться своим сроком отказа?"
   },
   "articles": {
     "title": "Статьи",

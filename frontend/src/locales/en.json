@@ -323,7 +323,8 @@
     "edited": "edited",
     "editedAt": "Edited at",
     "errorEditingMessage": "Failed to edit message. Please try again.",
-    "copyMessage": "Copy"
+    "copyMessage": "Copy",
+    "confirmShareDuration": "Are you sure you want to share your quit duration?"
   },
   "articles": {
     "title": "Articles",
