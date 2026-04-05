@@ -184,8 +184,8 @@ public class ChatHub : Hub
                         // 2. Готовим данные для фона, чтобы не держать DbContext открытым
                         var vapidPub = _configuration["Vapid:PublicKey"];
                         var vapidPriv = _configuration["Vapid:PrivateKey"];
-                        var sender = messageResponse.SenderName;
-                        var content = messageResponse.Content;
+                        var senderName = messageResponse.SenderName;
+                        var msgContent = messageResponse.Content;
                         var cId = conversationId;
                         var mId = messageResponse.Id;
 
@@ -202,8 +202,8 @@ public class ChatHub : Hub
                                     var subscription = new PushSubscription(s.Endpoint, s.P256DH, s.Auth);
                                     
                                     var payload = new {
-                                        title = $"💬 {sender}",
-                                        body = (content?.Length > 100 ? content[..100] + "..." : content) ?? "",
+                                        title = $"💬 {senderName}",
+                                        body = (msgContent?.Length > 100 ? msgContent[..100] + "..." : msgContent) ?? "",
                                         icon = "/pwa-512x512.png",
                                         conversationId = cId,
                                         messageId = mId
