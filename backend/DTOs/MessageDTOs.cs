@@ -31,6 +31,7 @@ public class MessageResponse
     public int? ReplyToId { get; set; }
     public string? ReplyToSenderName { get; set; }
     public string? ReplyToContent { get; set; }
+    public bool SenderIsBanned { get; set; }
 }
 
 public class ConversationResponse

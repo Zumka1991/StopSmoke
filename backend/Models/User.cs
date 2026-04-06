@@ -13,6 +13,7 @@ public class User : IdentityUser
     public decimal PricePerPack { get; set; }
     public string Currency { get; set; } = "USD";
     public bool IsAdmin { get; set; } = false;
+    public bool IsBanned { get; set; } = false;
     public bool ShowInLeaderboard { get; set; } = true;
     public DateTime? LastSeen { get; set; }
     public string? AvatarUrl { get; set; }

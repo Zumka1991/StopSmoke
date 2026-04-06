@@ -19,6 +19,8 @@ public class ConversationParticipant
 
     public bool IsBlocked { get; set; } = false;
 
+    public bool IsBannedByAdmin { get; set; } = false;
+
     public DateTime? ClearedHistoryAt { get; set; }
 
     public bool IsDeleted { get; set; } = false;

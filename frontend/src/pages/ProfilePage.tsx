@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Button from '../components/Button';
+import { Mail } from 'lucide-react';
 
 interface ProfileData {
     email: string;
@@ -30,7 +31,8 @@ export default function ProfilePage() {
     const { t } = useTranslation();
     const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<any>({
         defaultValues: {
-            showInLeaderboard: true
+            showInLeaderboard: true,
+            email: ''
         }
     });
     const quitDate = watch('quitDate');
@@ -47,6 +49,14 @@ export default function ProfilePage() {
     const [avatarThumbnailUrl, setAvatarThumbnailUrl] = useState<string | null>(null);
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
     const navigate = useNavigate();
+
+    // Mask email for privacy: z***a@gmail.com
+    const maskEmail = (email: string) => {
+        const [local, domain] = email.split('@');
+        if (!local || !domain) return email;
+        if (local.length <= 2) return `${local[0]}***@${domain}`;
+        return `${local[0]}${'*'.repeat(Math.min(local.length - 2, 5))}${local[local.length - 1]}@${domain}`;
+    };
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -71,6 +81,7 @@ export default function ProfilePage() {
                 setValue('cigarettesPerDay', data.cigarettesPerDay);
                 setValue('pricePerPack', data.pricePerPack);
                 setValue('currency', data.currency);
+                setValue('email', data.email);
                 setValue('showInLeaderboard', data.showInLeaderboard ?? true);
                 setAvatarUrl(data.avatarUrl || null);
                 setAvatarThumbnailUrl(data.avatarThumbnailUrl || null);
@@ -239,7 +250,11 @@ export default function ProfilePage() {
             }}>
                 {/* Profile Settings Card */}
                 <div className="card">
-                    <h2 style={{ marginBottom: '2rem' }}>{t('profile.title')}</h2>
+                    <h2 style={{ marginBottom: '0.5rem' }}>{t('profile.title')}</h2>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
+                        <Mail size={16} />
+                        {maskEmail(watch('email') || '')}
+                    </p>
 
                     {/* Avatar Upload UI */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>

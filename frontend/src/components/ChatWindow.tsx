@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import type { Message } from '../types/chatTypes';
+import type { Message, Participant } from '../types/chatTypes';
 import { Send, ArrowLeft, MoreVertical, Ban, Trash2, Eraser, Unlock, Globe, Trophy, Copy, Reply, Edit2, X, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -17,10 +17,13 @@ interface ChatWindowProps {
     otherUserAvatarThumbnailUrl?: string;
     isOtherUserOnline: boolean;
     currentUserId: string;
+    isAdmin: boolean;
+    isBannedUser: boolean;
     isBlocked: boolean;
     isBlockedByOther: boolean;
     isGlobal: boolean;
     onlineCount?: number;
+    participants?: Participant[];
     onSendMessage: (content: string, replyToId?: number) => void;
     onBack?: () => void;
     onLoadOlderMessages?: () => Promise<boolean | void>;
@@ -30,6 +33,8 @@ interface ChatWindowProps {
     onDeleteConversation: () => void;
     onDeleteMessage: (messageId: number) => void;
     onEditMessage: (messageId: number, content: string) => void;
+    onBanUser?: (userEmail: string, isBanned: boolean) => void;
+    onDeleteAllUserMessages?: (userEmail: string) => void;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
@@ -41,10 +46,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     otherUserAvatarThumbnailUrl,
     isOtherUserOnline,
     currentUserId,
+    isAdmin,
+    isBannedUser,
     isBlocked,
     isBlockedByOther,
     isGlobal,
     onlineCount = 0,
+    participants = [],
     onSendMessage,
     onBack,
     onLoadOlderMessages,
@@ -54,6 +62,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     onDeleteConversation,
     onDeleteMessage,
     onEditMessage,
+    onBanUser,
+    onDeleteAllUserMessages,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -65,7 +75,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         messageId: number;
         x: number;
         y: number;
-        senderId?: string;
+        senderId: string;
+        senderEmail?: string;
+        isSenderBanned: boolean;
     } | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -333,8 +345,16 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         longPressTimerRef.current = window.setTimeout(() => {
             if (longPressTargetRef.current) {
                 const { messageId: mid, senderId: sid, x, y } = longPressTargetRef.current;
-                // Show context menu for own messages on delete, for all messages on reply
-                setMessageContextMenu({ messageId: mid, x, y, senderId: sid });
+                const msg = messages.find(m => m.id === mid);
+                const participant = participants?.find(p => p.userId === sid);
+                setMessageContextMenu({
+                    messageId: mid,
+                    x,
+                    y,
+                    senderId: sid,
+                    senderEmail: participant?.email,
+                    isSenderBanned: msg?.senderIsBanned ?? false,
+                });
             }
         }, 500);
     };
@@ -434,11 +454,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
     const handleMessageContextMenu = (e: React.MouseEvent, messageId: number, senderId: string) => {
         e.preventDefault();
+        const msg = messages.find(m => m.id === messageId);
+        const participant = participants?.find(p => p.userId === senderId);
         setMessageContextMenu({
             messageId,
             x: e.clientX,
             y: e.clientY,
             senderId,
+            senderEmail: participant?.email,
+            isSenderBanned: msg?.senderIsBanned ?? false,
         });
     };
 
@@ -470,6 +494,26 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         if (messageContextMenu) {
             if (window.confirm(t('messages.confirmDeleteMessage'))) {
                 onDeleteMessage(messageContextMenu.messageId);
+                setMessageContextMenu(null);
+            }
+        }
+    };
+
+    const handleToggleBan = () => {
+        if (messageContextMenu && onBanUser && messageContextMenu.senderEmail) {
+            const action = messageContextMenu.isSenderBanned ? 'Разбанить' : (t('messages.banUser') || 'Забанить');
+            if (window.confirm(`${action} пользователя?`)) {
+                onBanUser(messageContextMenu.senderEmail, messageContextMenu.isSenderBanned);
+                setMessageContextMenu(null);
+            }
+        }
+    };
+
+    const handleDeleteAllMessages = () => {
+        if (messageContextMenu && onDeleteAllUserMessages && messageContextMenu.senderEmail) {
+            const msg = messages.find(m => m.id === messageContextMenu.messageId);
+            if (msg && window.confirm(`${t('messages.confirmDeleteAllMessages') || 'Удалить ВСЕ сообщения пользователя'} ${msg.senderName}?`)) {
+                onDeleteAllUserMessages(messageContextMenu.senderEmail);
                 setMessageContextMenu(null);
             }
         }
@@ -695,7 +739,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         <p>{t('messages.noMessages')}</p>
                     </div>
                 ) : (
-                    messages.map((message) => (
+                    messages
+                        .filter(message => !message.isDeleted)
+                        .map((message) => (
                         <div
                             key={message.id}
                             data-message-id={message.id}
@@ -705,7 +751,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                             onTouchStart={(e) => handleLongPressStart(e, message.id, message.senderId)}
                             onTouchEnd={handleLongPressEnd}
                             onTouchMove={handleLongPressEnd}
-                            style={{ cursor: message.senderId === currentUserId && !message.isDeleted ? 'context-menu' : 'default' }}
+                            style={{ cursor: 'context-menu' }}
                         >
                                 {isGlobal && message.senderId !== currentUserId && (
                                     <div className="message-avatar-container">
@@ -773,15 +819,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                                             {message.senderName}
                                         </span>
                                     )}
-                                {message.isDeleted ? (
-                                    <p style={{
-                                        fontStyle: 'italic',
-                                        opacity: 0.9,
-                                        color: 'rgba(255, 255, 255, 0.8)'
-                                    }}>
-                                        {t('messages.deletedMessage')}
-                                    </p>
-                                ) : message.content.startsWith('[APP_META:QUIT_SHARE]') ? (
+                                {message.content.startsWith('[APP_META:QUIT_SHARE]') ? (
                                     (() => {
                                         try {
                                             const data = JSON.parse(message.content.replace('[APP_META:QUIT_SHARE]', ''));
@@ -934,8 +972,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                             {t('messages.editMessage') || 'Редактировать'}
                         </button>
                     )}
-                    {/* Delete button - only own messages */}
-                    {messageContextMenu?.senderId === currentUserId && (
+                    {/* Delete button - own messages or admin can delete any */}
+                    {(messageContextMenu?.senderId === currentUserId || isAdmin) && (
                         <button
                             onClick={handleDeleteMessage}
                             className="context-menu-button context-menu-button-danger"
@@ -959,6 +997,62 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                         >
                             <Trash2 size={18} />
                             {t('messages.deleteMessage')}
+                        </button>
+                    )}
+                    {/* Ban/Unban user button - admin only, not for self */}
+                    {isAdmin && messageContextMenu?.senderId !== currentUserId && onBanUser && (
+                        <button
+                            onClick={handleToggleBan}
+                            className="context-menu-button"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                width: '100%',
+                                padding: '0.75rem',
+                                background: 'transparent',
+                                border: 'none',
+                                color: messageContextMenu?.isSenderBanned ? '#22c55e' : 'var(--error-color)',
+                                cursor: 'pointer',
+                                textAlign: 'left',
+                                fontSize: '0.9rem',
+                                borderRadius: '0.25rem',
+                                transition: 'background 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = messageContextMenu?.isSenderBanned ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                        >
+                            {messageContextMenu?.isSenderBanned ? <Unlock size={18} /> : <Ban size={18} />}
+                            {messageContextMenu?.isSenderBanned
+                                ? (t('messages.unbanUser') || 'Разбанить')
+                                : (t('messages.banUser') || 'Забанить пользователя')}
+                        </button>
+                    )}
+                    {/* Delete all user messages - admin only, not for self */}
+                    {isAdmin && messageContextMenu?.senderId !== currentUserId && onDeleteAllUserMessages && (
+                        <button
+                            onClick={handleDeleteAllMessages}
+                            className="context-menu-button context-menu-button-danger"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                width: '100%',
+                                padding: '0.75rem',
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--error-color)',
+                                cursor: 'pointer',
+                                textAlign: 'left',
+                                fontSize: '0.9rem',
+                                borderRadius: '0.25rem',
+                                transition: 'background 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                        >
+                            <Eraser size={18} />
+                            {t('messages.deleteAllUserMessages') || 'Удалить все сообщения пользователя'}
                         </button>
                     )}
                 </div>
@@ -1050,6 +1144,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 <div className="chat-window-input" style={{ justifyContent: 'center' }}>
                     <p style={{ color: 'var(--error-color)', margin: 0 }}>
                         {t('messages.cannotSendMessage')}
+                    </p>
+                </div>
+            ) : isBannedUser ? (
+                <div className="chat-window-input" style={{ justifyContent: 'center' }}>
+                    <p style={{ color: 'var(--error-color)', margin: 0 }}>
+                        {t('messages.bannedByAdmin') || 'Вы были забанены администратором'}
                     </p>
                 </div>
             ) : (

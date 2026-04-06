@@ -14,6 +14,7 @@ export interface Message {
     replyToId?: number;
     replyToSenderName?: string;
     replyToContent?: string;
+    senderIsBanned: boolean;
 }
 
 export interface Conversation {

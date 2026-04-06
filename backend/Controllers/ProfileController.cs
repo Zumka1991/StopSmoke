@@ -49,6 +49,7 @@ public class ProfileController : ControllerBase
             PricePerPack = user.PricePerPack,
             Currency = user.Currency,
             IsAdmin = user.IsAdmin,
+            IsBanned = user.IsBanned,
             CompletedMarathonsCount = completedMarathonsCount,
             ShowInLeaderboard = user.ShowInLeaderboard,
             AvatarUrl = user.AvatarUrl,

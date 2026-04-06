@@ -355,7 +355,19 @@
     "searchUsersToStartChat": "Search for users to start chatting",
     "onlineStatus": "Online",
     "noMessagesYet": "No messages yet",
-    "loadingConversation": "Loading conversation..."
+    "loadingConversation": "Loading conversation...",
+    "banUser": "Ban User",
+    "unbanUser": "Unban User",
+    "confirmBanUser": "Ban this user",
+    "deleteAllUserMessages": "Delete all user messages",
+    "confirmDeleteAllMessages": "Delete ALL messages from this user?",
+    "bannedByAdmin": "You have been banned from this chat by an administrator",
+    "participants": "Participants",
+    "banned": "banned",
+    "ban": "Ban",
+    "unban": "Unban",
+    "errorBanningUser": "Error banning user",
+    "errorUnbanningUser": "Error unbanning user"
   },
   "articles": {
     "title": "Articles",

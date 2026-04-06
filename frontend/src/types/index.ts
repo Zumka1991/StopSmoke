@@ -6,6 +6,7 @@ export interface User {
     pricePerPack: number;
     currency: string;
     isAdmin: boolean;
+    isBanned: boolean;
     completedMarathonsCount: number;
 }
 

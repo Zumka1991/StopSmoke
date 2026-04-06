@@ -5,7 +5,7 @@ import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Button from '../components/Button';
-import { Calendar, MessageCircle, Clock, Trophy, X } from 'lucide-react';
+import { Calendar, MessageCircle, Clock, Trophy, X, Mail } from 'lucide-react';
 import Toast from '../components/Toast';
 
 interface PublicProfile {
@@ -108,6 +108,14 @@ export default function UserProfilePage() {
 
     const daysSmokeFree = getDaysSmokeFree();
 
+    // Mask email for privacy: z***a@gmail.com
+    const maskEmail = (email: string) => {
+        const [local, domain] = email.split('@');
+        if (!local || !domain) return email;
+        if (local.length <= 2) return `${local[0]}***@${domain}`;
+        return `${local[0]}${'*'.repeat(Math.min(local.length - 2, 5))}${local[local.length - 1]}@${domain}`;
+    };
+
     // Last seen formatter
     const formatLastSeen = (dateString: string | null) => {
         if (!dateString) return t('messages.offline');
@@ -162,6 +170,10 @@ export default function UserProfilePage() {
                         </div>
                     
                     <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{profile.name}</h2>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                        <Mail size={16} />
+                        {maskEmail(profile.email)}
+                    </p>
                     <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                         <Clock size={16} />
                         {formatLastSeen(profile.lastSeen)}

@@ -355,7 +355,19 @@
     "searchUsersToStartChat": "Найдите пользователя, чтобы начать общение",
     "onlineStatus": "Онлайн",
     "noMessagesYet": "Сообщений пока нет",
-    "loadingConversation": "Загрузка диалога..."
+    "loadingConversation": "Загрузка диалога...",
+    "banUser": "Забанить пользователя",
+    "unbanUser": "Разбанить пользователя",
+    "confirmBanUser": "Забанить пользователя",
+    "deleteAllUserMessages": "Удалить все сообщения пользователя",
+    "confirmDeleteAllMessages": "Удалить ВСЕ сообщения пользователя?",
+    "bannedByAdmin": "Вы были забанены администратором в этом чате",
+    "participants": "Участники",
+    "banned": "забанен",
+    "ban": "Забанить",
+    "unban": "Разбанить",
+    "errorBanningUser": "Ошибка при бане пользователя",
+    "errorUnbanningUser": "Ошибка при разбане пользователя"
   },
   "articles": {
     "title": "Статьи",

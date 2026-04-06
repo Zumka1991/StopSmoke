@@ -233,7 +233,8 @@ public class MessagesController : ControllerBase
                     SenderAvatarThumbnailUrl = m.Sender.AvatarThumbnailUrl,
                     ReplyToId = m.ReplyToId,
                     ReplyToSenderName = m.ReplyTo != null ? (m.ReplyTo.Sender.Name ?? m.ReplyTo.Sender.Email) : null,
-                    ReplyToContent = (m.ReplyTo != null && !m.ReplyTo.IsDeleted) ? m.ReplyTo.Content : null
+                    ReplyToContent = (m.ReplyTo != null && !m.ReplyTo.IsDeleted) ? m.ReplyTo.Content : null,
+                    SenderIsBanned = m.Sender.IsBanned
                 }).ToList()
         };
 
@@ -303,7 +304,8 @@ public class MessagesController : ControllerBase
                 SenderAvatarThumbnailUrl = m.Sender.AvatarThumbnailUrl,
                 ReplyToId = m.ReplyToId,
                 ReplyToSenderName = m.ReplyTo != null ? (m.ReplyTo.Sender.Name ?? m.ReplyTo.Sender.Email) : null,
-                ReplyToContent = (m.ReplyTo != null && !m.ReplyTo.IsDeleted) ? m.ReplyTo.Content : null
+                ReplyToContent = (m.ReplyTo != null && !m.ReplyTo.IsDeleted) ? m.ReplyTo.Content : null,
+                SenderIsBanned = m.Sender.IsBanned
             })
             .ToListAsync();
 
@@ -515,12 +517,97 @@ public class MessagesController : ControllerBase
         return Ok(new { message = "Conversation deleted" });
     }
 
+    // POST: api/messages/users/{userEmail}/ban
+    [HttpPost("users/{userEmail}/ban")]
+    public async Task<IActionResult> BanUser(string userEmail)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return Unauthorized();
+
+        // Check if current user is admin
+        var currentUser = await _userManager.FindByIdAsync(userId);
+        if (currentUser?.IsAdmin != true)
+        {
+            return Forbid();
+        }
+
+        // Find the user to ban
+        var userToBan = await _userManager.FindByEmailAsync(userEmail);
+        if (userToBan == null) return NotFound(new { message = "User not found" });
+
+        userToBan.IsBanned = true;
+        await _userManager.UpdateAsync(userToBan);
+
+        return Ok(new { message = "User banned from the platform" });
+    }
+
+    // POST: api/messages/users/{userEmail}/unban
+    [HttpPost("users/{userEmail}/unban")]
+    public async Task<IActionResult> UnbanUser(string userEmail)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return Unauthorized();
+
+        // Check if current user is admin
+        var currentUser = await _userManager.FindByIdAsync(userId);
+        if (currentUser?.IsAdmin != true)
+        {
+            return Forbid();
+        }
+
+        // Find the user to unban
+        var userToUnban = await _userManager.FindByEmailAsync(userEmail);
+        if (userToUnban == null) return NotFound(new { message = "User not found" });
+
+        userToUnban.IsBanned = false;
+        await _userManager.UpdateAsync(userToUnban);
+
+        return Ok(new { message = "User unbanned" });
+    }
+
+    // DELETE: api/messages/users/{userEmail}/all-messages
+    [HttpDelete("users/{userEmail}/all-messages")]
+    public async Task<IActionResult> DeleteAllUserMessages(string userEmail)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (userId == null) return Unauthorized();
+
+        // Check if current user is admin
+        var currentUser = await _userManager.FindByIdAsync(userId);
+        if (currentUser?.IsAdmin != true)
+        {
+            return Forbid();
+        }
+
+        // Find the target user
+        var targetUser = await _userManager.FindByEmailAsync(userEmail);
+        if (targetUser == null) return NotFound(new { message = "User not found" });
+
+        // Soft-delete all messages from this user
+        var messages = await _context.Messages
+            .Where(m => m.SenderId == targetUser.Id && !m.IsDeleted)
+            .ToListAsync();
+
+        foreach (var message in messages)
+        {
+            message.IsDeleted = true;
+            message.Content = "";
+        }
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = $"Deleted {messages.Count} messages" });
+    }
+
     // DELETE: api/messages/{messageId}
     [HttpDelete("{messageId}")]
     public async Task<IActionResult> DeleteMessage(int messageId)
     {
         var userId = _userManager.GetUserId(User);
         if (userId == null) return Unauthorized();
+
+        var user = await _userManager.FindByIdAsync(userId);
+        var isAdmin = user?.IsAdmin ?? false;
 
         var message = await _context.Messages
             .Include(m => m.Conversation)
@@ -529,8 +616,8 @@ public class MessagesController : ControllerBase
 
         if (message == null) return NotFound();
 
-        // Check if user is the sender of the message
-        if (message.SenderId != userId)
+        // Check if user is the sender OR is an admin
+        if (message.SenderId != userId && !isAdmin)
         {
             return Forbid();
         }

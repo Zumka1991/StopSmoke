@@ -90,11 +90,18 @@ public class ChatHub : Hub
             throw new HubException("User not authenticated");
         }
 
-        // Verify user is participant
-        var isParticipant = await _context.ConversationParticipants
-            .AnyAsync(p => p.ConversationId == conversationId && p.UserId == userId);
+        // Check if user is globally banned
+        var user = await _context.Users.FindAsync(userId);
+        if (user?.IsBanned == true)
+        {
+            throw new HubException("You have been banned from the platform by an administrator");
+        }
 
-        if (!isParticipant)
+        // Verify user is participant
+        var participant = await _context.ConversationParticipants
+            .FirstOrDefaultAsync(p => p.ConversationId == conversationId && p.UserId == userId);
+
+        if (participant == null)
         {
             throw new HubException("User is not a participant of this conversation");
         }
@@ -147,6 +154,7 @@ public class ChatHub : Hub
             Content = message.Content,
             SentAt = message.SentAt,
             IsRead = message.IsRead,
+            SenderIsBanned = sender?.IsBanned ?? false,
             ReplyToId = replyToMessage?.Id,
             ReplyToSenderName = replyToMessage?.Sender?.Name ?? replyToMessage?.Sender?.Email,
             ReplyToContent = replyToMessage?.IsDeleted == true ? null : replyToMessage?.Content
@@ -320,6 +328,13 @@ public class ChatHub : Hub
             throw new HubException("Message not found");
         }
 
+        // Check if user is globally banned
+        var user = await _context.Users.FindAsync(userId);
+        if (user?.IsBanned == true)
+        {
+            throw new HubException("You have been banned from the platform by an administrator");
+        }
+
         if (message.SenderId != userId)
         {
             throw new HubException("You can only edit your own messages");
@@ -356,6 +371,7 @@ public class ChatHub : Hub
             IsEdited = message.IsEdited,
             EditedAt = message.EditedAt,
             IsDeleted = message.IsDeleted,
+            SenderIsBanned = message.Sender.IsBanned,
             ReplyToId = message.ReplyToId,
             ReplyToSenderName = message.ReplyTo?.Sender?.Name ?? message.ReplyTo?.Sender?.Email,
             ReplyToContent = message.ReplyTo?.IsDeleted == true ? null : message.ReplyTo?.Content

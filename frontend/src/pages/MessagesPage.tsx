@@ -20,6 +20,8 @@ const MessagesPage: React.FC = () => {
     const [selectedConversationId, setSelectedConversationId] = useState<number | null>(null);
     const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
     const [currentUserId, setCurrentUserId] = useState<string>('');
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [isBannedUser, setIsBannedUser] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isConversationLoading, setIsConversationLoading] = useState(false);
     const [showMobileSidebar, setShowMobileSidebar] = useState(true);
@@ -52,6 +54,13 @@ const MessagesPage: React.FC = () => {
         }
 
         setCurrentUserId(userId);
+        
+        // Load user profile to check if admin
+        api.get('/profile').then(response => {
+            setIsAdmin(response.data.isAdmin || false);
+            setIsBannedUser(response.data.isBanned || false);
+        }).catch(err => console.error('Error loading profile:', err));
+        
         initializeSignalR(token);
         loadConversations();
         
@@ -453,6 +462,70 @@ const MessagesPage: React.FC = () => {
         }
     };
 
+    const handleBanUser = async (userEmail: string, isCurrentlyBanned: boolean) => {
+        try {
+            if (isCurrentlyBanned) {
+                await api.post(`/messages/users/${userEmail}/unban`);
+            } else {
+                await api.post(`/messages/users/${userEmail}/ban`);
+            }
+
+            // Update all messages from this user in the current conversation
+            if (currentConversation) {
+                const participant = currentConversation.participants?.find(p => p.email === userEmail);
+                if (participant) {
+                    const newBanStatus = !isCurrentlyBanned;
+                    setCurrentConversation(prev => {
+                        if (!prev) return prev;
+                        return {
+                            ...prev,
+                            messages: prev.messages.map(msg =>
+                                msg.senderId === participant.userId
+                                    ? { ...msg, senderIsBanned: newBanStatus }
+                                    : msg
+                            )
+                        };
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Error toggling ban:', error);
+            alert(t('messages.errorBanningUser') || 'Error toggling ban');
+        }
+    };
+
+    const handleDeleteAllUserMessages = async (userEmail: string) => {
+        try {
+            const response = await api.delete(`/messages/users/${userEmail}/all-messages`);
+            const deletedCount = response.data?.message || '';
+
+            // Remove all messages from this user in the current conversation
+            if (currentConversation) {
+                const participant = currentConversation.participants?.find(p => p.email === userEmail);
+                if (participant) {
+                    setCurrentConversation(prev => {
+                        if (!prev) return prev;
+                        return {
+                            ...prev,
+                            messages: prev.messages.filter(msg => msg.senderId !== participant.userId)
+                        };
+                    });
+                }
+            }
+
+            // Reload conversations
+            loadConversations();
+
+            if (deletedCount) {
+                // Could show a toast notification here
+                console.log(deletedCount);
+            }
+        } catch (error) {
+            console.error('Error deleting all user messages:', error);
+            alert(t('messages.errorDeletingMessages') || 'Error deleting messages');
+        }
+    };
+
     if (isLoading) {
         return (
             <>
@@ -602,10 +675,13 @@ const MessagesPage: React.FC = () => {
                                     otherUserAvatarThumbnailUrl={otherUserInfo.avatarThumbnailUrl}
                                     isOtherUserOnline={otherUserInfo.isOnline}
                                     currentUserId={currentUserId}
+                                    isAdmin={isAdmin}
+                                    isBannedUser={isBannedUser}
                                     isBlocked={currentConversation.isBlocked}
                                     isBlockedByOther={currentConversation.isBlockedByOther}
                                     isGlobal={otherUserInfo.isGlobal}
                                     onlineCount={otherUserInfo.onlineCount}
+                                    participants={currentConversation.participants}
                                     onSendMessage={handleSendMessage}
                                     onEditMessage={handleEditMessage}
                                     onBack={handleBackToList}
@@ -615,6 +691,8 @@ const MessagesPage: React.FC = () => {
                                     onClearHistory={handleClearHistory}
                                     onDeleteConversation={handleDeleteConversation}
                                     onDeleteMessage={handleDeleteMessage}
+                                    onBanUser={handleBanUser}
+                                    onDeleteAllUserMessages={handleDeleteAllUserMessages}
                                 />
                             ) : (
                                 <div className="messages-empty">
