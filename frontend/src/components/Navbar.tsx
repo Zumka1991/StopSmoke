@@ -640,7 +640,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     zIndex: 2000
                 }}
             >
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '1.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', gap: '1.5rem' }}>
                     {/* Header: Logo and Close Action */}
                     <div style={{ 
                         display: 'flex', 
@@ -802,21 +802,24 @@ export default function Navbar({ onLogout }: NavbarProps) {
                             <button
                                 onClick={() => { setSosOpen(true); setMobileMenuOpen(false); }}
                                 style={{
-                                    width: '48px',
+                                    flex: 1.5,
                                     height: '48px',
                                     borderRadius: '12px',
-                                    background: 'rgba(251, 191, 36, 0.1)',
-                                    border: '1px solid rgba(251, 191, 36, 0.2)',
+                                    background: 'rgba(251, 191, 36, 0.15)',
+                                    border: '1px solid rgba(251, 191, 36, 0.3)',
                                     color: '#fbbf24',
-                                    fontSize: '1.2rem',
+                                    fontSize: '1rem',
+                                    fontWeight: '700',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center'
+                                    justifyContent: 'center',
+                                    gap: '0.5rem'
                                 }}
-                            >🫁</button>
+                            >
+                                <span style={{ fontSize: '1.3rem' }}>🫁</span>
+                                SOS
+                            </button>
                         </div>
-
-                        <InstallPwaButton />
 
                         {isAuthenticated ? (
                             <button
