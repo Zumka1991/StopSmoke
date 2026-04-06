@@ -340,29 +340,31 @@ export default function Navbar({ onLogout }: NavbarProps) {
                             <button
                                 onClick={onLogout}
                                 style={{
-                                    padding: '0.5rem 1rem',
-                                    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))',
-                                    border: '2px solid rgba(239, 68, 68, 0.4)',
-                                    borderRadius: '0.75rem',
-                                    color: '#ef4444',
-                                    fontSize: '0.9rem',
-                                    fontWeight: '600',
+                                    padding: '0.4rem 0.7rem',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '0.5rem',
+                                    color: 'rgba(255, 255, 255, 0.5)',
+                                    fontSize: '0.8rem',
+                                    fontWeight: '500',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: '0.4rem'
+                                    gap: '0.3rem'
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.25))';
-                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+                                    e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                                    e.currentTarget.style.color = '#ef4444';
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))';
-                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
                                 }}
                             >
-                                <span>🚪</span>
+                                <span>↗</span>
                                 {t('common.logout')}
                             </button>
                         ) : (
