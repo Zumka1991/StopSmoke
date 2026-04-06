@@ -98,38 +98,27 @@ export default function LanguageSwitcher({ compact = false }: LanguageSwitcherPr
                     position: relative;
                     display: flex;
                     align-items: center;
-                    width: 100%;
-                    max-width: 160px;
-                    height: 48px;
+                    width: 140px; /* Fixed width to prevent squeezing */
+                    height: 44px;
                     background: rgba(30, 41, 59, 0.7);
-                    backdrop-filter: blur(8px);
-                    border-radius: 12px;
+                    backdrop-filter: blur(12px);
+                    border-radius: 22px;
                     padding: 4px;
                     cursor: pointer;
-                    border: 2px solid rgba(59, 130, 246, 0.3);
+                    border: 2px solid rgba(59, 130, 246, 0.25);
                     box-shadow:
                         0 4px 15px rgba(0, 0, 0, 0.3),
-                        inset 0 2px 4px rgba(0, 0, 0, 0.4),
-                        0 0 0 1px rgba(255, 255, 255, 0.05);
+                        inset 0 2px 5px rgba(0, 0, 0, 0.5);
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                     user-select: none;
                     overflow: hidden;
-                    margin: 0.5rem 0;
+                    margin: 0.25rem 0.5rem;
                 }
 
-                @media (min-width: 768px) {
+                @media (max-width: 767px) {
                     .language-toggle-container {
-                        max-width: 120px;
-                        height: 42px;
-                        border-radius: 21px;
-                        margin: 0.5rem;
-                        border-width: 2px;
-                    }
-                    .lang-text {
-                        font-size: 13px;
-                    }
-                    .flag-icon {
-                        display: flex;
+                        width: 140px;
+                        height: 44px;
                     }
                 }
 
@@ -145,23 +134,15 @@ export default function LanguageSwitcher({ compact = false }: LanguageSwitcherPr
 
                 .toggle-thumb {
                     position: absolute;
-                    top: 4px;
-                    left: 4px;
-                    width: calc(50% - 4px);
-                    height: calc(100% - 8px);
+                    top: 2px;
+                    left: 2px;
+                    width: calc(50% - 2px);
+                    height: calc(100% - 4px);
                     background: linear-gradient(135deg, var(--accent-color), #2563eb);
-                    border-radius: 8px;
-                    box-shadow:
-                        0 2px 10px rgba(59, 130, 246, 0.6),
-                        0 0 15px rgba(59, 130, 246, 0.3);
-                    transition: transform 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+                    border-radius: 20px;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+                    transition: transform 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045);
                     z-index: 1;
-                }
-
-                @media (min-width: 768px) {
-                    .toggle-thumb {
-                        border-radius: 17px;
-                    }
                 }
 
                 .toggle-thumb.is-ru {
@@ -197,24 +178,18 @@ export default function LanguageSwitcher({ compact = false }: LanguageSwitcherPr
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 8px;
-                    opacity: 0.4;
-                    transition: all 0.4s ease;
-                    color: white;
-                    font-weight: 800;
-                    font-size: 14px;
-                }
-
-                @media (min-width: 768px) {
-                    .label-item {
-                        font-size: 12px;
-                        gap: 6px;
-                    }
+                    gap: 6px;
+                    opacity: 0.5;
+                    transition: all 0.3s ease;
+                    color: rgba(255, 255, 255, 0.8);
+                    font-weight: 700;
+                    font-size: 13px;
                 }
 
                 .label-item.active {
                     opacity: 1;
-                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+                    color: #fff;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
                 }
 
                 .lang-text {
