@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import Logo from '../components/Logo';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import Button from '../components/Button';
@@ -44,6 +45,10 @@ export default function LandingPage() {
 
     return (
         <>
+            <Helmet>
+                <title>StopSmoke - Quit Smoking & Start a New Life</title>
+                <meta name="description" content="Begin your journey to quit smoking with StopSmoke. Track progress, save money, improve your health. Join our supportive community." />
+            </Helmet>
             <SOSModal isOpen={sosOpen} onClose={() => setSosOpen(false)} />
 
             <div style={{

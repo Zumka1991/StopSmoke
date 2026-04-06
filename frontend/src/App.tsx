@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import RegisterPage from './pages/RegisterPage';
@@ -26,9 +27,10 @@ import './i18n';
 function App() {
 
   return (
-    <NotificationProvider>
-      <GlobalNotificationListener />
-      <Router>
+    <HelmetProvider>
+      <NotificationProvider>
+        <GlobalNotificationListener />
+        <Router>
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           <div style={{ flex: 1 }}>
             <Routes>
@@ -109,6 +111,7 @@ function App() {
         </div>
       </Router>
     </NotificationProvider>
+    </HelmetProvider>
   );
 }
 

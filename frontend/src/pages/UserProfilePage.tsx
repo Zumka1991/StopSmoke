@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -133,6 +134,9 @@ export default function UserProfilePage() {
 
     return (
         <>
+            <Helmet>
+                <title>{profile?.name ? `${profile.name} - StopSmoke` : 'User Profile - StopSmoke'}</title>
+            </Helmet>
             <Navbar onLogout={() => {
                 localStorage.removeItem('token');
                 navigate('/login');

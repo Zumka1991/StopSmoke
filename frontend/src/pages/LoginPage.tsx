@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import Logo from '../components/Logo';
@@ -27,6 +28,9 @@ export default function LoginPage() {
 
     return (
         <>
+            <Helmet>
+                <title>Login - StopSmoke</title>
+            </Helmet>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10 }}>
                 <LanguageSwitcher />
             </div>

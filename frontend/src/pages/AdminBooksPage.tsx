@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import type { Book, CreateBookRequest } from '../types/bookTypes';
 import { booksService } from '../api/booksService';
 import Navbar from '../components/Navbar';
@@ -140,6 +141,9 @@ export default function AdminBooksPage() {
 
     return (
         <>
+            <Helmet>
+                <title>Manage Books - StopSmoke</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ marginTop: '2rem', maxWidth: '1200px', margin: '2rem auto', padding: '0 2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>

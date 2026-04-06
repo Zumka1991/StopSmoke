@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import ReCAPTCHA from 'react-google-recaptcha';
 import api from '../api/axios';
 import LanguageSwitcher from '../components/LanguageSwitcher';
@@ -44,6 +45,9 @@ export default function RegisterPage() {
 
     return (
         <>
+            <Helmet>
+                <title>Register - StopSmoke</title>
+            </Helmet>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10 }}>
                 <LanguageSwitcher />
             </div>

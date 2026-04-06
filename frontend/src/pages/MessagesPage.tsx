@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import { signalRService } from '../api/signalrService';
 import Navbar from '../components/Navbar';
@@ -548,6 +549,9 @@ const MessagesPage: React.FC = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Messages - StopSmoke</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="messages-page-wrapper">
                 <div className="container" style={{ maxWidth: '1400px', padding: '0 1rem', height: '100%' }}>

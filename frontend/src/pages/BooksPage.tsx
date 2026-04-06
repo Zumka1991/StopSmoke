@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import type { Book } from '../types/bookTypes';
 import { booksService } from '../api/booksService';
 import Navbar from '../components/Navbar';
@@ -40,6 +41,9 @@ export default function BooksPage() {
 
     return (
         <>
+            <Helmet>
+                <title>Books - StopSmoke</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ marginTop: '2rem', maxWidth: '1200px', margin: '2rem auto', padding: '0 2rem' }}>
                 <h1 style={{

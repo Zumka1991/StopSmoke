@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -37,18 +38,27 @@ export default function SecretAdminPage() {
 
     if (success) {
         return (
-            <div className="auth-container">
-                <div className="card" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
-                    <h2 style={{ marginBottom: '1rem' }}>Права администратора получены!</h2>
-                    <p style={{ color: 'var(--text-secondary)' }}>Перенаправление на главную...</p>
+            <>
+                <Helmet>
+                    <title>Admin Access Granted - StopSmoke</title>
+                </Helmet>
+                <div className="auth-container">
+                    <div className="card" style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
+                        <h2 style={{ marginBottom: '1rem' }}>Права администратора получены!</h2>
+                        <p style={{ color: 'var(--text-secondary)' }}>Перенаправление на главную...</p>
+                    </div>
                 </div>
-            </div>
+            </>
         );
     }
 
     return (
-        <div className="auth-container">
+        <>
+            <Helmet>
+                <title>Admin Access - StopSmoke</title>
+            </Helmet>
+            <div className="auth-container">
             <div className="card">
                 <h2 style={{ marginBottom: '2rem', textAlign: 'center' }}>🔐 Секретный доступ</h2>
 
@@ -97,9 +107,10 @@ export default function SecretAdminPage() {
                     fontSize: '0.875rem',
                     color: 'var(--text-secondary)'
                 }}>
-                    ⚠️ Эта страница предназначена только для разработки
+                    ⚠️ Эта страница предназначена только только для разработки
                 </div>
             </div>
         </div>
+        </>
     );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
@@ -227,6 +228,9 @@ export default function ProfilePage() {
 
     return (
         <>
+            <Helmet>
+                <title>Profile - StopSmoke</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{
                 maxWidth: '1000px',

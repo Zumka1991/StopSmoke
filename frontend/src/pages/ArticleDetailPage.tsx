@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -64,6 +65,9 @@ export default function ArticleDetailPage() {
 
     return (
         <>
+            <Helmet>
+                <title>{article ? `${article.title} - StopSmoke` : 'Article - StopSmoke'}</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ marginTop: '2rem', maxWidth: '1000px', margin: '2rem auto', padding: '0 2rem' }}>
                 <button

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Button from '../components/Button';
 import { CheckCircle, AlertCircle, Lock } from 'lucide-react';
@@ -56,7 +57,11 @@ export default function ResetPasswordPage() {
     };
 
     return (
-        <div className="container" style={{ maxWidth: '450px', marginTop: '4rem', padding: '0 1rem' }}>
+        <>
+            <Helmet>
+                <title>Reset Password - StopSmoke</title>
+            </Helmet>
+            <div className="container" style={{ maxWidth: '450px', marginTop: '4rem', padding: '0 1rem' }}>
             <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.05)' }}>
                 {isSuccess ? (
                     <div style={{ textAlign: 'center', padding: '2rem 0' }}>
@@ -127,5 +132,6 @@ export default function ResetPasswordPage() {
                 )}
             </div>
         </div>
+        </>
     );
 }

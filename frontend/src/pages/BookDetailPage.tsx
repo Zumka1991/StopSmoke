@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import type { Book } from '../types/bookTypes';
 import { booksService } from '../api/booksService';
 import Navbar from '../components/Navbar';
@@ -67,6 +68,9 @@ export default function BookDetailPage() {
 
     return (
         <>
+            <Helmet>
+                <title>{book ? `${book.title} - StopSmoke` : 'Book - StopSmoke'}</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ maxWidth: '1000px', margin: '3rem auto', padding: '0 2rem' }}>
                 <button 

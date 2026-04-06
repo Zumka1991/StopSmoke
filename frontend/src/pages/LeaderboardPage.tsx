@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import { MessageCircle, User } from 'lucide-react';
@@ -93,6 +94,9 @@ export default function LeaderboardPage() {
 
     return (
         <>
+            <Helmet>
+                <title>Leaderboard - StopSmoke</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{ marginTop: '2rem', maxWidth: '900px' }}>
                 <h1 style={{ marginBottom: '2rem', textAlign: 'center' }}>

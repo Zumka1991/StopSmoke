@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Button from '../components/Button';
 import { ArrowLeft, Mail } from 'lucide-react';
@@ -32,7 +33,11 @@ export default function ForgotPasswordPage() {
     };
 
     return (
-        <div className="container" style={{ maxWidth: '450px', marginTop: '4rem', padding: '0 1rem' }}>
+        <>
+            <Helmet>
+                <title>Forgot Password - StopSmoke</title>
+            </Helmet>
+            <div className="container" style={{ maxWidth: '450px', marginTop: '4rem', padding: '0 1rem' }}>
             <button 
                 onClick={() => navigate('/login')}
                 style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '1rem' }}
@@ -95,5 +100,6 @@ export default function ForgotPasswordPage() {
                 </div>
             </div>
         </div>
+        </>
     );
 }

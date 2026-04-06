@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import Toast from '../components/Toast';
@@ -129,6 +130,9 @@ export default function MarathonPage() {
 
     return (
         <>
+            <Helmet>
+                <title>Marathons - StopSmoke</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{ maxWidth: '1000px', margin: '3rem auto', paddingBottom: '3rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>

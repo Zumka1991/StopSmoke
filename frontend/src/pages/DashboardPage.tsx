@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import HealthTimeline from '../components/HealthTimeline';
@@ -90,6 +91,9 @@ export default function DashboardPage() {
 
     return (
         <>
+            <Helmet>
+                <title>Dashboard - StopSmoke</title>
+            </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{ marginTop: '2rem', maxWidth: '1200px' }}>
                 {profile?.isAdmin && (
