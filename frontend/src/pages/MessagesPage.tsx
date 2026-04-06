@@ -306,9 +306,16 @@ const MessagesPage: React.FC = () => {
         try {
             console.log('Sending message:', content);
             await signalRService.sendMessage(selectedConversationId, content, replyToId);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error sending message:', error);
-            console.warn('Message may not have been delivered. Check your connection.');
+            const errorMsg = error?.message || error?.toString() || '';
+            if (errorMsg.includes('banned')) {
+                alert(t('messages.bannedByAdmin') || 'Вы были забанены администратором');
+            } else if (errorMsg.includes('not a participant')) {
+                alert('Вы не являетесь участником этого чата');
+            } else {
+                alert(t('messages.errorSendingMessage') || 'Ошибка отправки сообщения. Проверьте соединение.');
+            }
         }
     };
 
