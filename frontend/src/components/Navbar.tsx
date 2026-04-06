@@ -119,23 +119,26 @@ export default function Navbar({ onLogout }: NavbarProps) {
                 zIndex: 1000,
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
             }}>
-                <div style={{
+                <div className="header-container" style={{
                     maxWidth: '1200px',
                     margin: '0 auto',
                     padding: '0 1.5rem',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
-                    height: '70px'
+                    height: '75px'
                 }}>
-                    {/* Logo */}
-                    <Logo size={35} showText={true} onClick={() => navigate(isAuthenticated ? '/dashboard' : '/')} />
+                    {/* Column 1: Logo */}
+                    <div className="logo-col" style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                        <Logo size={35} showText={true} onClick={() => navigate(isAuthenticated ? '/dashboard' : '/')} />
+                    </div>
 
-                    {/* Desktop Menu */}
+                    {/* Column 2: Centered Desktop Links */}
                     <div style={{
+                        flex: 1,
                         display: 'flex',
-                        gap: '1rem',
-                        alignItems: 'center'
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '0.25rem'
                     }}
                         className="desktop-nav"
                     >
@@ -149,27 +152,48 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                     >
                                         <button
                                             style={{
-                                                padding: '0.5rem 0.75rem',
-                                                background: active
-                                                    ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))'
-                                                    : 'transparent',
-                                                border: active
-                                                    ? '2px solid rgba(59, 130, 246, 0.5)'
-                                                    : '2px solid transparent',
-                                                borderRadius: '0.75rem',
+                                                padding: '0.6rem 0.9rem',
+                                                background: 'transparent',
+                                                border: 'none',
+                                                borderRadius: '0.5rem',
                                                 color: active ? 'var(--accent-color)' : 'var(--text-secondary)',
-                                                fontSize: '0.9rem',
-                                                fontWeight: '600',
+                                                fontSize: '0.9deg',
+                                                fontWeight: active ? '700' : '500',
                                                 cursor: 'pointer',
-                                                transition: 'all 0.2s',
+                                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                gap: '0.4rem'
+                                                gap: '0.4rem',
+                                                position: 'relative',
+                                                overflow: 'hidden'
                                             }}
                                         >
-                                            <span>{item.icon}</span>
+                                            <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
                                             {item.label}
-                                            <span style={{ fontSize: '0.7rem', marginLeft: '0.2rem' }}>▼</span>
+                                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ 
+                                                marginLeft: '0.2rem', 
+                                                transform: communityOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                                transition: 'transform 0.3s ease',
+                                                stroke: 'currentColor',
+                                                strokeWidth: '1.5',
+                                                strokeLinecap: 'round',
+                                                strokeLinejoin: 'round'
+                                            }}>
+                                                <path d="M1 1L5 5L9 1" />
+                                            </svg>
+                                            
+                                            {/* Active link indicator */}
+                                            {active && (
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    bottom: 0,
+                                                    left: '20%',
+                                                    right: '20%',
+                                                    height: '2px',
+                                                    background: 'linear-gradient(90deg, transparent, var(--accent-color), transparent)',
+                                                    borderRadius: '2px'
+                                                }} />
+                                            )}
                                         </button>
 
                                         {/* Dropdown */}
@@ -262,44 +286,63 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                     key={item.path}
                                     onClick={() => item.path && navigate(item.path)}
                                     style={{
-                                        padding: '0.5rem 0.75rem',
-                                        background: isActive(item.path)
-                                            ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))'
-                                            : 'transparent',
-                                        border: isActive(item.path)
-                                            ? '2px solid rgba(59, 130, 246, 0.5)'
-                                            : '2px solid transparent',
-                                        borderRadius: '0.75rem',
+                                        padding: '0.6rem 0.9rem',
+                                        background: 'transparent',
+                                        border: 'none',
+                                        borderRadius: '0.5rem',
                                         color: isActive(item.path) ? 'var(--accent-color)' : 'var(--text-secondary)',
                                         fontSize: '0.9rem',
-                                        fontWeight: '600',
+                                        fontWeight: isActive(item.path) ? '700' : '500',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s',
+                                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '0.4rem'
+                                        gap: '0.4rem',
+                                        position: 'relative'
                                     }}
                                     onMouseEnter={(e) => {
                                         if (!isActive(item.path)) {
-                                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)';
                                             e.currentTarget.style.color = 'var(--text-primary)';
+                                            e.currentTarget.style.transform = 'translateY(-1px)';
                                         }
                                     }}
                                     onMouseLeave={(e) => {
                                         if (!isActive(item.path)) {
-                                            e.currentTarget.style.background = 'transparent';
                                             e.currentTarget.style.color = 'var(--text-secondary)';
+                                            e.currentTarget.style.transform = 'translateY(0)';
                                         }
                                     }}
                                 >
-                                    <span>{item.icon}</span>
+                                    <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
                                     {item.label}
+
+                                    {/* Active link indicator */}
+                                    {isActive(item.path) && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: '20%',
+                                            right: '25%',
+                                            height: '2px',
+                                            background: 'linear-gradient(90deg, transparent, var(--accent-color), transparent)',
+                                            borderRadius: '2px'
+                                        }} />
+                                    )}
                                 </button>
                             );
                         })}
+                    </div>
 
-                        <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }}></div>
-
+                    {/* Column 3: Action Buttons (Right Aligned) */}
+                    <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        gap: '0.75rem',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end'
+                    }}
+                        className="desktop-actions"
+                    >
                         {/* SOS Button */}
                         <button
                             onClick={() => setSosOpen(true)}
@@ -330,7 +373,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                             🫁 SOS
                         </button>
 
-                        <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }}></div>
+                        <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.06)', margin: '0 0.5rem' }}></div>
 
                         <LanguageSwitcher compact />
                         <InstallPwaButton />
@@ -755,7 +798,14 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     }
 
                     @media (max-width: 1150px) {
-                        .desktop-nav {
+                        .header-container {
+                            justify-content: space-between !important;
+                            padding: 0 1rem !important;
+                        }
+                        .logo-col {
+                            flex: 0 !important;
+                        }
+                        .desktop-nav, .desktop-actions {
                             display: none !important;
                         }
                         .mobile-hamburger {
