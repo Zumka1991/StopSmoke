@@ -333,7 +333,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
 
                         <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }}></div>
 
-                        <LanguageSwitcher />
+                        <LanguageSwitcher compact />
                         <InstallPwaButton />
 
                         {isAuthenticated ? (
@@ -649,7 +649,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         }}></div>
 
                         <div style={{ padding: '0.5rem 0' }}>
-                            <LanguageSwitcher />
+                            <LanguageSwitcher compact />
                             <div style={{ marginTop: '0.5rem' }}>
                                 <InstallPwaButton />
                             </div>

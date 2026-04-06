@@ -1,10 +1,14 @@
 import { useTranslation } from 'react-i18next';
 
+interface LanguageSwitcherProps {
+    compact?: boolean;
+}
+
 /**
- * LanguageSwitcher - A premium toggle-style (tumbler) component for RU/EN switching.
- * Highly responsive and visually optimized for both desktop and mobile views.
+ * LanguageSwitcher - Language toggle component.
+ * Supports compact mode (for navbar) and full toggle mode (for pages).
  */
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
     const { i18n } = useTranslation();
 
     const toggleLanguage = (e: React.MouseEvent) => {
@@ -15,8 +19,41 @@ export default function LanguageSwitcher() {
 
     const isRussian = i18n.language === 'ru';
 
+    if (compact) {
+        return (
+            <button
+                onClick={toggleLanguage}
+                title={isRussian ? "Switch to English" : "Переключить на русский"}
+                style={{
+                    padding: '0.35rem 0.6rem',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '0.5rem',
+                    color: 'rgba(255, 255, 255, 0.6)',
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                }}
+            >
+                {isRussian ? '🇷🇺' : '🇬🇧'} {isRussian ? 'RU' : 'EN'}
+            </button>
+        );
+    }
+
     return (
-        <div 
+        <div
             onClick={toggleLanguage}
             className="language-toggle-container"
             title={isRussian ? "Switch to English" : "Переключить на русский"}
@@ -62,7 +99,7 @@ export default function LanguageSwitcher() {
                     display: flex;
                     align-items: center;
                     width: 100%;
-                    max-width: 160px; /* Mobile width */
+                    max-width: 160px;
                     height: 48px;
                     background: rgba(30, 41, 59, 0.7);
                     backdrop-filter: blur(8px);
@@ -70,7 +107,7 @@ export default function LanguageSwitcher() {
                     padding: 4px;
                     cursor: pointer;
                     border: 2px solid rgba(59, 130, 246, 0.3);
-                    box-shadow: 
+                    box-shadow:
                         0 4px 15px rgba(0, 0, 0, 0.3),
                         inset 0 2px 4px rgba(0, 0, 0, 0.4),
                         0 0 0 1px rgba(255, 255, 255, 0.05);
@@ -80,20 +117,19 @@ export default function LanguageSwitcher() {
                     margin: 0.5rem 0;
                 }
 
-                /* Desktop Version Enhancements */
                 @media (min-width: 768px) {
                     .language-toggle-container {
-                        max-width: 120px; /* Increased from 90px */
-                        height: 42px;    /* Increased from 36px */
-                        border-radius: 21px; 
+                        max-width: 120px;
+                        height: 42px;
+                        border-radius: 21px;
                         margin: 0.5rem;
                         border-width: 2px;
                     }
                     .lang-text {
-                        font-size: 13px; /* Increased from 10px */
+                        font-size: 13px;
                     }
                     .flag-icon {
-                        display: flex; /* Show flags on desktop too for better visibility */
+                        display: flex;
                     }
                 }
 
@@ -101,7 +137,7 @@ export default function LanguageSwitcher() {
                     border-color: rgba(59, 130, 246, 0.6);
                     background: rgba(30, 41, 59, 0.9);
                     transform: translateY(-1px);
-                    box-shadow: 
+                    box-shadow:
                         0 6px 20px rgba(0, 0, 0, 0.4),
                         inset 0 2px 4px rgba(0, 0, 0, 0.4),
                         0 0 20px rgba(59, 130, 246, 0.2);
@@ -115,7 +151,7 @@ export default function LanguageSwitcher() {
                     height: calc(100% - 8px);
                     background: linear-gradient(135deg, var(--accent-color), #2563eb);
                     border-radius: 8px;
-                    box-shadow: 
+                    box-shadow:
                         0 2px 10px rgba(59, 130, 246, 0.6),
                         0 0 15px rgba(59, 130, 246, 0.3);
                     transition: transform 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
@@ -124,7 +160,7 @@ export default function LanguageSwitcher() {
 
                 @media (min-width: 768px) {
                     .toggle-thumb {
-                        border-radius: 17px; /* Slightly more rounded for desktop */
+                        border-radius: 17px;
                     }
                 }
 
