@@ -623,7 +623,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     bottom: 0,
                     width: '85%',
                     maxWidth: '320px',
-                    height: '100vh',
+                    height: '100dvh',
                     background: 'rgba(15, 23, 42, 0.85)',
                     backdropFilter: 'blur(32px) saturate(180%)',
                     borderLeft: '1px solid rgba(59, 130, 246, 0.15)',
@@ -637,10 +637,11 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     overflowY: 'auto',
                     overflowX: 'hidden',
                     WebkitOverflowScrolling: 'touch',
-                    zIndex: 2000
+                    zIndex: 2000,
+                    paddingBottom: '3.5rem' // Extra space for mobile browser bars
                 }}
             >
-                <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', gap: '1.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100% - 1rem)', gap: '1.5rem' }}>
                     {/* Header: Logo and Close Action */}
                     <div style={{ 
                         display: 'flex', 
