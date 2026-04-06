@@ -550,7 +550,7 @@ const MessagesPage: React.FC = () => {
     return (
         <>
             <Helmet>
-                <title>Messages - StopSmoke</title>
+                <title>{t('titles.messages')}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="messages-page-wrapper">

@@ -2,6 +2,27 @@
   "app": {
     "slogan": "Let's quit smoking together!"
   },
+  "titles": {
+    "landing": "StopSmoke - Quit Smoking & Start a New Life",
+    "login": "Login - StopSmoke",
+    "register": "Register - StopSmoke",
+    "dashboard": "Dashboard - StopSmoke",
+    "profile": "Profile - StopSmoke",
+    "userProfile": "User Profile - StopSmoke",
+    "messages": "Messages - StopSmoke",
+    "leaderboard": "Leaderboard - StopSmoke",
+    "marathons": "Marathons - StopSmoke",
+    "articles": "Articles - StopSmoke",
+    "articleDetail": "{{title}} - StopSmoke",
+    "books": "Books - StopSmoke",
+    "bookDetail": "{{title}} - StopSmoke",
+    "adminArticles": "Manage Articles - StopSmoke",
+    "adminBooks": "Manage Books - StopSmoke",
+    "forgotPassword": "Forgot Password - StopSmoke",
+    "resetPassword": "Reset Password - StopSmoke",
+    "adminAccess": "Admin Access - StopSmoke",
+    "adminAccessGranted": "Admin Access Granted - StopSmoke"
+  },
   "auth": {
     "login": {
       "title": "Welcome Back",

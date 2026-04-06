@@ -229,7 +229,7 @@ export default function ProfilePage() {
     return (
         <>
             <Helmet>
-                <title>Profile - StopSmoke</title>
+                <title>{t('titles.profile')}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{

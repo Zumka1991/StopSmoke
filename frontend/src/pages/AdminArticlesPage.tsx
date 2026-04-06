@@ -161,7 +161,7 @@ export default function AdminArticlesPage() {
     return (
         <>
             <Helmet>
-                <title>Manage Articles - StopSmoke</title>
+                <title>{t('titles.adminArticles')}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ marginTop: '2rem', maxWidth: '1600px', margin: '2rem auto', padding: '0 2rem' }}>

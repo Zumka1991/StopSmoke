@@ -29,7 +29,7 @@ export default function LoginPage() {
     return (
         <>
             <Helmet>
-                <title>Login - StopSmoke</title>
+                <title>{t('titles.login')}</title>
             </Helmet>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10 }}>
                 <LanguageSwitcher />

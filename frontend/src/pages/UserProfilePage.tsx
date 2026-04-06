@@ -135,7 +135,7 @@ export default function UserProfilePage() {
     return (
         <>
             <Helmet>
-                <title>{profile?.name ? `${profile.name} - StopSmoke` : 'User Profile - StopSmoke'}</title>
+                <title>{profile?.name ? t('titles.userProfile', { title: profile.name }) : t('titles.userProfile')}</title>
             </Helmet>
             <Navbar onLogout={() => {
                 localStorage.removeItem('token');

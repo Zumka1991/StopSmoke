@@ -59,7 +59,7 @@ export default function ResetPasswordPage() {
     return (
         <>
             <Helmet>
-                <title>Reset Password - StopSmoke</title>
+                <title>{t('titles.resetPassword')}</title>
             </Helmet>
             <div className="container" style={{ maxWidth: '450px', marginTop: '4rem', padding: '0 1rem' }}>
             <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.05)' }}>

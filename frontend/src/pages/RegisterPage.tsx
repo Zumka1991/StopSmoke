@@ -46,7 +46,7 @@ export default function RegisterPage() {
     return (
         <>
             <Helmet>
-                <title>Register - StopSmoke</title>
+                <title>{t('titles.register')}</title>
             </Helmet>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10 }}>
                 <LanguageSwitcher />

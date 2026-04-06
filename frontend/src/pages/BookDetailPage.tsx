@@ -69,7 +69,7 @@ export default function BookDetailPage() {
     return (
         <>
             <Helmet>
-                <title>{book ? `${book.title} - StopSmoke` : 'Book - StopSmoke'}</title>
+                <title>{book ? t('titles.bookDetail', { title: book.title }) : t('titles.bookDetail', { title: 'Book' })}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ maxWidth: '1000px', margin: '3rem auto', padding: '0 2rem' }}>

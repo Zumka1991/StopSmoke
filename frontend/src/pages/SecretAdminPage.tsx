@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function SecretAdminPage() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [code, setCode] = useState('');
     const [loading, setLoading] = useState(false);
@@ -40,7 +42,7 @@ export default function SecretAdminPage() {
         return (
             <>
                 <Helmet>
-                    <title>Admin Access Granted - StopSmoke</title>
+                    <title>{t('titles.adminAccessGranted')}</title>
                 </Helmet>
                 <div className="auth-container">
                     <div className="card" style={{ textAlign: 'center' }}>
@@ -56,7 +58,7 @@ export default function SecretAdminPage() {
     return (
         <>
             <Helmet>
-                <title>Admin Access - StopSmoke</title>
+                <title>{t('titles.adminAccess')}</title>
             </Helmet>
             <div className="auth-container">
             <div className="card">

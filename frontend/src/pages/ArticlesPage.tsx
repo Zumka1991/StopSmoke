@@ -82,7 +82,7 @@ export default function ArticlesPage() {
     return (
         <>
             <Helmet>
-                <title>Articles - StopSmoke</title>
+                <title>{t('titles.articles')}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ marginTop: '2rem', maxWidth: '1200px', margin: '2rem auto', padding: '0 2rem' }}>

@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Button from '../components/Button';
 
 export default function AdminBooksPage() {
-    useTranslation();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
@@ -142,7 +142,7 @@ export default function AdminBooksPage() {
     return (
         <>
             <Helmet>
-                <title>Manage Books - StopSmoke</title>
+                <title>{t('titles.adminBooks')}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ marginTop: '2rem', maxWidth: '1200px', margin: '2rem auto', padding: '0 2rem' }}>

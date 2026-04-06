@@ -131,7 +131,7 @@ export default function MarathonPage() {
     return (
         <>
             <Helmet>
-                <title>Marathons - StopSmoke</title>
+                <title>{t('titles.marathons')}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{ maxWidth: '1000px', margin: '3rem auto', paddingBottom: '3rem' }}>

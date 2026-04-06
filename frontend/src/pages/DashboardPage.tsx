@@ -92,7 +92,7 @@ export default function DashboardPage() {
     return (
         <>
             <Helmet>
-                <title>Dashboard - StopSmoke</title>
+                <title>{t('titles.dashboard')}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{ marginTop: '2rem', maxWidth: '1200px' }}>

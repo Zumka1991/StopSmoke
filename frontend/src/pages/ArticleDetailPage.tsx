@@ -66,7 +66,7 @@ export default function ArticleDetailPage() {
     return (
         <>
             <Helmet>
-                <title>{article ? `${article.title} - StopSmoke` : 'Article - StopSmoke'}</title>
+                <title>{article ? t('titles.articleDetail', { title: article.title }) : t('titles.articleDetail', { title: 'Article' })}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div style={{ marginTop: '2rem', maxWidth: '1000px', margin: '2rem auto', padding: '0 2rem' }}>

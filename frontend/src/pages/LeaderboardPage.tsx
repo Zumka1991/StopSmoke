@@ -95,7 +95,7 @@ export default function LeaderboardPage() {
     return (
         <>
             <Helmet>
-                <title>Leaderboard - StopSmoke</title>
+                <title>{t('titles.leaderboard')}</title>
             </Helmet>
             <Navbar onLogout={handleLogout} />
             <div className="container" style={{ marginTop: '2rem', maxWidth: '900px' }}>

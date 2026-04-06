@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
     return (
         <>
             <Helmet>
-                <title>Forgot Password - StopSmoke</title>
+                <title>{t('titles.forgotPassword')}</title>
             </Helmet>
             <div className="container" style={{ maxWidth: '450px', marginTop: '4rem', padding: '0 1rem' }}>
             <button 

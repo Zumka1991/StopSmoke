@@ -2,6 +2,27 @@
   "app": {
     "slogan": "Бросаем курить вместе!"
   },
+  "titles": {
+    "landing": "StopSmoke - Бросай курить и начни новую жизнь",
+    "login": "Вход - StopSmoke",
+    "register": "Регистрация - StopSmoke",
+    "dashboard": "Главная - StopSmoke",
+    "profile": "Профиль - StopSmoke",
+    "userProfile": "Профиль пользователя - StopSmoke",
+    "messages": "Сообщения - StopSmoke",
+    "leaderboard": "Таблица лидеров - StopSmoke",
+    "marathons": "Марафоны - StopSmoke",
+    "articles": "Статьи - StopSmoke",
+    "articleDetail": "{{title}} - StopSmoke",
+    "books": "Книги - StopSmoke",
+    "bookDetail": "{{title}} - StopSmoke",
+    "adminArticles": "Управление статьями - StopSmoke",
+    "adminBooks": "Управление книгами - StopSmoke",
+    "forgotPassword": "Забыли пароль - StopSmoke",
+    "resetPassword": "Сброс пароля - StopSmoke",
+    "adminAccess": "Доступ админа - StopSmoke",
+    "adminAccessGranted": "Доступ админа получен - StopSmoke"
+  },
   "auth": {
     "login": {
       "title": "Добро пожаловать",
