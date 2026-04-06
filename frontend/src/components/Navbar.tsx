@@ -88,7 +88,6 @@ export default function Navbar({ onLogout }: NavbarProps) {
         <>
             <SOSModal isOpen={sosOpen} onClose={() => setSosOpen(false)} />
 
-            {/* Mobile Menu Backdrop Overlay */}
             <div
                 onClick={() => setMobileMenuOpen(false)}
                 style={{
@@ -97,12 +96,12 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: 'rgba(0, 0, 0, 0.6)',
-                    backdropFilter: 'blur(8px)',
-                    zIndex: 998,
+                    background: 'rgba(2, 6, 23, 0.4)',
+                    backdropFilter: 'blur(12px)',
+                    zIndex: 1000,
                     opacity: mobileMenuOpen ? 1 : 0,
                     visibility: mobileMenuOpen ? 'visible' : 'hidden',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
                     display: 'none'
                 }}
                 className="mobile-backdrop"
@@ -399,311 +398,289 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         )}
                     </div>
 
-                    {/* Mobile Hamburger */}
                     <button
                         className="mobile-hamburger"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         style={{
                             display: 'none',
-                            background: mobileMenuOpen
-                                ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.25))'
-                                : 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))',
-                            border: mobileMenuOpen
-                                ? '2px solid rgba(239, 68, 68, 0.5)'
-                                : '2px solid rgba(59, 130, 246, 0.5)',
-                            borderRadius: '0.75rem',
-                            padding: '0.65rem',
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '12px',
+                            padding: '10px',
                             cursor: 'pointer',
-                            color: mobileMenuOpen ? '#ef4444' : 'var(--accent-color)',
-                            fontSize: '1.5rem',
+                            color: mobileMenuOpen ? 'var(--accent-color)' : 'var(--text-primary)',
                             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            boxShadow: mobileMenuOpen
-                                ? '0 4px 14px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                                : '0 4px 14px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                             position: 'relative',
-                            overflow: 'hidden',
-                            width: '48px',
-                            height: '48px',
+                            zIndex: 2001,
+                            width: '44px',
+                            height: '44px',
                             alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
-                            e.currentTarget.style.boxShadow = mobileMenuOpen
-                                ? '0 6px 20px rgba(239, 68, 68, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
-                                : '0 6px 20px rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                            e.currentTarget.style.boxShadow = mobileMenuOpen
-                                ? '0 4px 14px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                                : '0 4px 14px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
-                        }}
-                        onMouseDown={(e) => {
-                            e.currentTarget.style.transform = 'scale(0.95)';
-                        }}
-                        onMouseUp={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                            justifyContent: 'center',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
                         }}
                     >
-                        <span style={{
+                        <div style={{
+                            width: '20px',
+                            height: '14px',
+                            position: 'relative',
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '4px',
-                            width: '22px',
-                            height: '18px',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            position: 'relative',
-                            transition: 'all 0.3s ease'
+                            justifyContent: 'space-between'
                         }}>
                             <span style={{
-                                position: mobileMenuOpen ? 'absolute' : 'relative',
                                 width: '100%',
-                                height: '2.5px',
+                                height: '2px',
                                 background: 'currentColor',
-                                borderRadius: '2px',
-                                transition: 'all 0.3s ease',
-                                transform: mobileMenuOpen ? 'rotate(45deg)' : 'rotate(0)',
-                                boxShadow: '0 0 8px currentColor'
+                                borderRadius: '10px',
+                                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                                transform: mobileMenuOpen ? 'translateY(6px) rotate(45deg)' : 'none'
                             }}></span>
                             <span style={{
-                                position: mobileMenuOpen ? 'absolute' : 'relative',
-                                width: '100%',
-                                height: '2.5px',
+                                width: mobileMenuOpen ? '0%' : '70%',
+                                height: '2px',
                                 background: 'currentColor',
-                                borderRadius: '2px',
-                                transition: 'all 0.3s ease',
-                                opacity: mobileMenuOpen ? 0 : 1,
-                                boxShadow: '0 0 8px currentColor'
+                                borderRadius: '10px',
+                                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                                opacity: mobileMenuOpen ? 0 : 1
                             }}></span>
                             <span style={{
-                                position: mobileMenuOpen ? 'absolute' : 'relative',
                                 width: '100%',
-                                height: '2.5px',
+                                height: '2px',
                                 background: 'currentColor',
-                                borderRadius: '2px',
-                                transition: 'all 0.3s ease',
-                                transform: mobileMenuOpen ? 'rotate(-45deg)' : 'rotate(0)',
-                                boxShadow: '0 0 8px currentColor'
+                                borderRadius: '10px',
+                                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                                transform: mobileMenuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none'
                             }}></span>
-                        </span>
+                        </div>
                     </button>
                 </div>
 
-                {/* Mobile Menu */}
+                {/* Mobile Menu Drawer */}
                 <div
                     className="mobile-nav"
                     style={{
-                        display: 'none',
                         position: 'fixed',
-                        top: '70px',
-                        left: 0,
+                        top: 0,
                         right: 0,
-                        maxHeight: 'calc(100vh - 70px)',
-                        background: 'rgba(30, 41, 59, 0.98)',
-                        backdropFilter: 'blur(10px)',
-                        borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
-                        borderRight: '1px solid rgba(59, 130, 246, 0.1)',
-                        padding: '1rem',
-                        transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-                        opacity: mobileMenuOpen ? 1 : 0,
-                        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+                        bottom: 0,
+                        width: '85%',
+                        maxWidth: '320px',
+                        height: '100vh',
+                        background: 'rgba(15, 23, 42, 0.85)',
+                        backdropFilter: 'blur(32px) saturate(180%)',
+                        borderLeft: '1px solid rgba(59, 130, 246, 0.15)',
+                        padding: '1.25rem',
+                        transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+                        visibility: mobileMenuOpen ? 'visible' : 'hidden',
+                        transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                         boxShadow: mobileMenuOpen
-                            ? '0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.1)'
-                            : '0 4px 6px rgba(0, 0, 0, 0.2)',
+                            ? '-20px 0 60px rgba(0, 0, 0, 0.5)'
+                            : 'none',
                         overflowY: 'auto',
                         overflowX: 'hidden',
                         WebkitOverflowScrolling: 'touch',
-                        zIndex: 999
+                        zIndex: 2000
                     }}
                 >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingBottom: '2rem' }}>
-                        {navItems.map((item) => (
-                            <div key={item.path || item.id}>
+                    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '2rem' }}>
+                        {/* Header: Logo */}
+                        <div style={{
+                            marginTop: '4rem',
+                            padding: '0 0.5rem',
+                            opacity: mobileMenuOpen ? 1 : 0,
+                            transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
+                            transition: 'all 0.4s 0.1s'
+                        }}>
+                            <Logo size={42} showText={true} onClick={() => { navigate(isAuthenticated ? '/dashboard' : '/'); setMobileMenuOpen(false); }} />
+                        </div>
+
+                        {/* Navigation Links */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {navItems.map((item, index) => (
+                                <div key={item.path || item.id} style={{
+                                    opacity: mobileMenuOpen ? 1 : 0,
+                                    transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(20px)',
+                                    transition: `all 0.4s ${0.2 + index * 0.05}s`
+                                }}>
+                                    {item.children ? (
+                                        <div style={{ marginBottom: '1rem' }}>
+                                            <div style={{
+                                                padding: '0.75rem 0.5rem',
+                                                color: 'var(--text-secondary)',
+                                                fontSize: '0.8rem',
+                                                fontWeight: '700',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '0.05em',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem'
+                                            }}>
+                                                <span>{item.icon}</span>
+                                                {item.label}
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                                {item.children.map((child) => (
+                                                    <button
+                                                        key={child.path}
+                                                        className={isActive(child.path) ? 'active-link' : ''}
+                                                        onClick={() => {
+                                                            navigate(child.path);
+                                                            setMobileMenuOpen(false);
+                                                        }}
+                                                        style={{
+                                                            width: '100%',
+                                                            padding: '1rem 0.75rem',
+                                                            background: isActive(child.path) ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                                                            border: 'none',
+                                                            borderRadius: '12px',
+                                                            color: isActive(child.path) ? 'var(--accent-color)' : 'var(--text-primary)',
+                                                            fontSize: '1rem',
+                                                            fontWeight: '500',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '1rem',
+                                                            transition: 'all 0.2s',
+                                                            position: 'relative',
+                                                            overflow: 'hidden',
+                                                            textAlign: 'left'
+                                                        }}
+                                                    >
+                                                        {isActive(child.path) && (
+                                                            <div style={{
+                                                                position: 'absolute',
+                                                                left: 0,
+                                                                width: '3px',
+                                                                height: '100%',
+                                                                background: 'var(--accent-color)',
+                                                                borderRadius: '0 4px 4px 0'
+                                                            }} />
+                                                        )}
+                                                        <span style={{ fontSize: '1.25rem' }}>{child.icon}</span>
+                                                        <span style={{ flex: 1 }}>{child.label}</span>
+                                                        {child.path === '/messages' && unreadCount > 0 && (
+                                                            <span className="badge-pulse">{unreadCount}</span>
+                                                        )}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={() => {
+                                                if (item.path) {
+                                                    navigate(item.path);
+                                                    setMobileMenuOpen(false);
+                                                }
+                                            }}
+                                            className={isActive(item.path) ? 'active-link' : ''}
+                                            style={{
+                                                width: '100%',
+                                                padding: '1rem 0.75rem',
+                                                background: isActive(item.path) ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                                                border: 'none',
+                                                borderRadius: '12px',
+                                                color: isActive(item.path) ? 'var(--accent-color)' : 'var(--text-primary)',
+                                                fontSize: '1rem',
+                                                fontWeight: '600',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '1rem',
+                                                transition: 'all 0.2s',
+                                                position: 'relative',
+                                                textAlign: 'left'
+                                            }}
+                                        >
+                                            {isActive(item.path) && (
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    left: 0,
+                                                    width: '3px',
+                                                    height: '100%',
+                                                    background: 'var(--accent-color)',
+                                                    borderRadius: '0 4px 4px 0'
+                                                }} />
+                                            )}
+                                            <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
+                                            {item.label}
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Bottom Actions */}
+                        <div style={{
+                            marginTop: 'auto',
+                            padding: '1.5rem 0',
+                            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1rem',
+                            opacity: mobileMenuOpen ? 1 : 0,
+                            transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
+                            transition: 'all 0.4s 0.5s'
+                        }}>
+                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                                <div style={{ flex: 1 }}><LanguageSwitcher compact={false} /></div>
                                 <button
-                                    onClick={() => {
-                                        if (item.children) {
-                                            // Toggle logic could be added here, for now always expanded or just header
-                                        } else if (item.path) {
-                                            navigate(item.path);
-                                            setMobileMenuOpen(false);
-                                        }
-                                    }}
+                                    onClick={() => { setSosOpen(true); setMobileMenuOpen(false); }}
                                     style={{
-                                        padding: '1rem',
-                                        background: isActive(item.path)
-                                            ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))'
-                                            : 'rgba(255, 255, 255, 0.05)',
-                                        border: isActive(item.path)
-                                            ? '2px solid rgba(59, 130, 246, 0.5)'
-                                            : '2px solid transparent',
-                                        borderRadius: '0.75rem',
-                                        color: isActive(item.path) ? 'var(--accent-color)' : 'var(--text-primary)',
-                                        fontSize: '1rem',
-                                        fontWeight: '600',
-                                        cursor: item.children ? 'default' : 'pointer',
+                                        width: '48px',
+                                        height: '48px',
+                                        borderRadius: '12px',
+                                        background: 'rgba(251, 191, 36, 0.1)',
+                                        border: '1px solid rgba(251, 191, 36, 0.2)',
+                                        color: '#fbbf24',
+                                        fontSize: '1.2rem',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '0.75rem',
-                                        textAlign: 'left',
+                                        justifyContent: 'center'
+                                    }}
+                                >🫁</button>
+                            </div>
+
+                            <InstallPwaButton />
+
+                            {isAuthenticated ? (
+                                <button
+                                    onClick={() => { onLogout?.(); setMobileMenuOpen(false); }}
+                                    style={{
+                                        padding: '1rem',
+                                        background: 'rgba(239, 68, 68, 0.05)',
+                                        border: '1px solid rgba(239, 68, 68, 0.1)',
+                                        borderRadius: '12px',
+                                        color: '#ef4444',
+                                        fontWeight: '600',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
                                         width: '100%'
                                     }}
                                 >
-                                    <span style={{ fontSize: '1.5rem' }}>{item.icon}</span>
-                                    {item.label}
+                                    <span>↪</span> {t('common.logout')}
                                 </button>
-
-                                {item.children && (
-                                    <div style={{ paddingLeft: '1.5rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                        {item.children.map(child => (
-                                            <button
-                                                key={child.path}
-                                                onClick={() => {
-                                                    navigate(child.path);
-                                                    setMobileMenuOpen(false);
-                                                }}
-                                                style={{
-                                                    padding: '0.75rem 1rem',
-                                                    background: isActive(child.path)
-                                                        ? 'rgba(59, 130, 246, 0.15)'
-                                                        : 'rgba(255, 255, 255, 0.02)',
-                                                    border: 'none',
-                                                    borderRadius: '0.5rem',
-                                                    color: isActive(child.path) ? 'var(--accent-color)' : 'var(--text-secondary)',
-                                                    fontSize: '0.95rem',
-                                                    fontWeight: '500',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '0.75rem',
-                                                    textAlign: 'left',
-                                                    width: '100%'
-                                                }}
-                                            >
-                                                <span style={{ fontSize: '1.2rem' }}>{child.icon}</span>
-                                                {child.label}
-                                                {child.path === '/messages' && unreadCount > 0 && (
-                                                    <span style={{
-                                                        marginLeft: 'auto',
-                                                        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                                                        color: 'white',
-                                                        fontSize: '0.75rem',
-                                                        fontWeight: '600',
-                                                        padding: '0.125rem 0.5rem',
-                                                        borderRadius: '1rem',
-                                                        minWidth: '20px',
-                                                        textAlign: 'center',
-                                                        animation: 'badge-pulse 2s ease-in-out infinite',
-                                                        boxShadow: '0 0 10px rgba(239, 68, 68, 0.5)'
-                                                    }}>
-                                                        {unreadCount > 99 ? '99+' : unreadCount}
-                                                    </span>
-                                                )}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-
-                        {/* Navigation Separator */}
-                        <div style={{
-                            height: '1px',
-                            background: 'linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent)',
-                            margin: '0.5rem 0',
-                            boxShadow: '0 0 10px rgba(59, 130, 246, 0.2)'
-                        }}></div>
-
-                        <button
-                            onClick={() => {
-                                setSosOpen(true);
-                                setMobileMenuOpen(false);
-                            }}
-                            style={{
-                                padding: '0.75rem 1rem',
-                                background: 'rgba(251, 191, 36, 0.15)',
-                                border: '1px solid rgba(251, 191, 36, 0.3)',
-                                borderRadius: '0.5rem',
-                                color: '#fbbf24',
-                                fontSize: '0.9rem',
-                                fontWeight: '600',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                textAlign: 'left',
-                                width: '100%'
-                            }}
-                        >
-                            <span style={{ fontSize: '1.2rem' }}>🫁</span>
-                            {t('sos.button')}
-                        </button>
-
-                        {/* Settings Separator */}
-                        <div style={{
-                            height: '1px',
-                            background: 'linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent)',
-                            margin: '0.5rem 0',
-                            boxShadow: '0 0 10px rgba(59, 130, 246, 0.2)'
-                        }}></div>
-
-                        <div style={{ padding: '0.5rem 0' }}>
-                            <LanguageSwitcher compact />
-                            <div style={{ marginTop: '0.5rem' }}>
-                                <InstallPwaButton />
-                            </div>
+                            ) : (
+                                <button
+                                    onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}
+                                    style={{
+                                        padding: '1rem',
+                                        background: 'linear-gradient(135deg, var(--accent-color), var(--accent-hover))',
+                                        borderRadius: '12px',
+                                        color: 'white',
+                                        fontWeight: '600',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
+                                        width: '100%',
+                                        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                                    }}
+                                >
+                                    🔐 {t('landing.hero.login')}
+                                </button>
+                            )}
                         </div>
-
-                        {isAuthenticated ? (
-                            <button
-                                onClick={() => {
-                                    onLogout?.();
-                                    setMobileMenuOpen(false);
-                                }}
-                                style={{
-                                    padding: '1rem',
-                                    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.15))',
-                                    border: '2px solid rgba(239, 68, 68, 0.4)',
-                                    borderRadius: '0.75rem',
-                                    color: '#ef4444',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.75rem',
-                                    width: '100%'
-                                }}
-                            >
-                                <span style={{ fontSize: '1.5rem' }}>🚪</span>
-                                {t('common.logout')}
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => {
-                                    navigate('/login');
-                                    setMobileMenuOpen(false);
-                                }}
-                                style={{
-                                    padding: '1rem',
-                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(99, 102, 241, 0.2))',
-                                    border: '2px solid rgba(59, 130, 246, 0.5)',
-                                    borderRadius: '0.75rem',
-                                    color: 'var(--accent-color)',
-                                    fontSize: '1rem',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.75rem',
-                                    width: '100%'
-                                }}
-                            >
-                                <span style={{ fontSize: '1.5rem' }}>🔐</span>
-                                {t('landing.hero.login')}
-                            </button>
-                        )}
                     </div>
                 </div>
 
@@ -717,26 +694,23 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         }
                     }
 
-                    @keyframes badge-pulse {
-                        0%, 100% {
-                            transform: scale(1);
-                            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-                        }
-                        50% {
-                            transform: scale(1.1);
-                            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);
-                        }
+                    .badge-pulse {
+                        margin-left: auto;
+                        background: #ef4444;
+                        color: white;
+                        font-size: 0.75rem;
+                        font-weight: 700;
+                        padding: 2px 8px;
+                        border-radius: 20px;
+                        min-width: 20px;
+                        text-align: center;
+                        animation: badge-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                        box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
                     }
 
-                    @keyframes slideInDown {
-                        from {
-                            opacity: 0;
-                            transform: translateX(-50%) translateY(-20px);
-                        }
-                        to {
-                            opacity: 1;
-                            transform: translateX(-50%) translateY(0);
-                        }
+                    @keyframes badge-pulse {
+                        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+                        50% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
                     }
 
                     /* Active menu indicator */
@@ -761,6 +735,25 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         transform: translateX(-50%) scaleX(0.7);
                     }
 
+                    .mobile-nav button {
+                        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+
+                    .mobile-nav button:hover {
+                        background: rgba(255, 255, 255, 0.05) !important;
+                        transform: translateX(4px);
+                    }
+
+                    .mobile-nav button:active {
+                        background: rgba(255, 255, 255, 0.1) !important;
+                        transform: scale(0.98);
+                    }
+
+                    /* Active state special hover */
+                    .mobile-nav button.active-link:hover {
+                         background: rgba(59, 130, 246, 0.15) !important;
+                    }
+
                     @media (max-width: 1150px) {
                         .desktop-nav {
                             display: none !important;
@@ -769,7 +762,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                             display: flex !important;
                         }
                         .mobile-nav {
-                            display: block !important;
+                            display: flex !important;
                         }
                         .mobile-backdrop {
                             display: block !important;
