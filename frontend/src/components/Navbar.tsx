@@ -304,34 +304,31 @@ export default function Navbar({ onLogout }: NavbarProps) {
                         {/* SOS Button */}
                         <button
                             onClick={() => setSosOpen(true)}
-                            className="sos-button"
+                            title={t('landing.hero.emergency') || 'Хочу закурить!'}
                             style={{
-                                padding: '0.5rem 1rem',
-                                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%)',
-                                border: '2px solid rgba(239, 68, 68, 0.6)',
-                                borderRadius: '0.75rem',
-                                color: 'white',
-                                fontSize: '0.9rem',
-                                fontWeight: 'bold',
+                                padding: '0.4rem 0.7rem',
+                                background: 'rgba(251, 191, 36, 0.15)',
+                                border: '1px solid rgba(251, 191, 36, 0.3)',
+                                borderRadius: '0.5rem',
+                                color: '#fbbf24',
+                                fontSize: '0.8rem',
+                                fontWeight: '600',
                                 cursor: 'pointer',
-                                transition: 'all 0.3s',
+                                transition: 'all 0.2s',
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '0.4rem',
-                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3)',
-                                position: 'relative',
-                                animation: 'sos-pulse 2s ease-in-out infinite'
+                                gap: '0.3rem',
                             }}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
-                                e.currentTarget.style.boxShadow = '0 6px 20px rgba(239, 68, 68, 0.7), 0 0 30px rgba(239, 68, 68, 0.5)';
+                                e.currentTarget.style.background = 'rgba(251, 191, 36, 0.25)';
+                                e.currentTarget.style.borderColor = 'rgba(251, 191, 36, 0.5)';
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3)';
+                                e.currentTarget.style.background = 'rgba(251, 191, 36, 0.15)';
+                                e.currentTarget.style.borderColor = 'rgba(251, 191, 36, 0.3)';
                             }}
                         >
-                            🆘 {t('sos.button')}
+                            🫁 SOS
                         </button>
 
                         <div style={{ width: '1px', height: '30px', background: 'rgba(255,255,255,0.1)' }}></div>
@@ -621,26 +618,23 @@ export default function Navbar({ onLogout }: NavbarProps) {
                                 setSosOpen(true);
                                 setMobileMenuOpen(false);
                             }}
-                            className="sos-button"
                             style={{
-                                padding: '1rem',
-                                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%)',
-                                border: '2px solid rgba(239, 68, 68, 0.6)',
-                                borderRadius: '0.75rem',
-                                color: 'white',
-                                fontSize: '1rem',
-                                fontWeight: 'bold',
+                                padding: '0.75rem 1rem',
+                                background: 'rgba(251, 191, 36, 0.15)',
+                                border: '1px solid rgba(251, 191, 36, 0.3)',
+                                borderRadius: '0.5rem',
+                                color: '#fbbf24',
+                                fontSize: '0.9rem',
+                                fontWeight: '600',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '0.75rem',
+                                gap: '0.5rem',
                                 textAlign: 'left',
-                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3)',
-                                animation: 'sos-pulse 2s ease-in-out infinite',
                                 width: '100%'
                             }}
                         >
-                            <span style={{ fontSize: '1.5rem' }}>🆘</span>
+                            <span style={{ fontSize: '1.2rem' }}>🫁</span>
                             {t('sos.button')}
                         </button>
 
