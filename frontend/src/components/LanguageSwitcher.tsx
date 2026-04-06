@@ -47,7 +47,7 @@ export default function LanguageSwitcher({ compact = false }: LanguageSwitcherPr
                     e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
                 }}
             >
-                {isRussian ? '🇷🇺' : '🇬🇧'} {isRussian ? 'RU' : 'EN'}
+                {isRussian ? '🌐 Язык RU' : '🌐 Lang EN'}
             </button>
         );
     }
