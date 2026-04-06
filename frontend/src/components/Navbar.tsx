@@ -498,234 +498,6 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     </button>
                 </div>
 
-                {/* Mobile Menu Drawer */}
-                <div
-                    className="mobile-nav"
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        width: '85%',
-                        maxWidth: '320px',
-                        height: '100vh',
-                        background: 'rgba(15, 23, 42, 0.85)',
-                        backdropFilter: 'blur(32px) saturate(180%)',
-                        borderLeft: '1px solid rgba(59, 130, 246, 0.15)',
-                        padding: '1.25rem',
-                        transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-                        visibility: mobileMenuOpen ? 'visible' : 'hidden',
-                        transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                        boxShadow: mobileMenuOpen
-                            ? '-20px 0 60px rgba(0, 0, 0, 0.5)'
-                            : 'none',
-                        overflowY: 'auto',
-                        overflowX: 'hidden',
-                        WebkitOverflowScrolling: 'touch',
-                        zIndex: 2000
-                    }}
-                >
-                    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '2rem' }}>
-                        {/* Header: Logo */}
-                        <div style={{
-                            marginTop: '4rem',
-                            padding: '0 0.5rem',
-                            opacity: mobileMenuOpen ? 1 : 0,
-                            transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
-                            transition: 'all 0.4s 0.1s'
-                        }}>
-                            <Logo size={42} showText={true} onClick={() => { navigate(isAuthenticated ? '/dashboard' : '/'); setMobileMenuOpen(false); }} />
-                        </div>
-
-                        {/* Navigation Links */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {navItems.map((item, index) => (
-                                <div key={item.path || item.id} style={{
-                                    opacity: mobileMenuOpen ? 1 : 0,
-                                    transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(20px)',
-                                    transition: `all 0.4s ${0.2 + index * 0.05}s`
-                                }}>
-                                    {item.children ? (
-                                        <div style={{ marginBottom: '1rem' }}>
-                                            <div style={{
-                                                padding: '0.75rem 0.5rem',
-                                                color: 'var(--text-secondary)',
-                                                fontSize: '0.8rem',
-                                                fontWeight: '700',
-                                                textTransform: 'uppercase',
-                                                letterSpacing: '0.05em',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '0.5rem'
-                                            }}>
-                                                <span>{item.icon}</span>
-                                                {item.label}
-                                            </div>
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                                                {item.children.map((child) => (
-                                                    <button
-                                                        key={child.path}
-                                                        className={isActive(child.path) ? 'active-link' : ''}
-                                                        onClick={() => {
-                                                            navigate(child.path);
-                                                            setMobileMenuOpen(false);
-                                                        }}
-                                                        style={{
-                                                            width: '100%',
-                                                            padding: '1rem 0.75rem',
-                                                            background: isActive(child.path) ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
-                                                            border: 'none',
-                                                            borderRadius: '12px',
-                                                            color: isActive(child.path) ? 'var(--accent-color)' : 'var(--text-primary)',
-                                                            fontSize: '1rem',
-                                                            fontWeight: '500',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: '1rem',
-                                                            transition: 'all 0.2s',
-                                                            position: 'relative',
-                                                            overflow: 'hidden',
-                                                            textAlign: 'left'
-                                                        }}
-                                                    >
-                                                        {isActive(child.path) && (
-                                                            <div style={{
-                                                                position: 'absolute',
-                                                                left: 0,
-                                                                width: '3px',
-                                                                height: '100%',
-                                                                background: 'var(--accent-color)',
-                                                                borderRadius: '0 4px 4px 0'
-                                                            }} />
-                                                        )}
-                                                        <span style={{ fontSize: '1.25rem' }}>{child.icon}</span>
-                                                        <span style={{ flex: 1 }}>{child.label}</span>
-                                                        {child.path === '/messages' && unreadCount > 0 && (
-                                                            <span className="badge-pulse">{unreadCount}</span>
-                                                        )}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <button
-                                            onClick={() => {
-                                                if (item.path) {
-                                                    navigate(item.path);
-                                                    setMobileMenuOpen(false);
-                                                }
-                                            }}
-                                            className={isActive(item.path) ? 'active-link' : ''}
-                                            style={{
-                                                width: '100%',
-                                                padding: '1rem 0.75rem',
-                                                background: isActive(item.path) ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
-                                                border: 'none',
-                                                borderRadius: '12px',
-                                                color: isActive(item.path) ? 'var(--accent-color)' : 'var(--text-primary)',
-                                                fontSize: '1rem',
-                                                fontWeight: '600',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '1rem',
-                                                transition: 'all 0.2s',
-                                                position: 'relative',
-                                                textAlign: 'left'
-                                            }}
-                                        >
-                                            {isActive(item.path) && (
-                                                <div style={{
-                                                    position: 'absolute',
-                                                    left: 0,
-                                                    width: '3px',
-                                                    height: '100%',
-                                                    background: 'var(--accent-color)',
-                                                    borderRadius: '0 4px 4px 0'
-                                                }} />
-                                            )}
-                                            <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
-                                            {item.label}
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Bottom Actions */}
-                        <div style={{
-                            marginTop: 'auto',
-                            padding: '1.5rem 0',
-                            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '1rem',
-                            opacity: mobileMenuOpen ? 1 : 0,
-                            transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
-                            transition: 'all 0.4s 0.5s'
-                        }}>
-                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                                <div style={{ flex: 1 }}><LanguageSwitcher compact={false} /></div>
-                                <button
-                                    onClick={() => { setSosOpen(true); setMobileMenuOpen(false); }}
-                                    style={{
-                                        width: '48px',
-                                        height: '48px',
-                                        borderRadius: '12px',
-                                        background: 'rgba(251, 191, 36, 0.1)',
-                                        border: '1px solid rgba(251, 191, 36, 0.2)',
-                                        color: '#fbbf24',
-                                        fontSize: '1.2rem',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}
-                                >🫁</button>
-                            </div>
-
-                            <InstallPwaButton />
-
-                            {isAuthenticated ? (
-                                <button
-                                    onClick={() => { onLogout?.(); setMobileMenuOpen(false); }}
-                                    style={{
-                                        padding: '1rem',
-                                        background: 'rgba(239, 68, 68, 0.05)',
-                                        border: '1px solid rgba(239, 68, 68, 0.1)',
-                                        borderRadius: '12px',
-                                        color: '#ef4444',
-                                        fontWeight: '600',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '0.5rem',
-                                        width: '100%'
-                                    }}
-                                >
-                                    <span>↪</span> {t('common.logout')}
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}
-                                    style={{
-                                        padding: '1rem',
-                                        background: 'linear-gradient(135deg, var(--accent-color), var(--accent-hover))',
-                                        borderRadius: '12px',
-                                        color: 'white',
-                                        fontWeight: '600',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '0.5rem',
-                                        width: '100%',
-                                        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
-                                    }}
-                                >
-                                    🔐 {t('landing.hero.login')}
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </div>
 
                 <style>{`
                     @keyframes sos-pulse {
@@ -820,6 +592,274 @@ export default function Navbar({ onLogout }: NavbarProps) {
                     }
                 `}</style>
             </nav>
+
+            {/* Mobile Menu Backdrop */}
+            <div
+                className="mobile-backdrop"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                    display: 'none', // Managed by media queries in the <style> block
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.4)',
+                    backdropFilter: 'blur(8px)',
+                    zIndex: 1999,
+                    opacity: mobileMenuOpen ? 1 : 0,
+                    pointerEvents: mobileMenuOpen ? 'auto' : 'none',
+                    transition: 'all 0.4s ease-in-out'
+                }}
+            />
+
+            {/* Mobile Menu Drawer */}
+            <div
+                className="mobile-nav"
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    width: '85%',
+                    maxWidth: '320px',
+                    height: '100vh',
+                    background: 'rgba(15, 23, 42, 0.85)',
+                    backdropFilter: 'blur(32px) saturate(180%)',
+                    borderLeft: '1px solid rgba(59, 130, 246, 0.15)',
+                    padding: '1.25rem',
+                    transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+                    visibility: mobileMenuOpen ? 'visible' : 'hidden',
+                    transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: mobileMenuOpen
+                        ? '-20px 0 60px rgba(0, 0, 0, 0.5)'
+                        : 'none',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
+                    WebkitOverflowScrolling: 'touch',
+                    zIndex: 2000
+                }}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '1.5rem' }}>
+                    {/* Header: Logo and Close Action */}
+                    <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        marginTop: '1rem',
+                        padding: '0 0.5rem',
+                        opacity: mobileMenuOpen ? 1 : 0,
+                        transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
+                        transition: 'all 0.4s 0.1s'
+                    }}>
+                        <Logo size={42} showText={true} onClick={() => { navigate(isAuthenticated ? '/dashboard' : '/'); setMobileMenuOpen(false); }} />
+                        <button
+                            onClick={() => setMobileMenuOpen(false)}
+                            style={{
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                borderRadius: '12px',
+                                width: '40px',
+                                height: '40px',
+                                color: 'white',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '1.2rem',
+                                cursor: 'pointer'
+                            }}
+                        >✕</button>
+                    </div>
+
+                    {/* Navigation Links */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        {navItems.map((item, index) => (
+                            <div key={item.path || item.id} style={{
+                                opacity: mobileMenuOpen ? 1 : 0,
+                                transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(20px)',
+                                transition: `all 0.4s ${0.2 + index * 0.05}s`
+                            }}>
+                                {item.children ? (
+                                    <div style={{ marginBottom: '1rem' }}>
+                                        <div style={{
+                                            padding: '0.75rem 0.5rem',
+                                            color: 'var(--text-secondary)',
+                                            fontSize: '0.8rem',
+                                            fontWeight: '700',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '0.05em',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem'
+                                        }}>
+                                            <span>{item.icon}</span>
+                                            {item.label}
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                            {item.children.map((child) => (
+                                                <button
+                                                    key={child.path}
+                                                    className={isActive(child.path) ? 'active-link' : ''}
+                                                    onClick={() => {
+                                                        navigate(child.path);
+                                                        setMobileMenuOpen(false);
+                                                    }}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '1rem 0.75rem',
+                                                        background: isActive(child.path) ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                                                        border: 'none',
+                                                        borderRadius: '12px',
+                                                        color: isActive(child.path) ? 'var(--accent-color)' : 'var(--text-primary)',
+                                                        fontSize: '1rem',
+                                                        fontWeight: '500',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '1rem',
+                                                        transition: 'all 0.2s',
+                                                        position: 'relative',
+                                                        overflow: 'hidden',
+                                                        textAlign: 'left'
+                                                    }}
+                                                >
+                                                    {isActive(child.path) && (
+                                                        <div style={{
+                                                            position: 'absolute',
+                                                            left: 0,
+                                                            width: '3px',
+                                                            height: '100%',
+                                                            background: 'var(--accent-color)',
+                                                            borderRadius: '0 4px 4px 0'
+                                                        }} />
+                                                    )}
+                                                    <span style={{ fontSize: '1.25rem' }}>{child.icon}</span>
+                                                    <span style={{ flex: 1 }}>{child.label}</span>
+                                                    {child.path === '/messages' && unreadCount > 0 && (
+                                                        <span className="badge-pulse">{unreadCount}</span>
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={() => {
+                                            if (item.path) {
+                                                navigate(item.path);
+                                                setMobileMenuOpen(false);
+                                            }
+                                        }}
+                                        className={isActive(item.path) ? 'active-link' : ''}
+                                        style={{
+                                            width: '100%',
+                                            padding: '1rem 0.75rem',
+                                            background: isActive(item.path) ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                                            border: 'none',
+                                            borderRadius: '12px',
+                                            color: isActive(item.path) ? 'var(--accent-color)' : 'var(--text-primary)',
+                                            fontSize: '1rem',
+                                            fontWeight: '600',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '1rem',
+                                            transition: 'all 0.2s',
+                                            position: 'relative',
+                                            textAlign: 'left'
+                                        }}
+                                    >
+                                        {isActive(item.path) && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                left: 0,
+                                                width: '3px',
+                                                height: '100%',
+                                                background: 'var(--accent-color)',
+                                                borderRadius: '0 4px 4px 0'
+                                            }} />
+                                        )}
+                                        <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
+                                        {item.label}
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Bottom Actions */}
+                    <div style={{
+                        marginTop: 'auto',
+                        padding: '1.5rem 0',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                        opacity: mobileMenuOpen ? 1 : 0,
+                        transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
+                        transition: 'all 0.4s 0.5s'
+                    }}>
+                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                            <div style={{ flex: 1 }}><LanguageSwitcher compact={false} /></div>
+                            <button
+                                onClick={() => { setSosOpen(true); setMobileMenuOpen(false); }}
+                                style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    borderRadius: '12px',
+                                    background: 'rgba(251, 191, 36, 0.1)',
+                                    border: '1px solid rgba(251, 191, 36, 0.2)',
+                                    color: '#fbbf24',
+                                    fontSize: '1.2rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >🫁</button>
+                        </div>
+
+                        <InstallPwaButton />
+
+                        {isAuthenticated ? (
+                            <button
+                                onClick={() => { onLogout?.(); setMobileMenuOpen(false); }}
+                                style={{
+                                    padding: '1rem',
+                                    background: 'rgba(239, 68, 68, 0.05)',
+                                    border: '1px solid rgba(239, 68, 68, 0.1)',
+                                    borderRadius: '12px',
+                                    color: '#ef4444',
+                                    fontWeight: '600',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem',
+                                    width: '100%'
+                                }}
+                            >
+                                <span>↪</span> {t('common.logout')}
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}
+                                style={{
+                                    padding: '1rem',
+                                    background: 'linear-gradient(135deg, var(--accent-color), var(--accent-hover))',
+                                    borderRadius: '12px',
+                                    color: 'white',
+                                    fontWeight: '600',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.5rem',
+                                    width: '100%',
+                                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                                }}
+                            >
+                                🔐 {t('landing.hero.login')}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
         </>
     );
 }
