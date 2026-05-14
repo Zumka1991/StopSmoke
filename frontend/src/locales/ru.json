@@ -16,8 +16,12 @@
     "articleDetail": "{{title}} - StopSmoke",
     "books": "Книги - StopSmoke",
     "bookDetail": "{{title}} - StopSmoke",
+    "videos": "Видео - StopSmoke",
+    "videoDetail": "Видео - StopSmoke",
+    "adminVideos": "Управление видео - StopSmoke",
     "adminArticles": "Управление статьями - StopSmoke",
     "adminBooks": "Управление книгами - StopSmoke",
+    "adminVideos": "Управление видео - StopSmoke",
     "forgotPassword": "Забыли пароль - StopSmoke",
     "resetPassword": "Сброс пароля - StopSmoke",
     "adminAccess": "Доступ админа - StopSmoke",
@@ -425,7 +429,8 @@
   "admin": {
     "panel": "Панель администратора",
     "manageContent": "Управление контентом сайта",
-    "manageArticles": "Управление статьями"
+    "manageArticles": "Управление статьями",
+    "manageVideos": "Управление видео"
   },
   "landing": {
     "hero": {
@@ -483,6 +488,17 @@
     "iosInstructions": "Добавьте StopSmoke на домашний экран для быстрого доступа:",
     "androidTitle": "Установка на Android",
     "androidInstructions": "Установите приложение для лучшего опыта:"
+  },
+  "videos": {
+    "title": "Видео",
+    "subtitle": "Полезные видеоматериалы о борьбе с курением",
+    "noVideos": "Видео пока нет. Мы скоро их добавим!",
+    "errorLoading": "Ошибка загрузки видео",
+    "errorLoadingVideo": "Ошибка загрузки видео",
+    "watch": "Смотреть →",
+    "description": "Описание",
+    "unsupportedPlatform": "Не удалось встроить плеер для этой платформы",
+    "openOnPlatform": "Открыть на платформе"
   },
   "books": {
     "title": "Библиотека",

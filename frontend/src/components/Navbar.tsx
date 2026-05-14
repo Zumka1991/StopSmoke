@@ -41,6 +41,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
                 { path: '/messages', label: t('messages.title'), icon: '💬' },
                 { path: '/articles', label: t('articles.title'), icon: '📰' },
                 { path: '/books', label: t('books.title') || 'Библиотека', icon: '📚' },
+                { path: '/videos', label: t('videos.title') || 'Видео', icon: '🎬' },
             ]
         },
         { path: '/profile', label: t('nav.profile'), icon: '👤' },
@@ -54,6 +55,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
             children: [
                 { path: '/articles', label: t('articles.title'), icon: '📰' },
                 { path: '/books', label: t('books.title') || 'Библиотека', icon: '📚' },
+                { path: '/videos', label: t('videos.title') || 'Видео', icon: '🎬' },
             ]
         },
         {

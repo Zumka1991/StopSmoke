@@ -231,6 +231,12 @@ export default function LandingPage() {
                             📚 {t('books.title') || 'Библиотека'}
                         </Button>
                         <Button
+                            onClick={() => navigate('/videos')}
+                            variant="outline"
+                        >
+                            🎬 {t('videos.title') || 'Видео'}
+                        </Button>
+                        <Button
                             onClick={() => navigate('/leaderboard')}
                             variant="outline"
                         >

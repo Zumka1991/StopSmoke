@@ -17,6 +17,9 @@ import AdminArticlesPage from './pages/AdminArticlesPage';
 import BooksPage from './pages/BooksPage';
 import BookDetailPage from './pages/BookDetailPage';
 import AdminBooksPage from './pages/AdminBooksPage';
+import VideosPage from './pages/VideosPage';
+import VideoDetailPage from './pages/VideoDetailPage';
+import AdminVideosPage from './pages/AdminVideosPage';
 import LandingPage from './pages/LandingPage';
 import UserProfilePage from './pages/UserProfilePage';
 import { NotificationProvider } from './contexts/NotificationContext';
@@ -44,6 +47,8 @@ function App() {
               <Route path="/articles/:id" element={<ArticleDetailPage />} />
               <Route path="/books" element={<BooksPage />} />
               <Route path="/books/:id" element={<BookDetailPage />} />
+              <Route path="/videos" element={<VideosPage />} />
+              <Route path="/videos/:id" element={<VideoDetailPage />} />
               <Route path="/leaderboard" element={<LeaderboardPage />} />
               <Route path="/marathons" element={<MarathonPage />} />
 
@@ -101,6 +106,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AdminBooksPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/videos"
+                element={
+                  <ProtectedRoute>
+                    <AdminVideosPage />
                   </ProtectedRoute>
                 }
               />

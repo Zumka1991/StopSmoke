@@ -16,8 +16,12 @@
     "articleDetail": "{{title}} - StopSmoke",
     "books": "Books - StopSmoke",
     "bookDetail": "{{title}} - StopSmoke",
+    "videos": "Videos - StopSmoke",
+    "videoDetail": "Video - StopSmoke",
+    "adminVideos": "Manage Videos - StopSmoke",
     "adminArticles": "Manage Articles - StopSmoke",
     "adminBooks": "Manage Books - StopSmoke",
+    "adminVideos": "Manage Videos - StopSmoke",
     "forgotPassword": "Forgot Password - StopSmoke",
     "resetPassword": "Reset Password - StopSmoke",
     "adminAccess": "Admin Access - StopSmoke",
@@ -425,7 +429,8 @@
   "admin": {
     "panel": "Admin Panel",
     "manageContent": "Manage site content",
-    "manageArticles": "Manage Articles"
+    "manageArticles": "Manage Articles",
+    "manageVideos": "Manage Videos"
   },
   "landing": {
     "hero": {
@@ -483,6 +488,17 @@
     "iosInstructions": "Add StopSmoke to your home screen for quick access:",
     "androidTitle": "Install on Android",
     "androidInstructions": "Install the app for a better experience:"
+  },
+  "videos": {
+    "title": "Videos",
+    "subtitle": "Helpful videos about quitting smoking",
+    "noVideos": "No videos yet. We will add them soon!",
+    "errorLoading": "Error loading videos",
+    "errorLoadingVideo": "Error loading video",
+    "watch": "Watch →",
+    "description": "Description",
+    "unsupportedPlatform": "Could not embed player for this platform",
+    "openOnPlatform": "Open on platform"
   },
   "books": {
     "title": "Library",
