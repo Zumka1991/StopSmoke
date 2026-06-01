@@ -204,6 +204,13 @@
     "inProgress": "In Progress",
     "locked": "Locked"
   },
+  "goals": {
+    "title": "Goal Progress",
+    "hint": "Percentage of your current smoke-free streak",
+    "dayGoal": "{{count}} days",
+    "completed": "Goal reached",
+    "remaining": "{{count}}d left"
+  },
   "achievements": {
     "title": "Achievements",
     "list": {

@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import HealthTimeline from '../components/HealthTimeline';
+import GoalProgress from '../components/GoalProgress';
 import Achievements from '../components/Achievements';
 import Button from '../components/Button';
 
@@ -363,6 +364,8 @@ export default function DashboardPage() {
                                 </div>
                             </>
                         )}
+
+                        <GoalProgress quitDate={profile.quitDate} />
 
                         <HealthTimeline quitDate={profile.quitDate} />
 

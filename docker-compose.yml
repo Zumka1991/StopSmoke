@@ -103,3 +103,6 @@ volumes:
 networks:
   stopsmoke-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.240.0/24
